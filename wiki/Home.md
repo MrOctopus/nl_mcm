@@ -11,4 +11,4 @@ A special thanks goes out to:
 * [Dunc001](https://github.com/dunc001)
 * Kojak747
 
-Their contributions have been valuable.
+Their contributions have been invaluable.

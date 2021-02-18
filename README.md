@@ -35,3 +35,7 @@ An object-oriented module based extension of SkyUI MCM scripts.
 ## Optional
 
 * [JContainers](https://www.nexusmods.com/skyrimspecialedition/mods/16495)
+
+# Documentation
+
+Check out the [github wiki pages](https://github.com/MrOctopus/nl_mcm/wiki) for more details on how to use nl_mcm.
