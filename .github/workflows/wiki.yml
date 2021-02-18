@@ -1,0 +1,47 @@
+name: Deploy wiki on documentation changes
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'wiki/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.x']
+
+    steps:
+    - name: Checkout current repo
+      uses: actions/checkout@v2
+      with:
+        path: ./nl_mcm
+
+    - name: Checkout PaPyDoc repo
+      uses: actions/checkout@v2
+      with:
+        repository: MrOctopus/PaPyDoc
+        path: ./PaPyDoc
+      
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Run PaPyDoc and generate wiki documentation
+      run: python ./PaPyDoc/run.py -o "./nl_mcm/wiki" "./nl_mcm/src/**"
+      
+    - name: Push wiki changes
+      if: success()
+      uses: Andrew-Chen-Wang/github-wiki-action@v2
+      env:
+        EXCLUDED_FILES: "ski_configbase.md"
+        WIKI_DIR: ./nl_mcm/wiki/
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_MAIL: ${{ secrets.NL_EMAIL }}
+        GH_NAME: ${{ github.repository_owner }}
+        WIKI_PUSH_MESSAGE: "Automatic API documentation update from workflow"

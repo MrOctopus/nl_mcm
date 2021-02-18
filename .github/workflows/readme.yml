@@ -1,0 +1,28 @@
+name: Refresh table of contents on README update
+
+on:
+  push:
+    paths:
+      - 'README.md'
+
+jobs:
+  toc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    
+    steps:
+      - name: Checkout current repo
+        uses: actions/checkout@v2
+
+      - name: Update table of contents in ReadMe
+        run: |
+          curl https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc -o gh-md-toc
+          chmod a+x gh-md-toc
+          ./gh-md-toc --insert --no-backup README.md
+          rm gh-md-toc
+        
+      - name: Push update to repo
+        if: success()
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Auto update README TOC
