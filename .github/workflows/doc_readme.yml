@@ -1,4 +1,4 @@
-name: Refresh table of contents on README update
+name: Refresh index on README.md update
 
 on:
   push:
@@ -13,10 +13,10 @@ jobs:
     timeout-minutes: 5
     
     steps:
-      - name: Checkout current repo
+      - name: This Repo
         uses: actions/checkout@v2
 
-      - name: Update table of contents in ReadMe
+      - name: Update index in README.md
         run: |
           curl https://raw.githubusercontent.com/ekalinin/github-markdown-toc/master/gh-md-toc -o gh-md-toc
           chmod a+x gh-md-toc
@@ -27,4 +27,4 @@ jobs:
         if: success()
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: Auto update README TOC
+          commit_message: Updated README.md index

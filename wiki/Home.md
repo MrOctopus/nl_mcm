@@ -1,5 +1,8 @@
 # Info
 
+Wiki is up to date:
+![](https://github.com/MrOctopus/nl_mcm/actions/workflows/doc_wiki.yml/badge.svg)
+
 # API
 Read  the corresponding wiki page to a .psc script for a closer explanation of nl_mcm's API.
 

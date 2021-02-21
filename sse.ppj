@@ -1,0 +1,40 @@
+<PapyrusProject
+  xmlns="PapyrusProject.xsd"
+  Game="SSE"
+  Flags="TESV_Papyrus_Flags.flg"
+  Output="@MyProject\scripts"
+  Optimize="true" 
+  Anonymize="true" 
+  Zip="true">
+  <Variables>
+    <Variable Name="Namespace" Value="nl_mcm"/>
+    <Variable Name="ModName" Value="@Namespace - SSE"/>
+    <Variable Name="MyProject" Value="."/>
+    <Variable Name="ScriptsDir" Value="@GameDir\Data\Scripts\Source"/>
+
+    <!--Set these to point to their respective directories-->
+    <Variable Name="GameDir" Value="B:\Steam Games\steamapps\common\Skyrim Special Edition"/>
+    <Variable Name="SKSEDir" Value="https://github.com/MrOctopus/nl_online/tree/main/skse64/source"/>
+    <Variable Name="JContainersDir" Value="https://github.com/MrOctopus/nl_online/tree/main/jcontainersSE/source"/>
+  </Variables>
+  <Imports>
+    <Import>@MyProject\source</Import>
+    <Import>https://github.com/MrOctopus/nl_util/tree/main/dist/scripts/source</Import>
+    <Import>@JContainersDir</Import>
+    <Import>https://github.com/schlangster/skyui/tree/master/dist/Data/Scripts/Source</Import>
+    <Import>@SKSEDir</Import>
+    <Import>@ScriptsDir</Import>
+  </Imports>
+  <Scripts>
+    <Script>nl_util.psc</Script>
+  </Scripts>
+  <Folders>
+    <Folder NoRecurse="true">@MyProject\source</Folder>
+  </Folders>
+  <ZipFiles Output="@MyProject\dist">
+    <ZipFile Name="@ModName" RootDir="@MyProject" Compression="deflate">
+      <Include>scripts</Include>
+      <Include>interface</Include>
+    </ZipFile>
+  </ZipFiles>
+</PapyrusProject>

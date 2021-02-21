@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'src/**'
+      - 'source/**'
       - 'wiki/**'
 
 jobs:
@@ -16,12 +16,12 @@ jobs:
         python-version: ['3.x']
 
     steps:
-    - name: Checkout current repo
+    - name: This repo
       uses: actions/checkout@v2
       with:
         path: ./nl_mcm
 
-    - name: Checkout PaPyDoc repo
+    - name: PaPyDoc repo
       uses: actions/checkout@v2
       with:
         repository: MrOctopus/PaPyDoc
@@ -33,7 +33,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Run PaPyDoc and generate wiki documentation
-      run: python ./PaPyDoc/run.py -o "./nl_mcm/wiki" "./nl_mcm/src/**"
+      run: python ./PaPyDoc/run.py -o "./nl_mcm/wiki" "./nl_mcm/source/**"
       
     - name: Push wiki changes
       if: success()
@@ -44,4 +44,4 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GH_MAIL: ${{ secrets.NL_EMAIL }}
         GH_NAME: ${{ github.repository_owner }}
-        WIKI_PUSH_MESSAGE: "Automatic API documentation update from workflow"
+        WIKI_PUSH_MESSAGE: "Updated wiki"

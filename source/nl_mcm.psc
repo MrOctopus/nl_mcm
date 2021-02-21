@@ -455,7 +455,7 @@ int function SaveMCMToPreset(string preset_name)
 	
 	_busy_jcontainer = true
 	
-	int jPreset = jMap.object()
+	int jPreset = JMap.object()
 	
 	while _mutex_modules
 		Utility.WaitMenuMode(SPINLOCK_TIMER)

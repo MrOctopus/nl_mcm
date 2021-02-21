@@ -2,7 +2,7 @@
 
 An object-oriented module based extension of SkyUI MCM scripts.
 
-# Table of contents
+# Index
 <!--ts-->
    * [nl_mcm](#nl_mcm)
    * [Table of contents](#table-of-contents)
@@ -20,10 +20,13 @@ An object-oriented module based extension of SkyUI MCM scripts.
 
 ## Required
 
-* [SKSE](https://skse.silverlock.org/)
+* [Pyro](https://github.com/fireundubh/pyro)
 * [SkyUI SDK](https://github.com/schlangster/skyui/wiki)
 * [JContainers](https://www.nexusmods.com/skyrimspecialedition/mods/16495)
-* [NL_Util](https://github.com/MrOctopus/nl_util)
+
+## Instructions
+
+TODO
 
 # End User Dependencies 
 
