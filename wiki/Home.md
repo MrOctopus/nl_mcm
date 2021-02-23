@@ -1,6 +1,5 @@
 # Info
 
-Wiki is up to date:
 ![](https://github.com/MrOctopus/nl_mcm/actions/workflows/doc_wiki.yml/badge.svg)
 
 # API

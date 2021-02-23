@@ -10,20 +10,13 @@
     <Variable Name="Namespace" Value="nl_mcm"/>
     <Variable Name="ModName" Value="@Namespace - SSE"/>
     <Variable Name="MyProject" Value="."/>
-    <Variable Name="ScriptsDir" Value="@GameDir\Data\Scripts\Source"/>
-
-    <!--Set these to point to their respective directories-->
-    <Variable Name="GameDir" Value="B:\Steam Games\steamapps\common\Skyrim Special Edition"/>
-    <Variable Name="SKSEDir" Value="https://github.com/MrOctopus/nl_online/tree/main/skse64/source"/>
-    <Variable Name="JContainersDir" Value="https://github.com/MrOctopus/nl_online/tree/main/jcontainersSE/source"/>
   </Variables>
   <Imports>
     <Import>@MyProject\source</Import>
     <Import>https://github.com/MrOctopus/nl_util/tree/main/dist/scripts/source</Import>
-    <Import>@JContainersDir</Import>
+    <Import>https://github.com/MrOctopus/nl_online/tree/main/jcontainersSE/source</Import>
     <Import>https://github.com/schlangster/skyui/tree/master/dist/Data/Scripts/Source</Import>
-    <Import>@SKSEDir</Import>
-    <Import>@ScriptsDir</Import>
+    <Import>https://github.com/MrOctopus/nl_online/tree/main/skse64/source</Import>
   </Imports>
   <Scripts>
     <Script>nl_util.psc</Script>

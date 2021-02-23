@@ -22,23 +22,12 @@ An object-oriented module based extension of SkyUI MCM scripts.
 ## Required
 
 * [Pyro](https://github.com/fireundubh/pyro)
-* [SkyUI SDK](https://github.com/schlangster/skyui/wiki)
+* [SKSE](https://skse.silverlock.org/)
 * [JContainers](https://www.nexusmods.com/skyrimspecialedition/mods/16495)
 
 ## Instructions
 
 TODO
-
-# End User Dependencies 
-
-## Required
-
-* [SKSE](https://skse.silverlock.org/)
-* [SkyUI](https://www.nexusmods.com/skyrimspecialedition/mods/12604/?)
-
-## Optional
-
-* [JContainers](https://www.nexusmods.com/skyrimspecialedition/mods/16495)
 
 # Documentation
 
