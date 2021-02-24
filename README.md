@@ -20,8 +20,6 @@ An object-oriented module based extension of SkyUI MCM scripts.
 ## Required
 
 * [Pyro](https://github.com/fireundubh/pyro)
-* [SKSE](https://skse.silverlock.org/)
-* [JContainers](https://www.nexusmods.com/skyrimspecialedition/mods/16495)
 
 ## Instructions
 

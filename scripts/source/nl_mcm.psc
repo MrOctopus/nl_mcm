@@ -19,6 +19,16 @@ string property MCM_PATH_SETTINGS
 	endfunction
 endproperty
 
+string property COMMON_STORE
+	string function Get()
+		return _common_store
+	endfunction
+
+	function Set(string store)
+		_common_store = store
+	endfunction
+endproperty
+
 ; MISC CONSTANTS
 float property SPINLOCK_TIMER = 0.4 autoreadonly
 float property BUFFER_TIMER = 2.0 autoreadonly

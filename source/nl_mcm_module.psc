@@ -429,7 +429,7 @@ int property ERROR_LOADING_DATA = -8 autoreadonly
 int property ERROR_BUSY_WITH_DATA = -9 autoreadonly
 
 ; PROPERTIES
-nl_mcm property UNSAFE_RAW_MCM hidden
+nl_mcm property UNSAFE_RAW_MCM
 {
 	Grab the pointer to the main mcm script. \
 	Note: You can speed up your script by using this, but you better know what you are doing.
@@ -440,7 +440,7 @@ nl_mcm property UNSAFE_RAW_MCM hidden
 	endfunction
 endproperty
 
-quest property OWNING_QUEST hidden
+quest property OWNING_QUEST
 {
 	Grab the owning quest of the main mcm script. \
 	Note: This is identical to "UNSAFE_RAW_MCM as quest"
@@ -448,6 +448,22 @@ quest property OWNING_QUEST hidden
 }
 	quest function Get()
 		return MCM as quest
+	endfunction
+endproperty
+
+string property COMMON_STORE
+{
+	A string common storage usable by all mod pages. \
+	Useful to know: The string type is able to store all other types
+	@get The common storage
+	@set store - The new string to update the common store to
+}
+	string function Get()
+		return MCM.COMMON_STORE
+	endfunction
+
+	function Set(string store)
+		MCM.COMMON_STORE = store
 	endfunction
 endproperty
 

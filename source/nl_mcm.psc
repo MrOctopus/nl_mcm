@@ -25,6 +25,22 @@ string property MCM_PATH_SETTINGS
 	endfunction
 endproperty
 
+string property COMMON_STORE
+{
+	A string common storage usable by all mod pages. \
+	Useful to know: The string type is able to store all other types
+	@get The common storage
+	@set store - The new string to update the common store to
+}
+	string function Get()
+		return _common_store
+	endfunction
+
+	function Set(string store)
+		_common_store = store
+	endfunction
+endproperty
+
 ; MISC CONSTANTS
 float property SPINLOCK_TIMER = 0.4 autoreadonly
 float property BUFFER_TIMER = 2.0 autoreadonly
@@ -61,6 +77,7 @@ quest _owning_quest
 form _missing_form
 
 string _key_store = ""
+string _common_store = ""
 string _splash_path
 
 float _splash_x

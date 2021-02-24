@@ -344,15 +344,25 @@ int property ERROR_LOADING_DATA = -8 autoreadonly
 int property ERROR_BUSY_WITH_DATA = -9 autoreadonly
 
 ; PROPERTIES
-nl_mcm property UNSAFE_RAW_MCM hidden
+nl_mcm property UNSAFE_RAW_MCM
     nl_mcm function Get()
         return MCM
     endFunction
 endproperty
 
-quest property OWNING_QUEST hidden
+quest property OWNING_QUEST
 	quest function Get()
 		return MCM as quest
+	endfunction
+endproperty
+
+string property COMMON_STORE
+	string function Get()
+		return MCM.COMMON_STORE
+	endfunction
+
+	function Set(string store)
+		MCM.COMMON_STORE = store
 	endfunction
 endproperty
 
