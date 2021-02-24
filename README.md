@@ -11,7 +11,7 @@ An object-oriented module based extension of SkyUI MCM scripts.
       * [Instructions](#instructions)
    * [Documentation](#documentation)
 
-<!-- Added by: runner, at: Tue Feb 23 17:37:52 UTC 2021 -->
+<!-- Added by: runner, at: Wed Feb 24 19:26:39 UTC 2021 -->
 
 <!--te-->
 
