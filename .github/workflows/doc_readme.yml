@@ -1,4 +1,4 @@
-name: Refresh index on README.md update
+name: Readme updated
 
 on:
   push:

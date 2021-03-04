@@ -243,15 +243,15 @@ event OnKeyMapChangeST(int keycode, string conflict_control, string conflict_nam
 		if old_keycode == keycode
 			return
 		endif
-		
-		string msg = "This key is already mapped:\n\"" + conflict_control
+
+		string msg = ""
 		
 		; Mod conflict
 		if conflict_name != ""
-			msg = msg + "\"\n(" + conflict_name + ")\n\nAre you sure you want to continue?"
+			msg = "$nl_mcm_keyconflict_mod{" + conflict_name + "}"
 		; Vanilla conflict
 		else
-			msg = msg + "\"\n(Skyrim)\nAre you sure you want to continue?"
+			msg = "$nl_mcm_keyconflict_vanilla{" + conflict_control + "}"
         endIf
 		
 		if !ShowMessage(msg, true, "$Yes", "$No")
@@ -598,8 +598,9 @@ string function GetCustomControl(int a_keycode)
 	endwhile 
 
 	if nl_util.HasVal(_key_store, a_keyCode as string)
-		return "KEY CONFLICT"
+		return "!"
 	endif
+
 	return ""
 endfunction
 

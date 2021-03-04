@@ -647,6 +647,11 @@ event OnKeyMapChangeST(int keycode)
 	Guard()
 endevent
 
+;------\
+; GUARD \
+;--------------------------------------------------------
+
 function Guard()
 	Debug.MessageBox("SKI_ConfigBase: Don't recompile this script!")
 endFunction
+

@@ -11,6 +11,7 @@ endevent
 
 bool enabled
 int keyc = 0x07
+int keyb = 0x08
 
 ; - EVENTS
 event OnInit()
@@ -20,6 +21,8 @@ event OnInit()
 	if RegisterModule("General", 0) != OK
 		KeepTryingToRegister()
 	endif
+
+    UNSAFE_RAW_MCM._RegisterModule(self, "HeyHey" , 1)
 endEvent
 
 event OnPageInit()
@@ -39,6 +42,7 @@ event OnPageDraw()
 	
 	; Automatic keyconflict handling
 	raw.AddKeyMapOptionST("random_state", "Test", keyc, OPTION_FLAG_WITH_UNMAP)
+	raw.AddKeyMapOptionST("random_state2", "Test2", keyb, OPTION_FLAG_WITH_UNMAP)
 endEvent
 
 ; OPTION 1
@@ -52,6 +56,18 @@ state random_state
 	event OnKeyMapChangeST(int keycode)
 		keyc = keycode
 		SetKeyMapOptionValueST(keyc)
+	endevent
+endstate
+
+state random_state2
+	event OnDefaultST()
+		keyb = 0x08
+		SetKeyMapOptionValueST(keyb)
+	endEvent
+	
+	event OnKeyMapChangeST(int keycode)
+		keyb = keycode
+		SetKeyMapOptionValueST(keyb)
 	endevent
 endstate
 
@@ -70,10 +86,10 @@ state enable_core
 		SetToggleOptionValueST(enabled)
 		
 		; Allows refreshing pages
-		RefreshPages()
+		;RefreshPages()
 		
 		; Exit to MCM list
-		; ExitMCM()
+		ExitMCM()
 		
 		; Exit entire journal
 		; ExitMCM(true)

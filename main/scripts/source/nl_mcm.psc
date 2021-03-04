@@ -21,11 +21,12 @@ endproperty
 
 string property COMMON_STORE
 	string function Get()
-		return _common_store
+        Guard()
+		return ""
 	endfunction
 
 	function Set(string store)
-		_common_store = store
+		Guard()
 	endfunction
 endproperty
 
@@ -213,4 +214,12 @@ endFunction
 
 function RefreshPages()
 	Guard()
+endFunction
+
+;------\
+; GUARD \
+;--------------------------------------------------------
+
+function Guard()
+	Debug.MessageBox("SKI_ConfigBase: Don't recompile this script!")
 endFunction
