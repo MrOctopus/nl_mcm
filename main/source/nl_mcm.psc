@@ -502,12 +502,10 @@ int function SaveMCMToPreset(string preset_name)
 	return OK
 endFunction
 
-int function LoadMCMFromPreset(string preset_name, bool no_ext)
+int function LoadMCMFromPreset(string preset_path)
 {
-	Calls the local LoadData function on all module scripts, using the
-	JObjects loaded from the given file.
-	@param preset_name - The preset/file name to load settings from
-	@param no_ext - Does the supplied preset name contain a file extension?
+	Calls the local LoadData function on all module scripts, using the JObjects loaded from the given file.
+	@param preset_path - The path to the preset to load settings from
 	@return Error code
 }
 	if !JContainers.isInstalled()
@@ -526,11 +524,7 @@ int function LoadMCMFromPreset(string preset_name, bool no_ext)
 	
 	int jPreset
 	
-	if no_ext
-		jPreset = JValue.readFromFile(MCM_PATH_SETTINGS + preset_name)
-	else
-		jPreset = JValue.readFromFile(MCM_PATH_SETTINGS + preset_name + MCM_EXT)
-	endIf
+	jPreset = JValue.readFromFile(MCM_PATH_SETTINGS + preset_name + MCM_EXT)
 	
 	if jPreset == 0
 		_busy_jcontainer = false
@@ -684,20 +678,19 @@ function RelayPageEvent(string state_name, int event_id, float f = -1.0, string 
 	_modules[i]._OnPageEvent(state_name, event_id, f, str)
 endfunction
 
-int function GetMCMSavedPresets(string[] presets, string default_fill, bool no_ext)
+int function GetMCMSavedPresets(string[] presets, string default, string dir_path)
 {
 	Get an array containing the name of all saved presets.
 	@param presets - An empty/none list to store the results in
-	@param default_fill - A default string to fill the list with. Used
-	to create a "fake exit" button for mcm menus
-	@param no_ext - Should the resulting list of preset names have no extension?
+	@param default - A default string to fill the list with. Used to create a "fake exit" button for mcm menus
+	@param dir_path - The directory path of the presets. Defaults to current mcm menu directory 
 	@return Error code
 }
 	if !JContainers.isInstalled()
 		return ERROR
 	endif
 	
-	string[] dir_presets = JContainers.contentsOfDirectoryAtPath(MCM_PATH_SETTINGS, MCM_EXT)	
+	string[] dir_presets = JContainers.contentsOfDirectoryAtPath(MCM_PATH_SETTINGS + path, MCM_EXT)	
 	
 	if dir_presets.Length == 0
 		return ERROR_PRESET_NOT_FOUND
@@ -706,25 +699,18 @@ int function GetMCMSavedPresets(string[] presets, string default_fill, bool no_e
 	presets = Utility.CreateStringArray(dir_presets.length + 1, default_fill)
 	int i
 	
-	if no_ext
-		while i < dir_presets.length
-			presets[i + 1] = StringUtil.Substring(dir_presets[i], 0, StringUtil.Find(dir_presets[i], MCM_EXT))
-			i += 1
-		endwhile
-	else
-		while i < dir_presets.length
-			presets[i + 1] = dir_presets[i]
-			i += 1
-		endwhile
-	endif
+	while i < dir_presets.length
+		presets[i + 1] = StringUtil.Substring(dir_presets[i], 0, StringUtil.Find(dir_presets[i], MCM_EXT))
+		i += 1
+	endwhile
 	
 	return OK
 endfunction
 
-int function DeleteMCMSavedPreset(string preset_name)
+int function DeleteMCMSavedPreset(string preset_path)
 {
 	Delete a given preset from the settings folder. 
-	@param preset_name - The preset/file name to delete
+	@param preset_path - The path to the preset to delete
 	@return Error code
 }
 	if !JContainers.isInstalled()

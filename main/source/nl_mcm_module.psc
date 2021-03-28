@@ -715,12 +715,12 @@ int function SaveMCMToPreset(string preset_name)
 	return MCM.SaveMCMToPreset(preset_name)
 endfunction
 
-int function LoadMCMFromPreset(string preset_name, bool no_ext = false)
-	return MCM.LoadMCMFromPreset(preset_name, no_ext)
+int function LoadMCMFromPreset(string preset_name)
+	return MCM.LoadMCMFromPreset(preset_name)
 endfunction
 
-int function GetMCMSavedPresets(string[] none_array, string default_fill, bool no_ext = true)
-	return MCM.GetMCMSavedPresets(none_array, default_fill, no_ext)
+int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
+	return MCM.GetMCMSavedPresets(none_array, default, dir_path)
 endfunction 
 
 int function DeleteMCMSavedPreset(string preset_name)

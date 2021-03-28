@@ -9,13 +9,13 @@
   <Variables>
     <Variable Name="Namespace" Value="MCM Divided (Example)"/>
     <Variable Name="ModName" Value="@Namespace - SSE"/>
-    <Variable Name="MCMDivided" Value="..\main"/>
+    <Variable Name="MCM" Value="..\main"/>
     <Variable Name="Example" Value="."/>
     <Variable Name="Dist" Value="..\dist"/>
   </Variables>
   <Imports>
     <Import>@Example\scripts\source</Import>
-    <Import>@MCMDivided\scripts\source</Import>
+    <Import>@MCM\scripts\source</Import>
     <Import>https://github.com/schlangster/skyui/tree/master/dist/Data/Scripts/Source</Import>
     <Import>https://github.com/MrOctopus/nl_online/tree/main/skse64/source</Import>
     <Import>https://github.com/MrOctopus/nl_online/tree/main/sse/source</Import>

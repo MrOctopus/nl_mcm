@@ -547,12 +547,12 @@ int function SaveMCMToPreset(string preset_name)
 	return ERROR
 endfunction
 
-int function LoadMCMFromPreset(string preset_name, bool no_ext = false)
+int function LoadMCMFromPreset(string preset_name)
 	Guard()
 	return ERROR
 endfunction
 
-int function GetMCMSavedPresets(string[] none_array, string default_fill, bool no_ext = true)
+int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
 	Guard()
 	return ERROR
 endfunction 

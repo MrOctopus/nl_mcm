@@ -2,18 +2,18 @@
   xmlns="PapyrusProject.xsd"
   Game="SSE"
   Flags="TESV_Papyrus_Flags.flg"
-  Output="@MCMDivided\scripts"
+  Output="@MCM\scripts"
   Optimize="true" 
   Anonymize="true" 
   Zip="true">
   <Variables>
     <Variable Name="Namespace" Value="MCM Divided"/>
     <Variable Name="ModName" Value="@Namespace - SSE"/>
-    <Variable Name="MCMDivided" Value="."/>
+    <Variable Name="MCM" Value="."/>
     <Variable Name="Dist" Value="..\dist"/>
   </Variables>
   <Imports>
-    <Import>@MCMDivided\source</Import>
+    <Import>@MCM\source</Import>
     <Import>https://github.com/MrOctopus/nl_util/tree/main/dist/scripts/source</Import>
     <Import>https://github.com/MrOctopus/nl_online/tree/main/jcontainersse/source</Import>
     <Import>https://github.com/schlangster/skyui/tree/master/dist/Data/Scripts/Source</Import>
@@ -24,10 +24,10 @@
     <Script>nl_util.psc</Script>
   </Scripts>
   <Folders>
-    <Folder NoRecurse="true">@MCMDivided\source</Folder>
+    <Folder NoRecurse="true">@MCM\source</Folder>
   </Folders>
   <ZipFiles Output="@Dist">
-    <ZipFile Name="@ModName" RootDir="@MCMDivided" Compression="deflate">
+    <ZipFile Name="@ModName" RootDir="@MCM" Compression="deflate">
       <Include>*.esl</Include>
       <Include>scripts</Include>
       <Include>interface</Include>

@@ -97,7 +97,7 @@ int function SaveMCMToPreset(string preset_name)
 	return ERROR
 endFunction
 
-int function LoadMCMFromPreset(string preset_name, bool no_ext)
+int function LoadMCMFromPreset(string preset_path)
 	Guard()
 	return ERROR
 endFunction
@@ -181,12 +181,12 @@ function RelayPageEvent(string state_name, int event_id, float f = -1.0, string 
 	Guard()
 endfunction
 
-int function GetMCMSavedPresets(string[] presets, string default_fill, bool no_ext)
+int function GetMCMSavedPresets(string[] presets, string default, string dir_path)
 	Guard()
 	return ERROR
 endfunction
 
-int function DeleteMCMSavedPreset(string preset_name)
+int function DeleteMCMSavedPreset(string preset_path)
 	Guard()
 	return ERROR
 endfunction
