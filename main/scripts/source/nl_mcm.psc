@@ -92,7 +92,7 @@ int function _UnregisterModule(string page_name)
 	return ERROR
 endfunction
 
-int function SaveMCMToPreset(string preset_name)
+int function SaveMCMToPreset(string preset_path)
 	Guard()
 	return ERROR
 endFunction

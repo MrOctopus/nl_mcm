@@ -7,7 +7,7 @@
   Anonymize="true" 
   Zip="true">
   <Variables>
-    <Variable Name="Namespace" Value="MCM Divided"/>
+    <Variable Name="Namespace" Value="NL_MCM"/>
     <Variable Name="ModName" Value="@Namespace - SSE"/>
     <Variable Name="MCM" Value="."/>
     <Variable Name="Dist" Value="..\dist"/>

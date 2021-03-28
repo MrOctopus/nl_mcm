@@ -451,18 +451,18 @@ int function _UnregisterModule(string page_name)
 	return OK
 endfunction
 
-int function SaveMCMToPreset(string preset_name)
+int function SaveMCMToPreset(string preset_path)
 {
 	Calls the local SaveData function on all module scripts, storing the
 	resulting JObjects under the given file name.
-	@param preset_name - The preset/file name to store the settings under
+	@param preset_path - The path to the preset to store the settings under
 	@return Error code
 }
 	if !JContainers.isInstalled()
 		return ERROR
 	endif
 	
-	if preset_name == ""
+	if preset_path == ""
 		return ERROR_PRESET_NOT_FOUND
 	endif
 	
@@ -492,7 +492,7 @@ int function SaveMCMToPreset(string preset_name)
 	_mutex_modules = false
 	
 	if JMap.count(jPreset) > 0
-		JValue.writeTofile(jPreset, MCM_PATH_SETTINGS + preset_name + MCM_EXT)
+		JValue.writeTofile(jPreset, MCM_PATH_SETTINGS + preset_path + MCM_EXT)
 	endif
 	
 	_busy_jcontainer = false
@@ -512,7 +512,7 @@ int function LoadMCMFromPreset(string preset_path)
 		return ERROR
 	endif
 	
-	if preset_name == ""
+	if preset_path == ""
 		return ERROR_PRESET_NOT_FOUND
 	endif
 	
@@ -524,7 +524,7 @@ int function LoadMCMFromPreset(string preset_path)
 	
 	int jPreset
 	
-	jPreset = JValue.readFromFile(MCM_PATH_SETTINGS + preset_name + MCM_EXT)
+	jPreset = JValue.readFromFile(MCM_PATH_SETTINGS + preset_path + MCM_EXT)
 	
 	if jPreset == 0
 		_busy_jcontainer = false
@@ -690,13 +690,13 @@ int function GetMCMSavedPresets(string[] presets, string default, string dir_pat
 		return ERROR
 	endif
 	
-	string[] dir_presets = JContainers.contentsOfDirectoryAtPath(MCM_PATH_SETTINGS + path, MCM_EXT)	
+	string[] dir_presets = JContainers.contentsOfDirectoryAtPath(MCM_PATH_SETTINGS + dir_path, MCM_EXT)	
 	
 	if dir_presets.Length == 0
 		return ERROR_PRESET_NOT_FOUND
 	endif
 	
-	presets = Utility.CreateStringArray(dir_presets.length + 1, default_fill)
+	presets = Utility.CreateStringArray(dir_presets.length + 1, default)
 	int i
 	
 	while i < dir_presets.length
@@ -717,7 +717,7 @@ int function DeleteMCMSavedPreset(string preset_path)
 		return ERROR
 	endif
 	
-	if preset_name == ""
+	if preset_path == ""
 		return ERROR_PAGE_NOT_FOUND
 	endif
 	
@@ -726,7 +726,7 @@ int function DeleteMCMSavedPreset(string preset_path)
 	endif
 	
 	_busy_jcontainer = True
-	JContainers.removeFileAtPath(MCM_PATH_SETTINGS + preset_name + MCM_EXT)
+	JContainers.removeFileAtPath(MCM_PATH_SETTINGS + preset_path + MCM_EXT)
 	_busy_jcontainer = False
 	
 	return OK

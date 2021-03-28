@@ -297,22 +297,22 @@ auto state _inactive
 		return ERROR as bool
 	endfunction
 	
-	int function SaveMCMToPreset(string preset_name)
+	int function SaveMCMToPreset(string preset_path)
 		Trace(MSG_ERROR_INACTIVE + "SaveMCMToPreset.")
 		return ERROR
 	endfunction
 	
-	int function LoadMCMFromPreset(string preset_name, bool no_ext = false)
+	int function LoadMCMFromPreset(string preset_path)
 		Trace(MSG_ERROR_INACTIVE + "LoadMCMFromPreset.")
 		return ERROR
 	endfunction
 	
-	int function GetMCMSavedPresets(string[] none_array, string default_fill, bool no_ext = true)
+	int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
 		Trace(MSG_ERROR_INACTIVE + "GetMCMSavedPresets.")
 		return ERROR
 	endfunction 
 	
-	int function DeleteMCMSavedPreset(string preset_name)
+	int function DeleteMCMSavedPreset(string preset_path)
 		Trace(MSG_ERROR_INACTIVE + "DeleteMCMSavedPreset.")
 		return ERROR
 	endfunction
@@ -711,20 +711,20 @@ bool function ShowMessage(string a_message, bool a_withCancel = true, string a_a
 	return MCM.ShowMessage(a_message, a_withCancel, a_acceptLabel, a_cancelLabel)
 endfunction
 
-int function SaveMCMToPreset(string preset_name)
-	return MCM.SaveMCMToPreset(preset_name)
+int function SaveMCMToPreset(string preset_path)
+	return MCM.SaveMCMToPreset(preset_path)
 endfunction
 
-int function LoadMCMFromPreset(string preset_name)
-	return MCM.LoadMCMFromPreset(preset_name)
+int function LoadMCMFromPreset(string preset_path)
+	return MCM.LoadMCMFromPreset(preset_path)
 endfunction
 
 int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
 	return MCM.GetMCMSavedPresets(none_array, default, dir_path)
 endfunction 
 
-int function DeleteMCMSavedPreset(string preset_name)
-	return MCM.DeleteMCMSavedPreset(preset_name)
+int function DeleteMCMSavedPreset(string preset_path)
+	return MCM.DeleteMCMSavedPreset(preset_path)
 endfunction
 
 ;-------------\
