@@ -8,7 +8,7 @@
   Zip="true">
   <Variables>
     <Variable Name="Namespace" Value="nl_mcm"/>
-    <Variable Name="ModName" Value="@nl_mcm - sse"/>
+    <Variable Name="ModName" Value="@Namespace - sse"/>
     <Variable Name="MCM" Value="."/>
     <Variable Name="Dist" Value="..\dist"/>
   </Variables>
