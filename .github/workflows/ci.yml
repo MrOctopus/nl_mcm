@@ -35,7 +35,7 @@ jobs:
 
     - name: Get latest Pyro release
       id: pyro_asset
-      uses: MrOctopus/download-asset-action@master
+      uses: MrOctopus/download-asset-action@main
       with:
         repository: fireundubh/pyro
         excludes: draft
