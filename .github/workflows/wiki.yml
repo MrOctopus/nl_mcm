@@ -16,8 +16,7 @@ jobs:
         python-version: ['3.x']
 
     steps:
-    - name: This repo
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v2
       with:
         path: ./nl_mcm
 
@@ -41,7 +40,7 @@ jobs:
       env:
         EXCLUDED_FILES: "ski_configbase.md"
         WIKI_DIR: ./nl_mcm/wiki/
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ github.token }}
         GH_MAIL: ${{ secrets.NL_EMAIL }}
         GH_NAME: ${{ github.repository_owner }}
         WIKI_PUSH_MESSAGE: "Updated wiki"

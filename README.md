@@ -2,26 +2,7 @@
 
 An object-oriented module based extension of SkyUI MCM scripts.
 
-# Index
-<!--ts-->
-   * [nl_mcm](#nl_mcm)
-   * [Index](#index)
-   * [Build Dependencies](#build-dependencies)
-      * [Required](#required)
-      * [Instructions](#instructions)
-   * [Documentation](#documentation)
-
-<!-- Added by: runner, at: Wed Feb 24 19:26:39 UTC 2021 -->
-
-<!--te-->
-
-# Build Dependencies
-
-## Required
-
-* [Pyro](https://github.com/fireundubh/pyro)
-
-## Instructions
+## Info
 
 TODO
 

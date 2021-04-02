@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - test
+    paths:
+      - 'main/**'
+      - 'example/**'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: ['3.x']
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: ./repo
+
+    - name: Pull papyrus compiler
+      uses: actions/checkout@v2
+      with:
+        repository: MrOctopus/papyrus-compiler
+        token: ${{ secrets.PRIVATE_TOKEN }}
+        path: ./papyruscompiler
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Get latest Pyro release
+      id: pyro_asset
+      uses: MrOctopus/download-asset-action@master
+      with:
+        repository: fireundubh/pyro
+        excludes: draft
+        asset: pyro
+    
+    - name: Extract Pyro
+      run: 7z e ${Env:file_name} -opyro
+      env: 
+        file_name: ${{ steps.pyro_asset.outputs.name }}
+
+    - name: Build releases
+      run: |
+        .\pyro\pyro --compiler-path ${Env:p_compiler} --flags-path ${Env:p_flag} --access-token ${Env:pat_token} .\repo\main\sse.ppj
+        .\pyro\pyro --compiler-path ${Env:p_compiler} --flags-path ${Env:p_flag} --access-token ${Env:pat_token} .\repo\example\sse.ppj
+      env:
+        p_compiler: 'papyruscompiler\PapyrusCompiler.exe '
+        p_flag: '..\..papyruscompiler\TESV_Papyrus_Flags.flg'
+        pat_token: ${{ secrets.PRIVATE_TOKEN }}
+
+    - name: Prepare upload
+      if: success()
+      run: |
+        cd repo\dist
+        7z e *zip -o*
+
+    - name: Upload main release
+      if: success()
+      uses: actions/upload-artifact@v2
+      with:
+        name: nl_mcm
+        path: './repo/dist/nl_mcm - SSE'
+
+    - name: Upload example release
+      if: success()
+      uses: actions/upload-artifact@v2
+      with:
+        name: nl_mcm_example
+        path: './repo/dist/nl_mcm_example - SSE'
