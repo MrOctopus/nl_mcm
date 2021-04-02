@@ -277,8 +277,8 @@ endEvent
 
 int function _RegisterModule(nl_mcm_module module, string page_name, int z)		
 {
-	Internal register module function. Please opt for using the official
-	api in the nl_mcm_module script instead.
+	Internal register module function. \
+	Please opt for using the official api in the nl_mcm_module script instead.
 	@param module - Reference pointer to a module script
 	@param page_name - The page name which the module will be stored under
 	@param z - The Z-Index of the page. Pages are sorted in an ascending order
@@ -398,8 +398,8 @@ endfunction
 
 int function _UnregisterModule(string page_name)
 {
-	Internal unregister module function. Please opt for using the official
-	api in the nl_mcm_module script instead.
+	Internal unregister module function. \
+	Please opt for using the official api in the nl_mcm_module script instead.
 	@param page_name - The page name of the module we want to unregister
 	@return Error code
 }	
