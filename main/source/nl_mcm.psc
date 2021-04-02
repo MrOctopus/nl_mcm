@@ -291,7 +291,6 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 	
 	int i
 	
-	; - INIT -
 	; We buffer _modules at init to avoid multiple external resize calls
 	if !_initialized
 		; First module 
