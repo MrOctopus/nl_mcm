@@ -12,10 +12,6 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        python-version: ['3.x']
-
     steps:
     - uses: actions/checkout@v2
       with:
@@ -31,7 +27,8 @@ jobs:
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.8.6
+        architecture: x64
 
     - name: Get latest Pyro release
       id: pyro_asset
