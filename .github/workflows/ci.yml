@@ -27,10 +27,6 @@ jobs:
         repository: MrOctopus/papyrus-compiler
         token: ${{ secrets.PRIVATE_TOKEN }}
         path: ./papyruscompiler
-    
-    - name: Set up Visual Studio environment
-      if: success()
-      uses: seanmiddleditch/gha-setup-vsdevenv@master
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
@@ -50,6 +46,11 @@ jobs:
       run: 7z e ${Env:file_name} -opyro
       env: 
         file_name: ${{ steps.pyro_asset.outputs.name }}
+
+    - name: List pyro folders
+      run: |
+        ls .\pyro
+        ls .\pyro\psutil
 
     - name: Build releases
       run: |

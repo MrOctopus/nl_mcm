@@ -454,7 +454,8 @@ endproperty
 string property COMMON_STORE
 {
 	A string common storage usable by all mod pages. \
-	Useful to know: The string type is able to store all other types
+	Useful to know: The string type is able to store all other types \
+	NOT SAFE TO USE ATM
 	@get The common storage
 	@set store - The new string to update the common store to
 }
