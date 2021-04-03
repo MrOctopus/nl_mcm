@@ -443,7 +443,7 @@ endproperty
 quest property OWNING_QUEST
 {
 	Grab the owning quest of the main mcm script. \
-	Note: This is identical to "UNSAFE_RAW_MCM as quest"
+	This is identical to casting "UNSAFE_RAW_MCM as quest".
 	@get The nl_mcm quest
 }
 	quest function Get()
