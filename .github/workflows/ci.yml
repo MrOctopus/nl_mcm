@@ -27,6 +27,10 @@ jobs:
         repository: MrOctopus/papyrus-compiler
         token: ${{ secrets.PRIVATE_TOKEN }}
         path: ./papyruscompiler
+    
+    - name: Set up Visual Studio environment
+      if: success()
+      uses: seanmiddleditch/gha-setup-vsdevenv@master
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
