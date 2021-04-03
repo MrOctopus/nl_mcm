@@ -13,8 +13,6 @@ endfunction
 ;--------------------------------------------------------
 
 string property MCM_EXT = ".nlset" autoreadonly
-{Standard setting extension}
-
 string property MCM_PATH_SETTINGS
 {
 	Concats the standard file path and mod name.
