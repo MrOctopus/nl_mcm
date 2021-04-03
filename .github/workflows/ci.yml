@@ -50,8 +50,8 @@ jobs:
         .\pyro\pyro --compiler-path ${Env:p_compiler} --flags-path ${Env:p_flag} --access-token ${Env:pat_token} .\repo\main\sse.ppj
         .\pyro\pyro --compiler-path ${Env:p_compiler} --flags-path ${Env:p_flag} --access-token ${Env:pat_token} .\repo\example\sse.ppj
       env:
-        p_compiler: 'papyruscompiler\PapyrusCompiler.exe '
-        p_flag: '..\..papyruscompiler\TESV_Papyrus_Flags.flg'
+        p_compiler: 'papyruscompiler\PapyrusCompiler.exe'
+        p_flag: '..\..\papyruscompiler\TESV_Papyrus_Flags.flg'
         pat_token: ${{ secrets.PRIVATE_TOKEN }}
 
     - name: Prepare upload

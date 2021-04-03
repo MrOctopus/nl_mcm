@@ -453,8 +453,7 @@ endfunction
 
 int function SaveMCMToPreset(string preset_path)
 {
-	Calls the local SaveData function on all module scripts, storing the
-	resulting JObjects under the given file name.
+	Calls the local SaveData function on all module scripts, storing the resulting JObjects under the given file name.
 	@param preset_path - The path to the preset to store the settings under
 	@return Error code
 }
