@@ -26,7 +26,7 @@ jobs:
       with:
         repository: MrOctopus/papyrus-compiler
         token: ${{ secrets.PRIVATE_TOKEN }}
-        path: ./papyruscompiler
+        path: ./compiler
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
@@ -49,13 +49,10 @@ jobs:
 
     - name: Build releases
       run: |
-        .\pyro\pyro --game-path ${Env:p_game} --compiler-path ${Env:p_compiler} --flags-path ${Env:p_flag} --access-token ${Env:pat_token} .\repo\main\sse.ppj
-        .\pyro\pyro --game-path ${Env:p_game} --compiler-path ${Env:p_compiler} --flags-path ${Env:p_flag} --access-token ${Env:pat_token} .\repo\example\sse.ppj
+        .\pyro\pyro ${Env:ppj_args} .\repo\main\sse.ppj
+        .\pyro\pyro ${Env:ppj_args} .\repo\example\sse.ppj
       env:
-        p_game: '.' # Fake it
-        p_compiler: 'papyruscompiler\PapyrusCompiler.exe'
-        p_flag: 'papyruscompiler\TESV_Papyrus_Flags.flg'
-        pat_token: ${{ secrets.PRIVATE_TOKEN }}
+        ppj_args: --game-path '.' --compiler-path 'compiler\PapyrusCompiler.exe' --flags-path 'compiler\TESV_Papyrus_Flags.flg' --access-token ${{ secrets.PRIVATE_TOKEN }}
 
     - name: Prepare upload
       if: success()
