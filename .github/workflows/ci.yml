@@ -52,7 +52,7 @@ jobs:
         .\pyro\pyro ${Env:ppj_args} .\repo\main\sse.ppj
         .\pyro\pyro ${Env:ppj_args} .\repo\example\sse.ppj
       env:
-        ppj_args: --game-path '.' --compiler-path 'compiler\PapyrusCompiler.exe' --flags-path 'compiler\TESV_Papyrus_Flags.flg' --access-token ${{ secrets.PRIVATE_TOKEN }}
+        ppj_args: --game-path . --compiler-path compiler\PapyrusCompiler.exe --flags-path compiler\TESV_Papyrus_Flags.flg --access-token ${{ secrets.PRIVATE_TOKEN }}
 
     - name: Prepare upload
       if: success()
