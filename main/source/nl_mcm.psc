@@ -94,6 +94,8 @@ bool _mutex_page
 ; CRITICAL \ EVENTS \
 ;--------------------------------------------------------
 
+; TODO: If common store lock is added
+; we need to release the lock here if a module is unloaded
 event OnGameReload()
 	; Imagine F is a valid form and I is an invalid form
 	; --------
