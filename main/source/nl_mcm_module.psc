@@ -443,7 +443,7 @@ endproperty
 quest property OWNING_QUEST
 {
 	Grab the owning quest of the main mcm script. \
-	Note: This is identical to "UNSAFE_RAW_MCM as quest"
+	This is identical to casting "UNSAFE_RAW_MCM as quest".
 	@get The nl_mcm quest
 }
 	quest function Get()
@@ -454,7 +454,8 @@ endproperty
 string property COMMON_STORE
 {
 	A string common storage usable by all mod pages. \
-	Useful to know: The string type is able to store all other types
+	Useful to know: The string type is able to store all other types \
+	NOT SAFE TO USE ATM
 	@get The common storage
 	@set store - The new string to update the common store to
 }

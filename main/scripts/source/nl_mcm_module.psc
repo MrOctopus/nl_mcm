@@ -271,7 +271,7 @@ auto state _inactive
 		return ERROR
 	endfunction
 	
-	int function GetMCMSavedPresets(string[] none_array, string default, string dir_path)
+	int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
 		Guard()
 		return ERROR
 	endfunction 

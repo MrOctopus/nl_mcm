@@ -13,8 +13,6 @@ endfunction
 ;--------------------------------------------------------
 
 string property MCM_EXT = ".nlset" autoreadonly
-{Standard setting extension}
-
 string property MCM_PATH_SETTINGS
 {
 	Concats the standard file path and mod name.
@@ -28,7 +26,8 @@ endproperty
 string property COMMON_STORE
 {
 	A string common storage usable by all mod pages. \
-	Useful to know: The string type is able to store all other types
+	Useful to know: The string type is able to store all other types \
+	NOT SAFE TO USE ATM
 	@get The common storage
 	@set store - The new string to update the common store to
 }
@@ -95,6 +94,8 @@ bool _mutex_page
 ; CRITICAL \ EVENTS \
 ;--------------------------------------------------------
 
+; TODO: If common store lock is added
+; we need to release the lock here if a module is unloaded
 event OnGameReload()
 	; Imagine F is a valid form and I is an invalid form
 	; --------
@@ -277,8 +278,8 @@ endEvent
 
 int function _RegisterModule(nl_mcm_module module, string page_name, int z)		
 {
-	Internal register module function. Please opt for using the official
-	api in the nl_mcm_module script instead.
+	Internal register module function. \
+	Please opt for using the official api in the nl_mcm_module script instead.
 	@param module - Reference pointer to a module script
 	@param page_name - The page name which the module will be stored under
 	@param z - The Z-Index of the page. Pages are sorted in an ascending order
@@ -290,7 +291,6 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 	
 	int i
 	
-	; - INIT -
 	; We buffer _modules at init to avoid multiple external resize calls
 	if !_initialized
 		; First module 
@@ -398,8 +398,8 @@ endfunction
 
 int function _UnregisterModule(string page_name)
 {
-	Internal unregister module function. Please opt for using the official
-	api in the nl_mcm_module script instead.
+	Internal unregister module function. \
+	Please opt for using the official api in the nl_mcm_module script instead.
 	@param page_name - The page name of the module we want to unregister
 	@return Error code
 }	
@@ -453,8 +453,7 @@ endfunction
 
 int function SaveMCMToPreset(string preset_path)
 {
-	Calls the local SaveData function on all module scripts, storing the
-	resulting JObjects under the given file name.
+	Calls the local SaveData function on all module scripts, storing the resulting JObjects under the given file name.
 	@param preset_path - The path to the preset to store the settings under
 	@return Error code
 }
