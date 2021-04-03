@@ -49,9 +49,10 @@ jobs:
 
     - name: Build releases
       run: |
-        .\pyro\pyro --compiler-path ${Env:p_compiler} --flags-path ${Env:p_flag} --access-token ${Env:pat_token} .\repo\main\sse.ppj
-        .\pyro\pyro --compiler-path ${Env:p_compiler} --flags-path ${Env:p_flag} --access-token ${Env:pat_token} .\repo\example\sse.ppj
+        .\pyro\pyro --game-path ${Env:p_game} --compiler-path ${Env:p_compiler} --flags-path ${Env:p_flag} --access-token ${Env:pat_token} .\repo\main\sse.ppj
+        .\pyro\pyro --game-path ${Env:p_game} --compiler-path ${Env:p_compiler} --flags-path ${Env:p_flag} --access-token ${Env:pat_token} .\repo\example\sse.ppj
       env:
+        p_game: '.' # Fake it
         p_compiler: 'papyruscompiler\PapyrusCompiler.exe'
         p_flag: 'papyruscompiler\TESV_Papyrus_Flags.flg'
         pat_token: ${{ secrets.PRIVATE_TOKEN }}
@@ -60,7 +61,7 @@ jobs:
       if: success()
       run: |
         cd repo\dist
-        7z e *zip -o*
+        7z x *zip -o*
 
     - name: Upload main release
       if: success()
