@@ -4,9 +4,6 @@ Scriptname nl_mcm_module extends Quest
 	@version 1.0.0	
 }
 
-import Ui
-import Debug
-
 ;-------\----------\
 ; MODULE \ INTERNAL \ - ALSO KNOWN AS, IGNORE THIS SECTION
 ;--------------------------------------------------------
@@ -18,67 +15,16 @@ int property EVENT_OPEN = 3 autoreadonly
 int property EVENT_ACCEPT = 4 autoreadonly
 int property EVENT_CHANGE = 5 autoreadonly
 
-string property MENU_ROOT
+string property MENU_ROOT = "_root.ConfigPanelFader.configPanel" autoreadonly
+string property JOURNAL_MENU = "Journal Menu" autoreadonly
+
+string property DEBUG_MSG
 	string function Get()
-		return "_root.ConfigPanelFader.configPanel"
+		return "NL_MCM(" + _page_name + "): "
 	endfunction
 endproperty
 
-string property JOURNAL_MENU
-	string function Get()
-		return "Journal Menu"
-	endfunction
-endproperty
-
-string property MSG_ERROR
-	string function Get()
-		return "NL_MCM(" + _page_name + "): An error occured."
-	endfunction
-endproperty
-
-string property MSG_ERROR_INACTIVE
-	string function Get()
-		return "NL_MCM(" + _page_name + "): WARN, A function has been called in an invalid state"
-	endfunction
-endproperty
-
-string property MSG_ERROR_NOT_FOUND
-	string function Get()
-		return "NL_MCM(" + _page_name + "): Quest with editor id " + _quest_editorid + " could not be found."
-	endfunction
-endproperty
-
-string property MSG_ERROR_MCM_NOT_FOUND
-	string function Get()
-		return "NL_MCM(" + _page_name + "): Quest with editor id " + _quest_editorid + " has no nl_mcm attached."
-	endfunction
-endproperty
-
-string property MSG_ERROR_MAX_PAGE_REACHED
-	string function Get()
-		return "NL_MCM(" + _page_name + "): The hooked MCM has already reached the page limit."
-	endfunction
-endproperty
-
-string property MSG_ERROR_PAGE_NAME_TAKEN
-	string function Get()
-		return "NL_MCM(" + _page_name + "): The hooked MCM already has a page with the same name."
-	endfunction
-endproperty
-
-string property MSG_ERROR_NOT_INITIALIZED
-	string function Get()
-		return "NL_MCM(" + _page_name + "): The hooked MCM is not initialized."
-	endfunction
-endproperty
-
-string property MSG_ERROR_PAGE_NOT_FOUND
-	string function Get()
-		return "NL_MCM(" + _page_name + "): The hooked MCM has no matching page name."
-	endfunction
-endproperty
-
-nl_mcm MCM
+nl_mcm _MCM
 string _quest_editorid
 string _page_name
 int _z
@@ -346,23 +292,23 @@ int property ERROR_BUSY_WITH_DATA = -9 autoreadonly
 ; PROPERTIES
 nl_mcm property UNSAFE_RAW_MCM
     nl_mcm function Get()
-        return MCM
+        return _MCM
     endFunction
 endproperty
 
 quest property OWNING_QUEST
 	quest function Get()
-		return MCM as quest
+		return _MCM as quest
 	endfunction
 endproperty
 
 string property COMMON_STORE
 	string function Get()
-		return MCM.COMMON_STORE
+		return _MCM.COMMON_STORE
 	endfunction
 
 	function Set(string store)
-		MCM.COMMON_STORE = store
+		_MCM.COMMON_STORE = store
 	endfunction
 endproperty
 
