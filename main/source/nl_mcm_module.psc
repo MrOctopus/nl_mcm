@@ -413,6 +413,7 @@ function SetCommonStore(string new_value)
 {
 	Set the shared common store string. \
 	NOTE: This will always unlock the common store
+	@param new_value - The new string
 }
 	_MCM.SetCommonStore(_page_name, new_value)
 endfunction

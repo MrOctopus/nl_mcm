@@ -75,11 +75,11 @@ jobs:
       run: |
         cd repo\dist
         7z x *zip -o*
-        Get-ChildItem -Filter *. | Select-Object Name | ft -hidetableheaders >> $env:build_name
+        echo "build_name=$(Get-ChildItem -Filter *. -Name)" >> {$Env:GITHUB_ENV}
 
     - name: Upload release
       if: success()
       uses: actions/upload-artifact@v2
       with:
         name: ${{ env.build_name }}_${{ github.event.repository.pushed_at }}
-        path: ./repo/dist/*
+        path: ./repo/dist/${{ env.build_name }}
