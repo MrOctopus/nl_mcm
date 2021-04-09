@@ -22,7 +22,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        path: ./repo¨
+        path: ./repo
 
     - id: cache
       uses: actions/cache@v2
