@@ -16,13 +16,24 @@ jobs:
       matrix:
         python-version: ['3.x']
         project-path: ['main\sse', 'example\sse']
+    env:
+      python-arch: x64
 
     steps:
     - uses: actions/checkout@v2
       with:
-        path: ./repo
+        path: ./repo¨
+
+    - id: cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          compiler
+          pyro
+        key: ${{ runner.os }}-compilers
 
     - name: Pull papyrus compiler
+      if: steps.cache.outputs.cache-hit != 'true'
       uses: actions/checkout@v2
       with:
         repository: MrOctopus/papyrus-compiler
@@ -33,10 +44,11 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-        architecture: x64
+        architecture:  ${{ env.python-arch }}
 
     - name: Get latest Pyro release
       id: pyro_asset
+      if: steps.cache.outputs.cache-hit != 'true'
       uses: MrOctopus/download-asset-action@main
       with:
         repository: fireundubh/pyro
@@ -44,9 +56,10 @@ jobs:
         asset: pyro
     
     - name: Extract Pyro
-      run: 7z x ${Env:file_name} -opyro
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: 7z x ${Env:release_name} -opyro
       env: 
-        file_name: ${{ steps.pyro_asset.outputs.name }}
+        release_name: ${{ steps.pyro_asset.outputs.name }}
 
     - name: Build releases
       run: |
@@ -62,10 +75,11 @@ jobs:
       run: |
         cd repo\dist
         7z x *zip -o*
+        Get-ChildItem -Filter *. | Select-Object Name | ft -hidetableheaders >> $env:build_name
 
     - name: Upload release
       if: success()
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ matrix.project-path }}_${{ github.event.repository.pushed_at }}
+        name: ${{ env.build_name }}_${{ github.event.repository.pushed_at }}
         path: ./repo/dist/*
