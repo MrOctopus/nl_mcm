@@ -81,5 +81,5 @@ jobs:
       if: success()
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ env.build_name }}_${{ github.event.repository.pushed_at }}
+        name: ${{ env.build_name }}
         path: ./repo/dist/${{ env.build_name }}
