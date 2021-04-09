@@ -77,7 +77,7 @@ auto state _inactive
 	event OnMenuOpen(string name)
 		int return_code = RegisterModule(_page_name, _z, _quest_editorid)
 		
-		if return_code == OK || return_code == ERROR_MCM_NOT_FOUND
+		if return_code == OK || return_code == ERROR_MCM_NONE
 			StopTryingToRegister()
 		endif
 	endevent	
@@ -300,7 +300,7 @@ auto state _inactive
 			
 			if !mcm_quest
 				Notification(DEBUG_MSG + "Quest with editor id " + _quest_editorid + " could not be found.")
-				return ERROR_NOT_FOUND
+				return ERROR_MCM_NONEQUEST
 			endif
 		
 			_MCM = mcm_quest as nl_mcm
@@ -308,7 +308,7 @@ auto state _inactive
 		
 		if !_MCM
 			Notification(DEBUG_MSG + "Quest with editor id " + _quest_editorid + " has no nl_mcm attached.")
-			return ERROR_MCM_NOT_FOUND
+			return ERROR_MCM_NONE
 		endif
 		
 		int error_code = _MCM._RegisterModule(self, page_name, z)
@@ -317,9 +317,9 @@ auto state _inactive
 			_current_version = GetVersion()
 			OnPageInit()
 			GoToState("")
-		elseif error_code == ERROR_MAX_PAGE_REACHED
+		elseif error_code == ERROR_MODULE_FULL
 			Notification(DEBUG_MSG + "The hooked MCM has already reached the page limit.")
-		elseif error_code == ERROR_PAGE_NAME_TAKEN
+		elseif error_code == ERROR_MODULE_TAKEN
 			Notification(DEBUG_MSG + "The hooked MCM already has a page with the same name.")
 		endif
 		
@@ -351,9 +351,9 @@ int function UnregisterModule()
 		_quest_editorid = ""
 		_page_name = ""
 		_z = 0
-	elseif error_code == ERROR_NOT_INITIALIZED
+	elseif error_code == ERROR_MODULE_INIT
 		Notification(DEBUG_MSG + "The hooked MCM is not initialized.")
-	elseif error_code == ERROR_PAGE_NOT_FOUND
+	elseif error_code == ERROR_MODULE_NONE
 		Notification(DEBUG_MSG + "The hooked MCM has no matching page name.")
 	endif
 	
@@ -364,18 +364,22 @@ endfunction
 ; MCM API \ NEW \
 ;--------------------------------------------------------
 
-; MODULE CODES
+; ERROR CODES
 int property OK = 1 autoreadonly
 int property ERROR = 0 autoreadonly
-int property ERROR_NOT_FOUND = -1 autoreadonly
-int property ERROR_MCM_NOT_FOUND = -2 autoreadonly
-int property ERROR_MAX_PAGE_REACHED = -3 autoreadonly
-int property ERROR_PAGE_NAME_TAKEN = -4 autoreadonly
-int property ERROR_NOT_INITIALIZED = -5 autoreadonly
-int property ERROR_PAGE_NOT_FOUND = -6 autoreadonly
-int property ERROR_PRESET_NOT_FOUND = -7 autoreadonly
-int property ERROR_LOADING_DATA = -8 autoreadonly
-int property ERROR_BUSY_WITH_DATA = -9 autoreadonly
+
+int property ERROR_MODULE_FULL = -1 autoreadonly
+int property ERROR_MODULE_TAKEN = -2 autoreadonly
+int property ERROR_MODULE_INIT = -3 autoreadonly
+int property ERROR_MODULE_NONE = -4 autoreadonly
+
+int property ERROR_MCM_NONEQUEST = -10 autoreadonly
+int property ERROR_MCM_NONE = -10 autoreadonly
+
+int property ERROR_PRESET_NONE = -100 autoreadonly
+int property ERROR_PRESET_LOADING = -200 autoreadonly
+int property ERROR_PRESET_BUSY = -300 autoreadonly
+
 
 ; PROPERTIES
 nl_mcm property UNSAFE_RAW_MCM

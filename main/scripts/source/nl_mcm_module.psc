@@ -276,18 +276,21 @@ endfunction
 ; MCM API \ NEW \
 ;--------------------------------------------------------
 
-; MODULE CODES
+; ERROR CODES
 int property OK = 1 autoreadonly
 int property ERROR = 0 autoreadonly
-int property ERROR_NOT_FOUND = -1 autoreadonly
-int property ERROR_MCM_NOT_FOUND = -2 autoreadonly
-int property ERROR_MAX_PAGE_REACHED = -3 autoreadonly
-int property ERROR_PAGE_NAME_TAKEN = -4 autoreadonly
-int property ERROR_NOT_INITIALIZED = -5 autoreadonly
-int property ERROR_PAGE_NOT_FOUND = -6 autoreadonly
-int property ERROR_PRESET_NOT_FOUND = -7 autoreadonly
-int property ERROR_LOADING_DATA = -8 autoreadonly
-int property ERROR_BUSY_WITH_DATA = -9 autoreadonly
+
+int property ERROR_MODULE_FULL = -1 autoreadonly
+int property ERROR_MODULE_TAKEN = -2 autoreadonly
+int property ERROR_MODULE_INIT = -3 autoreadonly
+int property ERROR_MODULE_NONE = -4 autoreadonly
+
+int property ERROR_MCM_NONEQUEST = -10 autoreadonly
+int property ERROR_MCM_NONE = -10 autoreadonly
+
+int property ERROR_PRESET_NONE = -100 autoreadonly
+int property ERROR_PRESET_LOADING = -200 autoreadonly
+int property ERROR_PRESET_BUSY = -300 autoreadonly
 
 ; PROPERTIES
 nl_mcm property UNSAFE_RAW_MCM

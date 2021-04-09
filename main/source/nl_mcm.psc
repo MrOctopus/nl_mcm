@@ -32,13 +32,15 @@ int property LINE_LENGTH = 47 autoreadonly
 ; ERROR CODES
 int property OK = 1 autoreadonly
 int property ERROR = 0 autoreadonly
-int property ERROR_MAX_PAGE_REACHED = -3 autoreadonly
-int property ERROR_PAGE_NAME_TAKEN = -4 autoreadonly
-int property ERROR_NOT_INITIALIZED = -5 autoreadonly
-int property ERROR_PAGE_NOT_FOUND = -6 autoreadonly
-int property ERROR_PRESET_NOT_FOUND = -7 autoreadonly
-int property ERROR_LOADING_DATA = -8 autoreadonly
-int property ERROR_BUSY_WITH_DATA = -9 autoreadonly
+
+int property ERROR_MODULE_FULL = -1 autoreadonly
+int property ERROR_MODULE_TAKEN = -2 autoreadonly
+int property ERROR_MODULE_INIT = -3 autoreadonly
+int property ERROR_MODULE_NONE = -4 autoreadonly
+
+int property ERROR_PRESET_NONE = -100 autoreadonly
+int property ERROR_PRESET_LOADING = -200 autoreadonly
+int property ERROR_PRESET_BUSY = -300 autoreadonly
 
 ; EVENT CODES
 int property EVENT_DEFAULT = 0 autoreadonly
@@ -295,11 +297,11 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 			
 		; Maximum _modules exceeded
 		elseif _buffered == 128
-			return ERROR_MAX_PAGE_REACHED
+			return ERROR_MODULE_FULL
 			
 		; Page name must be unique
 		elseif Pages.Find(page_name) != -1
-			return ERROR_PAGE_NAME_TAKEN
+			return ERROR_MODULE_TAKEN
 			
 		endif
 	
@@ -334,24 +336,14 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 	
 	; - REGULAR -
 	; No need to buffer, as overlapping registers are unlikey to occur	
-	else
-		; First module
-		if !Pages
-			Pages = new string[1]
-			_pages_z = new int[1]
-			
-			Pages[0] = page_name
-			_pages_z[0] = z
-			_modules[0] = module
-			return OK
-			
+	elseif Pages			
 		; Maximum _modules exceeded
-		elseif Pages.Length == 128
-			return ERROR_MAX_PAGE_REACHED
+		if Pages.Length == 128
+			return ERROR_MODULE_FULL
 			
 		; Page name must be unique
 		elseif Pages.Find(page_name) != -1
-			return ERROR_PAGE_NAME_TAKEN
+			return ERROR_MODULE_TAKEN
 			
 		endif
 
@@ -384,6 +376,14 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 			Pages[i] = page_name
 			_pages_z[i] = z
 		endif
+	; First module
+	else
+		Pages = new string[1]
+		_pages_z = new int[1]
+		
+		Pages[0] = page_name
+		_pages_z[0] = z
+		i = 0
 	endif
 
 	_modules[i] = module
@@ -402,13 +402,13 @@ int function _UnregisterModule(string page_name)
 	endwhile
 	
 	if !_initialized
-		return ERROR_NOT_INITIALIZED
+		return ERROR_MODULE_INIT
 	endif
 	
 	int i = Pages.Find(page_name)
 	
 	if i == -1
-		return ERROR_PAGE_NOT_FOUND
+		return ERROR_MODULE_NONE
 	endif
 	
 	int j = Pages.Length - 1
@@ -445,6 +445,8 @@ int function _UnregisterModule(string page_name)
 	return OK
 endfunction
 
+
+
 int function SaveMCMToPreset(string preset_path)
 {
 	Calls the local SaveData function on all module scripts, storing the resulting JObjects under the given file name.
@@ -456,11 +458,11 @@ int function SaveMCMToPreset(string preset_path)
 	endif
 	
 	if preset_path == ""
-		return ERROR_PRESET_NOT_FOUND
+		return ERROR_PRESET_NONE
 	endif
 	
 	if _busy_jcontainer
-		return ERROR_BUSY_WITH_DATA
+		return ERROR_PRESET_BUSY
 	endif
 	
 	_busy_jcontainer = true
@@ -506,11 +508,11 @@ int function LoadMCMFromPreset(string preset_path)
 	endif
 	
 	if preset_path == ""
-		return ERROR_PRESET_NOT_FOUND
+		return ERROR_PRESET_NONE
 	endif
 	
 	if _busy_jcontainer
-		return ERROR_BUSY_WITH_DATA
+		return ERROR_PRESET_BUSY
 	endif
 
 	_busy_jcontainer = True
@@ -521,7 +523,7 @@ int function LoadMCMFromPreset(string preset_path)
 	
 	if jPreset == 0
 		_busy_jcontainer = false
-		return ERROR_LOADING_DATA
+		return ERROR_PRESET_LOADING
 	endif
 	
 	_mutex_modules = true
@@ -707,7 +709,7 @@ int function GetMCMSavedPresets(string[] presets, string default, string dir_pat
 	string[] dir_presets = JContainers.contentsOfDirectoryAtPath(MCM_PATH_SETTINGS + dir_path, MCM_EXT)	
 	
 	if dir_presets.Length == 0
-		return ERROR_PRESET_NOT_FOUND
+		return ERROR_PRESET_NONE
 	endif
 	
 	presets = Utility.CreateStringArray(dir_presets.length + 1, default)
@@ -732,11 +734,11 @@ int function DeleteMCMSavedPreset(string preset_path)
 	endif
 	
 	if preset_path == ""
-		return ERROR_PAGE_NOT_FOUND
+		return ERROR_MODULE_NONE
 	endif
 	
 	if _busy_jcontainer
-		return ERROR_BUSY_WITH_DATA
+		return ERROR_PRESET_BUSY
 	endif
 	
 	_busy_jcontainer = True
