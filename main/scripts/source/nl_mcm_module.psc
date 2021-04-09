@@ -302,15 +302,14 @@ quest property OWNING_QUEST
 	endfunction
 endproperty
 
-string property COMMON_STORE
-	string function Get()
-		return _MCM.COMMON_STORE
-	endfunction
+string function GetCommonStore(bool lock)
+	Guard()
+	return ERROR as string
+endfunction
 
-	function Set(string store)
-		_MCM.COMMON_STORE = store
-	endfunction
-endproperty
+function SetCommonStore(string new_value)
+	Guard()
+endfunction
 
 function AddParagraph(string text, string begin_format = "", string end_format = "", int flags = 0x01)
 	Guard()

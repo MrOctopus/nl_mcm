@@ -400,22 +400,22 @@ quest property OWNING_QUEST
 	endfunction
 endproperty
 
-string property COMMON_STORE
 {
-	A string common storage usable by all mod pages. \
-	Useful to know: The string type is able to store all other types \
-	NOT SAFE TO USE ATM
-	@get The common storage
-	@set store - The new string to update the common store to
+	Get the shared common store string. \
+	NOTE: Always lock the storage if you are planning on using SetCommonStore afterwards.
+	@param lock - If the shared common store should lock changes from other pages
 }
-	string function Get()
-		return _MCM.COMMON_STORE
-	endfunction
+string function GetCommonStore(bool lock)
+	return _MCM.GetCommonStore(_page_name, lock)
+endfunction
 
-	function Set(string store)
-		_MCM.COMMON_STORE = store
-	endfunction
-endproperty
+{
+	Set the shared common store string. \
+	NOTE: This will always unlock the common store
+}
+function SetCommonStore(string new_value)
+	_MCM.SetCommonStore(_page_name, new_value)
+endfunction
 
 function AddParagraph(string text, string begin_format = "", string end_format = "", int flags = 0x01)
 {

@@ -19,17 +19,6 @@ string property MCM_PATH_SETTINGS
 	endfunction
 endproperty
 
-string property COMMON_STORE
-	string function Get()
-        Guard()
-		return ""
-	endfunction
-
-	function Set(string store)
-		Guard()
-	endfunction
-endproperty
-
 ; MISC CONSTANTS
 float property SPINLOCK_TIMER = 0.4 autoreadonly
 float property BUFFER_TIMER = 2.0 autoreadonly
@@ -101,6 +90,15 @@ int function LoadMCMFromPreset(string preset_path)
 	Guard()
 	return ERROR
 endFunction
+
+string function GetCommonStore(string page_name, bool lock)
+	Guard()
+	return ERROR as string
+endfunction
+
+function SetCommonStore(string page_name, string new_value)
+	Guard()
+endfunction
 
 function AddKeyMapOptionST(String a_stateName, String a_text, Int a_keycode, Int a_flags = 0)
 	Guard()

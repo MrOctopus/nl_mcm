@@ -23,23 +23,6 @@ string property MCM_PATH_SETTINGS
 	endfunction
 endproperty
 
-string property COMMON_STORE
-{
-	A string common storage usable by all mod pages. \
-	Useful to know: The string type is able to store all other types \
-	NOT SAFE TO USE ATM
-	@get The common storage
-	@set store - The new string to update the common store to
-}
-	string function Get()
-		return _common_store
-	endfunction
-
-	function Set(string store)
-		_common_store = store
-	endfunction
-endproperty
-
 ; MISC CONSTANTS
 float property SPINLOCK_TIMER = 0.4 autoreadonly
 float property BUFFER_TIMER = 2.0 autoreadonly
@@ -77,6 +60,7 @@ form _missing_form
 
 string _key_store = ""
 string _common_store = ""
+string _common_store_owner = ""
 string _splash_path
 
 float _splash_x
@@ -143,6 +127,11 @@ event OnGameReload()
 		endwhile
 		
 		_mutex_store = True
+
+		if _common_store_owner == Pages[i]
+			_common_store_owner = ""
+		endif
+
 		_key_store = nl_util.DelGroup(_key_store, Pages[i])
 		
 		; Compact array
@@ -155,6 +144,11 @@ event OnGameReload()
 				i += 1
 			else
 				active_modules -= 1
+
+				if _common_store_owner == Pages[j]
+					_common_store_owner = ""
+				endif
+
 				_key_store = nl_util.DelGroup(_key_store, Pages[j])
 			endif
 			
@@ -499,7 +493,7 @@ int function SaveMCMToPreset(string preset_path)
 	JValue.zeroLifetime(jPreset)
 	
 	return OK
-endFunction
+endfunction
 
 int function LoadMCMFromPreset(string preset_path)
 {
@@ -547,7 +541,28 @@ int function LoadMCMFromPreset(string preset_path)
 	JValue.zeroLifetime(jPreset)
 	
 	return OK
-endFunction
+endfunction
+
+string function GetCommonStore(string page_name, bool lock)
+	if _common_store_owner != ""
+		Utility.WaitMenuMode(SPINLOCK_TIMER)
+	endif
+
+	if lock
+		_common_store_owner = page_name
+	endif
+
+	return _common_store
+endfunction
+
+function SetCommonStore(string page_name, string new_value)
+	if _common_store_owner != "" && _common_store_owner != page_name
+		Utility.WaitMenuMode(SPINLOCK_TIMER)
+	endif
+
+	_common_store_owner = ""
+	_common_store = new_value
+endfunction
 
 function AddKeyMapOptionST(String a_stateName, String a_text, Int a_keycode, Int a_flags = 0)
 	if a_keyCode != -1
@@ -605,7 +620,7 @@ function SetPage(String a_page, Int a_index)
 	_mutex_page = True
 	parent.SetPage(a_page, a_index)
 	_mutex_page = False
-endFunction
+endfunction
 
 ;-------------\--------\
 ; NON-CRITICAL \ EVENTS \

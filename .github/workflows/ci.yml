@@ -15,6 +15,7 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.x']
+        project-path: ['main\sse', 'example\sse']
 
     steps:
     - uses: actions/checkout@v2
@@ -49,12 +50,12 @@ jobs:
 
     - name: Build releases
       run: |
-        .\pyro\pyro --game-path . --compiler-path ${Env:ppj_c} --flags-path ${Env:ppj_f} --access-token ${Env:git_t} .\repo\main\sse.ppj
-        .\pyro\pyro --game-path . --compiler-path ${Env:ppj_c} --flags-path ${Env:ppj_f} --access-token ${Env:git_t} .\repo\example\sse.ppj
-      env:
+        .\pyro\pyro --compiler-path ${Env:ppj_c} --flags-path ${Env:ppj_f} --access-token ${Env:ppj_t} .\repo\${Env:ppj_p}.ppj
+      env: 
         ppj_c: compiler\PapyrusCompiler.exe
         ppj_f: compiler\TESV_Papyrus_Flags.flg
-        git_t: ${{ secrets.PRIVATE_TOKEN }}
+        ppj_t: ${{ secrets.PRIVATE_TOKEN }}
+        ppj_p: ${{ matrix.project-path }}
 
     - name: Prepare upload
       if: success()
@@ -62,16 +63,9 @@ jobs:
         cd repo\dist
         7z x *zip -o*
 
-    - name: Upload main release
+    - name: Upload release
       if: success()
       uses: actions/upload-artifact@v2
       with:
-        name: nl_mcm_${{ github.event.repository.pushed_at }}
-        path: './repo/dist/nl_mcm - SSE'
-
-    - name: Upload example release
-      if: success()
-      uses: actions/upload-artifact@v2
-      with:
-        name: nl_mcm_example_${{ github.event.repository.pushed_at }}
-        path: './repo/dist/nl_mcm_example - SSE'
+        name: ${{ matrix.project-path }}_${{ github.event.repository.pushed_at }}
+        path: ./repo/dist/*
