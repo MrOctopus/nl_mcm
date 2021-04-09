@@ -400,20 +400,20 @@ quest property OWNING_QUEST
 	endfunction
 endproperty
 
+string function GetCommonStore(bool lock)
 {
 	Get the shared common store string. \
 	NOTE: Always lock the storage if you are planning on using SetCommonStore afterwards.
 	@param lock - If the shared common store should lock changes from other pages
 }
-string function GetCommonStore(bool lock)
 	return _MCM.GetCommonStore(_page_name, lock)
 endfunction
 
+function SetCommonStore(string new_value)
 {
 	Set the shared common store string. \
 	NOTE: This will always unlock the common store
 }
-function SetCommonStore(string new_value)
 	_MCM.SetCommonStore(_page_name, new_value)
 endfunction
 
