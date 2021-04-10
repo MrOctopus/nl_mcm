@@ -20,12 +20,11 @@ An object-oriented module based extension of SkyUI MCM scripts.
 	- Requires JContainers
 
 ## Releases
-Latest release from main branch:
-![](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml/badge.svg)
+Latest release from main branch: \
+[![](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml/badge.svg)](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml)
 
-Latest release on the nexus:
+Latest release on the Nexus: \
 [Nexus]()
 
-# Documentation
-
+## Documentation
 Check out the [github wiki pages](https://github.com/MrOctopus/nl_mcm/wiki) for more details on how to use nl_mcm.
