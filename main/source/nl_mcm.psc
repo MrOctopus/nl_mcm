@@ -80,8 +80,6 @@ bool _mutex_page
 ; CRITICAL \ EVENTS \
 ;--------------------------------------------------------
 
-; TODO: If common store lock is added
-; we need to release the lock here if a module is unloaded
 event OnGameReload()
 	; Imagine F is a valid form and I is an invalid form
 	; --------
@@ -445,14 +443,7 @@ int function _UnregisterModule(string page_name)
 	return OK
 endfunction
 
-
-
 int function SaveMCMToPreset(string preset_path)
-{
-	Calls the local SaveData function on all module scripts, storing the resulting JObjects under the given file name.
-	@param preset_path - The path to the preset to store the settings under
-	@return Error code
-}
 	if !JContainers.isInstalled()
 		return ERROR
 	endif
@@ -498,11 +489,6 @@ int function SaveMCMToPreset(string preset_path)
 endfunction
 
 int function LoadMCMFromPreset(string preset_path)
-{
-	Calls the local LoadData function on all module scripts, using the JObjects loaded from the given file.
-	@param preset_path - The path to the preset to load settings from
-	@return Error code
-}
 	if !JContainers.isInstalled()
 		return ERROR
 	endif
@@ -695,13 +681,6 @@ function RelayPageEvent(string state_name, int event_id, float f = -1.0, string 
 endfunction
 
 int function GetMCMSavedPresets(string[] presets, string default, string dir_path)
-{
-	Get an array containing the name of all saved presets.
-	@param presets - An empty/none list to store the results in
-	@param default - A default string to fill the list with. Used to create a "fake exit" button for mcm menus
-	@param dir_path - The directory path of the presets. Defaults to current mcm menu directory 
-	@return Error code
-}
 	if !JContainers.isInstalled()
 		return ERROR
 	endif
@@ -724,11 +703,6 @@ int function GetMCMSavedPresets(string[] presets, string default, string dir_pat
 endfunction
 
 int function DeleteMCMSavedPreset(string preset_path)
-{
-	Delete a given preset from the settings folder. 
-	@param preset_path - The path to the preset to delete
-	@return Error code
-}
 	if !JContainers.isInstalled()
 		return ERROR
 	endif
@@ -749,16 +723,6 @@ int function DeleteMCMSavedPreset(string preset_path)
 endfunction
 
 function AddParagraph(string text, string begin_format = "", string end_format = "", int flags = 0x01)
-{
-	A convenience function to add a paragraph of text to the mcm page. \
-	Text splitting occurs when the [max line length](#LINE_LENGTH) is reached, or when a newline character (\n) is encountered.
-	@param text - The text to add as a paragraph to the page
-	@param begin_format - The format string to append at the start of each paragraph line. \
-	Can be used to for example add html coloring to the paragraph text
-	@param end_format - The format string to append at the end of each paragraph line. \
-	Can be used to for example add html coloring to the paragraph text
-	@param flags - The default flag of the added text options 
-}
 	int i = 0
 	int j = StringUtil.GetLength(text)
 	
@@ -803,11 +767,6 @@ function AddParagraph(string text, string begin_format = "", string end_format =
 endfunction
 
 int function SetModName(string name)
-{
-	Set the mod page name. Can only be used before the MCM has been initialized.
-	@param name - The mod's name
-	@return Error Code
-}
 	if _initialized
 		return ERROR
 	endif
@@ -818,26 +777,12 @@ int function SetModName(string name)
 endfunction
 
 function SetSplashScreen(string path, float x, float y)
-{
-	Set a splash screen to use for the "" page of the mcm menu.
-	@param path - File path of the splash screen
-	@param x - The x position of the splash screen
-	@param y - The y position of the splash screen
-}
 	_splash_path = path
 	_splash_x = x
 	_splash_y = y
 endfunction
 
 function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)
-{
-	A convenience function to set all of the slider data using only 1 function.
-	@param value - The value the slider is set at
-	@param range_start - The start value of the slider
-	@param range_end - The end value of the slider
-	@param interval - The interval at which increments/decrements are done to the value
-	@param default - The default value of the slider
-}
 	SetSliderDialogRange(range_start, range_end)
     SetSliderDialogStartValue(value)
     SetSliderDialogInterval(interval)
@@ -845,24 +790,12 @@ function SetSliderDialog(float value, float range_start, float range_end, float 
 endFunction 
 
 function SetMenuDialog(string[] options, int start_i, int default_i)
-{
-	A convenience function to set all of the menu data using only 1 function.
-	@param options - The array containig the options for the menu
-	@param start_i - The start selection/index of the menu
-	@param default_i - The default selection/index for the menu
-}
     SetMenuDialogOptions(options)
 	SetMenuDialogStartIndex(start_i)
     SetMenuDialogDefaultIndex(default_i)
 endFunction
 
 function RefreshPages()
-{
-	Refreshes the mod's mcm pages. \
-	Useful for situations where new pages/modules have been registered whilst the player is still in the mod's mcm menu. \
-	Thus requiring the page list to be reset. \
-	Use it when you need to refresh the mcm flash page list
-}
 	SetPage("", -1)
 	Ui.InvokeStringA(JOURNAL_MENU, MENU_ROOT + ".setPageNames", Pages)
 endFunction

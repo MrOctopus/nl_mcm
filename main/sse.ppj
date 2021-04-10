@@ -4,11 +4,12 @@
   Flags="TESV_Papyrus_Flags.flg"
   Output="@MCM\scripts"
   Optimize="true" 
-  Anonymize="true" 
+  Anonymize="true"
+  Package="true"
   Zip="true">
   <Variables>
     <Variable Name="Namespace" Value="nl_mcm"/>
-    <Variable Name="ModName" Value="@Namespace - sse"/>
+    <Variable Name="ModName" Value="@Namespace - SSE"/>
     <Variable Name="MCM" Value="."/>
     <Variable Name="Dist" Value="..\dist"/>
   </Variables>
@@ -26,11 +27,16 @@
   <Folders>
     <Folder NoRecurse="true">@MCM\source</Folder>
   </Folders>
-  <ZipFiles Output="@Dist">
-    <ZipFile Name="@ModName" RootDir="@MCM" Compression="deflate">
-      <Include>*.esl</Include>
+  <Packages Output="@MCM">
+    <Package Name="@Namespace" RootDir="@MCM">
       <Include>scripts</Include>
       <Include>interface</Include>
+    </Package>
+  </Packages>
+  <ZipFiles Output="@Dist">
+    <ZipFile Name="@ModName - English" RootDir="@MCM" Compression="deflate">
+      <Include>*.bsa</Include>
+      <Include>*.esl</Include>
     </ZipFile>
   </ZipFiles>
 </PapyrusProject>

@@ -409,6 +409,7 @@ string function GetCommonStore(bool lock)
 	Get the shared common store string. \
 	NOTE: Always lock the storage if you are planning on using SetCommonStore afterwards.
 	@param lock - If the shared common store should lock changes from other pages
+	@return The common store string
 }
 	return _MCM.GetCommonStore(_page_name, lock)
 endfunction
@@ -425,7 +426,7 @@ endfunction
 function AddParagraph(string text, string begin_format = "", string end_format = "", int flags = 0x01)
 {
 	A convenience function to add a paragraph of text to the mcm page. \
-	Text splitting occurs when the [max line length](#LINE_LENGTH) is reached,or when a newline character (\n) is encountered.
+	Text splitting occurs when the max line length is reached,or when a newline character (\n) is encountered.
 	@param text - The text to add as a paragraph to the page
 	@param begin_format - The format string to append at the start of each paragraph line. \
 	Can be used to for example add html coloring to the paragraph text
@@ -480,14 +481,17 @@ endFunction
 function RefreshPages()
 {
 	Refreshes the mod's mcm pages. \
-	Useful for situations where new pages/modules have been registered whilst the player is still in the mod's mcm menu. \
-	Thus requiring the page list to be reset. \
-	Use it when you need to refresh the mcm flash page list
+	Useful for situations where new pages/modules have been registered whilst the player is still in the mod's mcm menu, \
+	which will require the page list to be refreshed.
 }
 	_MCM.RefreshPages()
 endfunction
 
 function ExitMCM(bool fully = false)
+{
+	Exits the current MCM.
+	@param fully - If set to true, it will exit the quest journal too
+}
 	if GetString(JOURNAL_MENU, MENU_ROOT + ".titlebar.textField.text") != _page_name
 		return
 	endif
@@ -499,6 +503,44 @@ function ExitMCM(bool fully = false)
 		Invoke(JOURNAL_MENU, "_root.QuestJournalFader.Menu_mc.ConfigPanelClose")
 		InvokeBool(JOURNAL_MENU, "_root.QuestJournalFader.Menu_mc.CloseMenu", true)
 	endif
+endfunction
+
+int function SaveMCMToPreset(string preset_path)
+{
+	Calls the local SaveData function on all module scripts, storing the resulting JObjects under the given file name.
+	@param preset_path - The path to the preset to store the settings under
+	@return Error code
+}
+	return _MCM.SaveMCMToPreset(preset_path)
+endfunction
+	
+int function LoadMCMFromPreset(string preset_path)
+{
+	Calls the local LoadData function on all module scripts, using the JObjects loaded from the given file.
+	@param preset_path - The path to the preset to load settings from
+	@return Error code
+}
+	return _MCM.LoadMCMFromPreset(preset_path)
+endfunction
+	
+int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
+{
+	Get an array containing the name of all saved presets.
+	@param presets - An empty/none list to store the results in
+	@param default - A default string to fill the list with. Used to create a "fake exit" button for mcm menus
+	@param dir_path - The directory path of the presets. Defaults to current mcm menu directory 
+	@return Error code
+}
+	return _MCM.GetMCMSavedPresets(none_array, default, dir_path)
+endfunction 
+	
+int function DeleteMCMSavedPreset(string preset_path)
+{
+	Delete a given preset from the settings folder. 
+	@param preset_path - The path to the preset to delete
+	@return Error code
+}
+	return _MCM.DeleteMCMSavedPreset(preset_path)
 endfunction
 
 ;--------\----------\
@@ -664,22 +706,6 @@ endfunction
 
 bool function ShowMessage(string a_message, bool a_withCancel = true, string a_acceptLabel = "$Accept", string a_cancelLabel = "$Cancel")
 	return _MCM.ShowMessage(a_message, a_withCancel, a_acceptLabel, a_cancelLabel)
-endfunction
-
-int function SaveMCMToPreset(string preset_path)
-	return _MCM.SaveMCMToPreset(preset_path)
-endfunction
-
-int function LoadMCMFromPreset(string preset_path)
-	return _MCM.LoadMCMFromPreset(preset_path)
-endfunction
-
-int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
-	return _MCM.GetMCMSavedPresets(none_array, default, dir_path)
-endfunction 
-
-int function DeleteMCMSavedPreset(string preset_path)
-	return _MCM.DeleteMCMSavedPreset(preset_path)
 endfunction
 
 ;-------------\

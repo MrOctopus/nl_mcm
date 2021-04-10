@@ -343,6 +343,26 @@ function ExitMCM(bool fully = false)
 	Guard()
 endfunction
 
+int function SaveMCMToPreset(string preset_path)
+	Guard()
+	return ERROR
+endfunction
+
+int function LoadMCMFromPreset(string preset_path)
+	Guard()
+	return ERROR
+endfunction
+
+int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
+	Guard()
+	return ERROR
+endfunction 
+
+int function DeleteMCMSavedPreset(string preset_path)
+	Guard()
+	return ERROR
+endfunction
+
 ;--------\----------\
 ; MCM API \ ORIGINAL \
 ;--------------------------------------------------------
@@ -486,26 +506,6 @@ function UnloadCustomContent()
 endfunction
 
 bool function ShowMessage(string a_message, bool a_withCancel = true, string a_acceptLabel = "$Accept", string a_cancelLabel = "$Cancel")
-	Guard()
-	return ERROR
-endfunction
-
-int function SaveMCMToPreset(string preset_path)
-	Guard()
-	return ERROR
-endfunction
-
-int function LoadMCMFromPreset(string preset_path)
-	Guard()
-	return ERROR
-endfunction
-
-int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
-	Guard()
-	return ERROR
-endfunction 
-
-int function DeleteMCMSavedPreset(string preset_path)
 	Guard()
 	return ERROR
 endfunction
