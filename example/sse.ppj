@@ -25,7 +25,7 @@
   </Folders>
   <ZipFiles Output="@Dist">
     <ZipFile Name="@ModName" RootDir="@Example" Compression="deflate">
-      <Include>*.esp</Include>
+      <Include>*.esl</Include>
       <Include>scripts</Include>
     </ZipFile>
   </ZipFiles>
