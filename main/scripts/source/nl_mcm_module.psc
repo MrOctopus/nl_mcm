@@ -20,17 +20,12 @@ string property JOURNAL_MENU = "Journal Menu" autoreadonly
 
 string property DEBUG_MSG
 	string function Get()
-		return "NL_MCM(" + _page_name + "): "
+		Guard()
+		return ERROR as string
 	endfunction
 endproperty
 
-nl_mcm _MCM
-string _quest_editorid
-string _page_name
-int _z
-int _current_version
-
-event _OnPageDraw()
+event _OnPageDraw(int font)
 	Guard()
 endevent
 
@@ -43,7 +38,7 @@ auto state _inactive
 		Guard()
 	endevent
 
-	event _OnPageDraw()
+	event _OnPageDraw(int font)
 		Guard()
 	endevent
 
@@ -63,6 +58,10 @@ auto state _inactive
 	function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
 		Guard()
 	endfunction
+
+	function SetFont(int font = 0x00)
+		Guard()
+	endfunction
 	
 	function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)
 		Guard()
@@ -78,6 +77,26 @@ auto state _inactive
 	
 	function ExitMCM(bool fully = false)
 		Guard()
+	endfunction
+
+	int function SaveMCMToPreset(string preset_path)
+		Guard()
+		return ERROR
+	endfunction
+	
+	int function LoadMCMFromPreset(string preset_path)
+		Guard()
+		return ERROR
+	endfunction
+	
+	int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
+		Guard()
+		return ERROR
+	endfunction 
+	
+	int function DeleteMCMSavedPreset(string preset_path)
+		Guard()
+		return ERROR
 	endfunction
 
 	function SetCursorFillMode(int a_fillMode)
@@ -206,26 +225,6 @@ auto state _inactive
 		Guard()
 		return ERROR as bool
 	endfunction
-	
-	int function SaveMCMToPreset(string preset_path)
-		Guard()
-		return ERROR
-	endfunction
-	
-	int function LoadMCMFromPreset(string preset_path)
-		Guard()
-		return ERROR
-	endfunction
-	
-	int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
-		Guard()
-		return ERROR
-	endfunction 
-	
-	int function DeleteMCMSavedPreset(string preset_path)
-		Guard()
-		return ERROR
-	endfunction
 
 ;-------\-----\
 ; MODULE \ API \
@@ -292,16 +291,52 @@ int property ERROR_PRESET_NONE = -100 autoreadonly
 int property ERROR_PRESET_LOADING = -200 autoreadonly
 int property ERROR_PRESET_BUSY = -300 autoreadonly
 
+; FONTS
+int property FONT_D = 0x00 autoreadonly
+int property FONT_P = 0x01 autoreadonly
+
+string property FONT_HEADER
+    string function Get()
+		Guard()
+        return ERROR as string
+    endFunction
+endproperty
+
+string property FONT_HELP
+    string function Get()
+		Guard()
+        return ERROR as string
+    endFunction
+endproperty
+
+string property FONT_ENABLED
+    string function Get()
+		Guard()
+        return ERROR as string
+    endFunction
+endproperty
+
+string property FONT_DISABLED
+    string function Get()
+		Guard()
+        return ERROR as string
+    endFunction
+endproperty
+
+string property FONT_END = "</font>" autoreadonly
+
 ; PROPERTIES
 nl_mcm property UNSAFE_RAW_MCM
     nl_mcm function Get()
-        return _MCM
+		Guard()
+        return None
     endFunction
 endproperty
 
 quest property OWNING_QUEST
 	quest function Get()
-		return _MCM as quest
+		Guard()
+		return None
 	endfunction
 endproperty
 
@@ -324,6 +359,10 @@ int function SetModName(string name)
 endfunction
 
 function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
+	Guard()
+endfunction
+
+function SetFont(int font = 0x00)
 	Guard()
 endfunction
 
@@ -367,7 +406,7 @@ endfunction
 ; MCM API \ ORIGINAL \
 ;--------------------------------------------------------
 
-; PAGE
+; PAGE FLAGS
 int property OPTION_FLAG_NONE = 0x00 autoReadonly
 int property OPTION_FLAG_DISABLED = 0x01 autoReadonly
 int property OPTION_FLAG_HIDDEN	 = 0x02 autoReadonly

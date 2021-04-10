@@ -69,6 +69,7 @@ float _splash_x
 float _splash_y
 
 int _buffered
+int _font
 
 bool _initialized
 bool _busy_jcontainer
@@ -624,7 +625,7 @@ event OnPageReset(string page)
 		UnloadCustomContent()
 	
 		int i = Pages.Find(page)
-		_modules[i]._OnPageDraw()
+		_modules[i]._OnPageDraw(_font)
 	elseif _splash_path != ""
 		LoadCustomContent(_splash_path, _splash_x, _splash_y)
 	endif
@@ -780,6 +781,10 @@ function SetSplashScreen(string path, float x, float y)
 	_splash_path = path
 	_splash_x = x
 	_splash_y = y
+endfunction
+
+function SetFont(int font)
+	_font = font
 endfunction
 
 function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)

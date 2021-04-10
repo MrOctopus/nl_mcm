@@ -34,9 +34,10 @@ nl_mcm _MCM
 string _quest_editorid
 string _page_name
 int _z
+int _font
 int _current_version
 
-event _OnPageDraw()
+event _OnPageDraw(int font)
 	int version = GetVersion()
 	
 	if _current_version < version
@@ -45,6 +46,8 @@ event _OnPageDraw()
 		OnVersionUpdate(version)
 		_current_version = version
 	endIf
+
+	_font = font
 	
 	OnPageDraw()
 endevent
@@ -82,7 +85,7 @@ auto state _inactive
 		endif
 	endevent	
 
-	event _OnPageDraw()
+	event _OnPageDraw(int font)
 		Trace(DEBUG_MSG + "_OnPageDraw has been called in an invalid state.")
 	endevent
 
@@ -102,6 +105,10 @@ auto state _inactive
 	function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
 		Trace(DEBUG_MSG + "SetSplashScreen has been called in an invalid state.")
 	endfunction
+
+	function SetFont(int font = 0x00)
+		Trace(DEBUG_MSG + "SetFont has been called in an invalid state.")
+	endfunction
 	
 	function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)
 		Trace(DEBUG_MSG + "SetSliderDialog has been called in an invalid state.")
@@ -117,6 +124,26 @@ auto state _inactive
 	
 	function ExitMCM(bool fully = false)
 		Trace(DEBUG_MSG + "ExitMCM has been called in an invalid state.")
+	endfunction
+
+	int function SaveMCMToPreset(string preset_path)
+		Trace(DEBUG_MSG + "SaveMCMToPreset has been called in an invalid state.")
+		return ERROR
+	endfunction
+	
+	int function LoadMCMFromPreset(string preset_path)
+		Trace(DEBUG_MSG + "LoadMCMFromPreset has been called in an invalid state.")
+		return ERROR
+	endfunction
+	
+	int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
+		Trace(DEBUG_MSG + "GetMCMSavedPresets has been called in an invalid state.")
+		return ERROR
+	endfunction 
+	
+	int function DeleteMCMSavedPreset(string preset_path)
+		Trace(DEBUG_MSG + "DeleteMCMSavedPreset has been called in an invalid state.")
+		return ERROR
 	endfunction
 
 	function SetCursorFillMode(int a_fillMode)
@@ -245,26 +272,6 @@ auto state _inactive
 		Trace(DEBUG_MSG + "ShowMessage has been called in an invalid state.")
 		return ERROR as bool
 	endfunction
-	
-	int function SaveMCMToPreset(string preset_path)
-		Trace(DEBUG_MSG + "SaveMCMToPreset has been called in an invalid state.")
-		return ERROR
-	endfunction
-	
-	int function LoadMCMFromPreset(string preset_path)
-		Trace(DEBUG_MSG + "LoadMCMFromPreset has been called in an invalid state.")
-		return ERROR
-	endfunction
-	
-	int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
-		Trace(DEBUG_MSG + "GetMCMSavedPresets has been called in an invalid state.")
-		return ERROR
-	endfunction 
-	
-	int function DeleteMCMSavedPreset(string preset_path)
-		Trace(DEBUG_MSG + "DeleteMCMSavedPreset has been called in an invalid state.")
-		return ERROR
-	endfunction
 
 ;-------\-----\
 ; MODULE \ API \
@@ -380,6 +387,47 @@ int property ERROR_PRESET_NONE = -100 autoreadonly
 int property ERROR_PRESET_LOADING = -200 autoreadonly
 int property ERROR_PRESET_BUSY = -300 autoreadonly
 
+; FONTS
+int property FONT_D = 0x00 autoreadonly
+int property FONT_P = 0x01 autoreadonly
+
+string property FONT_HEADER
+    string function Get()
+		if _font == FONT_P
+			return "<font color='#723012'>"
+		endif
+        return "<font color='#c1a57a'>"
+    endFunction
+endproperty
+
+string property FONT_HELP
+    string function Get()
+		if _font == FONT_P
+			return "<font color='#135a09'>"
+		endif
+        return "<font color='#a6bffe'>"
+    endFunction
+endproperty
+
+string property FONT_ENABLED
+    string function Get()
+		if _font == FONT_P
+			return "<font color='#135a09'>"
+		endif
+        return "<font color='#c7ea46'>"
+    endFunction
+endproperty
+
+string property FONT_DISABLED
+    string function Get()
+		if _font == FONT_P
+			return "<font color='#d05300'>"
+		endif
+        return "<font color='#ff7417'>"
+    endFunction
+endproperty
+
+string property FONT_END = "</font>" autoreadonly
 
 ; PROPERTIES
 nl_mcm property UNSAFE_RAW_MCM
@@ -454,6 +502,10 @@ function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
 	@param y - The y position of the splash screen
 }
 	_MCM.SetSplashScreen(path, x, y)
+endfunction
+
+function SetFont(int font = 0x00)
+	_MCM.SetFont(font)
 endfunction
 
 function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)
@@ -547,7 +599,7 @@ endfunction
 ; MCM API \ ORIGINAL \
 ;--------------------------------------------------------
 
-; PAGE_FLAGS
+; PAGE FLAGS
 int property OPTION_FLAG_NONE = 0x00 autoReadonly
 int property OPTION_FLAG_DISABLED = 0x01 autoReadonly
 int property OPTION_FLAG_HIDDEN	 = 0x02 autoReadonly
