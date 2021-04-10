@@ -279,7 +279,7 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 	@param page_name - The page name which the module will be stored under
 	@param z - The Z-Index of the page. Pages are sorted in an ascending order
 	@return Error code
-}		
+}
 	while _mutex_modules
 		Utility.WaitMenuMode(SPINLOCK_TIMER)
 	endwhile
@@ -601,7 +601,7 @@ string function GetCustomControl(int a_keycode)
 	return ""
 endfunction
 
-function SetPage(String a_page, Int a_index)	
+function SetPage(String a_page, Int a_index)
 	while _mutex_page
 		Utility.WaitMenuMode(SPINLOCK_TIMER)
 	endwhile
@@ -729,13 +729,12 @@ function AddParagraph(string text, string begin_format = "", string end_format =
 	
 	while i < j
 		string line
-		int i_nl = StringUtil.Find(text, "\n")
+		int i_nl = StringUtil.Find(text, "\n", i)
 		
 		; New line found
 		if i_nl != -1 && i_nl < i + LINE_LENGTH
 			line = StringUtil.SubString(text, i, i_nl - i)
 			i = i_nl + 1
-		
 		else
 			i_nl = i + LINE_LENGTH
 			

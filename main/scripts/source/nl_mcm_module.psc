@@ -50,19 +50,6 @@ auto state _inactive
 		Guard()
 	endfunction
 	
-	int function SetModName(string name)
-		Guard()
-		return ERROR
-	endfunction
-	
-	function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
-		Guard()
-	endfunction
-
-	function SetFont(int font = 0x00)
-		Guard()
-	endfunction
-	
 	function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)
 		Guard()
 	endFunction 
@@ -230,12 +217,20 @@ auto state _inactive
 ; MODULE \ API \
 ;--------------------------------------------------------
 
-	int function KeepTryingToRegister()
+	int function SetModName(string name)
 		Guard()
 		return ERROR
 	endfunction
-	
-	int function StopTryingToRegister()
+
+	function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
+		Guard()
+	endfunction
+
+	function SetFont(int font = 0x00)
+		Guard()
+	endfunction
+
+	int function KeepTryingToRegister()
 		Guard()
 		return ERROR
 	endfunction
@@ -292,35 +287,42 @@ int property ERROR_PRESET_LOADING = -200 autoreadonly
 int property ERROR_PRESET_BUSY = -300 autoreadonly
 
 ; FONTS
-int property FONT_D = 0x00 autoreadonly
-int property FONT_P = 0x01 autoreadonly
+int property FONT_DEFAULT = 0x00 autoreadonly
+int property FONT_PAPER = 0x01 autoreadonly
+
+int property CURRENT_FONT
+    int function Get()
+		Guard()
+		return ERROR
+	endfunction
+endproperty
 
 string property FONT_HEADER
     string function Get()
 		Guard()
         return ERROR as string
-    endFunction
+    endfunction
 endproperty
 
 string property FONT_HELP
     string function Get()
 		Guard()
         return ERROR as string
-    endFunction
+    endfunction
 endproperty
 
 string property FONT_ENABLED
     string function Get()
 		Guard()
         return ERROR as string
-    endFunction
+    endfunction
 endproperty
 
 string property FONT_DISABLED
     string function Get()
 		Guard()
         return ERROR as string
-    endFunction
+    endfunction
 endproperty
 
 string property FONT_END = "</font>" autoreadonly
@@ -330,7 +332,7 @@ nl_mcm property UNSAFE_RAW_MCM
     nl_mcm function Get()
 		Guard()
         return None
-    endFunction
+    endfunction
 endproperty
 
 quest property OWNING_QUEST

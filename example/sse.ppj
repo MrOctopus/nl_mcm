@@ -7,7 +7,7 @@
   Anonymize="true" 
   Zip="true">
   <Variables>
-    <Variable Name="Namespace" Value="nl_core"/>
+    <Variable Name="Namespace" Value="NeverLost's Curios"/>
     <Variable Name="ModName" Value="@Namespace - SSE"/>
     <Variable Name="MCM" Value="..\main"/>
     <Variable Name="Example" Value="."/>

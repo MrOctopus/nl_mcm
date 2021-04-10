@@ -5,7 +5,6 @@
   Output="@MCM\scripts"
   Optimize="true" 
   Anonymize="true"
-  Package="true"
   Zip="true">
   <Variables>
     <Variable Name="Namespace" Value="nl_mcm"/>
@@ -27,15 +26,10 @@
   <Folders>
     <Folder NoRecurse="true">@MCM\source</Folder>
   </Folders>
-  <Packages Output="@MCM">
-    <Package Name="@Namespace" RootDir="@MCM">
-      <Include>scripts</Include>
-      <Include>interface</Include>
-    </Package>
-  </Packages>
   <ZipFiles Output="@Dist">
     <ZipFile Name="@ModName - English" RootDir="@MCM" Compression="deflate">
-      <Include>*.bsa</Include>
+      <Include>scripts</Include>
+      <Include>interface</Include>
       <Include>*.esl</Include>
     </ZipFile>
   </ZipFiles>

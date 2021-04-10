@@ -30,12 +30,22 @@ string property DEBUG_MSG
 	endfunction
 endproperty
 
+; PERMANENT
 nl_mcm _MCM
-string _quest_editorid
+
+int _current_version
+int _font
+
 string _page_name
 int _z
-int _font
-int _current_version
+
+; CACHE
+string _quest_editorid
+string _mod_name
+string _splash_path
+
+float _splash_x
+float _splash_y
 
 event _OnPageDraw(int font)
 	int version = GetVersion()
@@ -83,7 +93,7 @@ auto state _inactive
 		if return_code == OK || return_code == ERROR_MCM_NONE
 			StopTryingToRegister()
 		endif
-	endevent	
+	endevent
 
 	event _OnPageDraw(int font)
 		Trace(DEBUG_MSG + "_OnPageDraw has been called in an invalid state.")
@@ -95,19 +105,6 @@ auto state _inactive
 
 	function AddParagraph(string text, string begin_format = "", string end_format = "", int flags = 0x01)
 		Trace(DEBUG_MSG + "AddParagraph has been called in an invalid state.")
-	endfunction
-	
-	int function SetModName(string name)
-		Trace(DEBUG_MSG + "SetModName has been called in an invalid state.")
-		return ERROR
-	endfunction
-	
-	function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
-		Trace(DEBUG_MSG + "SetSplashScreen has been called in an invalid state.")
-	endfunction
-
-	function SetFont(int font = 0x00)
-		Trace(DEBUG_MSG + "SetFont has been called in an invalid state.")
 	endfunction
 	
 	function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)
@@ -277,20 +274,26 @@ auto state _inactive
 ; MODULE \ API \
 ;--------------------------------------------------------
 
+	int function SetModName(string name)
+		_mod_name = name
+		return OK
+	endfunction
+
+	function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
+		_splash_path = path
+		_splash_x = x
+		_splash_y = y
+	endfunction
+
+	function SetFont(int font = 0x00)
+		_font = font
+	endfunction
+
 	int function KeepTryingToRegister()
 		if _page_name == ""
 			return ERROR
 		endif
 		RegisterForMenu(JOURNAL_MENU)
-		
-		return OK
-	endfunction
-	
-	int function StopTryingToRegister()
-		UnregisterForMenu(JOURNAL_MENU)
-		_quest_editorid = ""
-		_page_name = ""
-		_z = 0
 		
 		return OK
 	endfunction
@@ -343,7 +346,33 @@ int function KeepTryingToRegister()
 endfunction
 
 int function StopTryingToRegister()
-	return ERROR
+	UnregisterForMenu(JOURNAL_MENU)
+	int error_code = OK
+
+	if _MCM
+		if _mod_name
+			error_code = _MCM.SetModName(_mod_name)
+		endif
+
+		if _splash_path
+			_MCM.SetSplashScreen(_splash_path, _splash_x, _splash_y)
+		endif
+
+		if _font
+			_MCM.SetFont(_font)
+		endif
+	else
+		_page_name = ""
+		_z = 0
+	endif
+
+	_quest_editorid = ""
+	_mod_name = ""
+	_splash_path = ""
+	_splash_x = 0.0
+	_splash_y = 0.0
+
+	return error_code
 endfunction
 
 int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
@@ -388,43 +417,55 @@ int property ERROR_PRESET_LOADING = -200 autoreadonly
 int property ERROR_PRESET_BUSY = -300 autoreadonly
 
 ; FONTS
-int property FONT_D = 0x00 autoreadonly
-int property FONT_P = 0x01 autoreadonly
+int property FONT_DEFAULT = 0x00 autoreadonly
+{ Default font color }
+int property FONT_PAPER = 0x01 autoreadonly
+{ Paper font color }
+
+int property CURRENT_FONT
+{
+	Get the current font.
+	@get Current font
+}
+    int function Get()
+		return _font
+	endfunction
+endproperty
 
 string property FONT_HEADER
     string function Get()
-		if _font == FONT_P
+		if _font == FONT_PAPER
 			return "<font color='#723012'>"
 		endif
         return "<font color='#c1a57a'>"
-    endFunction
+    endfunction
 endproperty
 
 string property FONT_HELP
     string function Get()
-		if _font == FONT_P
-			return "<font color='#135a09'>"
+		if _font == FONT_PAPER
+			return "<font color='#0c2263'>"
 		endif
         return "<font color='#a6bffe'>"
-    endFunction
+    endfunction
 endproperty
 
 string property FONT_ENABLED
     string function Get()
-		if _font == FONT_P
+		if _font == FONT_PAPER
 			return "<font color='#135a09'>"
 		endif
         return "<font color='#c7ea46'>"
-    endFunction
+    endfunction
 endproperty
 
 string property FONT_DISABLED
     string function Get()
-		if _font == FONT_P
+		if _font == FONT_PAPER
 			return "<font color='#d05300'>"
 		endif
         return "<font color='#ff7417'>"
-    endFunction
+    endfunction
 endproperty
 
 string property FONT_END = "</font>" autoreadonly
@@ -505,6 +546,11 @@ function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
 endfunction
 
 function SetFont(int font = 0x00)
+{
+	Set font color. \
+	See: [Default Color](#FONT_DEFAULT) and [Paper Color](#FONT_PAPER).
+	@param font - The new font color
+}
 	_MCM.SetFont(font)
 endfunction
 
