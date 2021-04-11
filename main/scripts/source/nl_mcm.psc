@@ -191,7 +191,7 @@ int function DeleteMCMSavedPreset(string preset_path)
 	return ERROR
 endfunction
 
-function AddParagraph(string text, string begin_format = "", string end_format = "", int flags = 0x01)
+function AddParagraph(string text, string format = "", int flags = 0x01)
 	Guard()
 endfunction
 

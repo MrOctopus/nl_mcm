@@ -103,7 +103,7 @@ auto state _inactive
 		Trace(DEBUG_MSG + "_OnPageEvent has been called in an invalid state.")
 	endevent
 
-	function AddParagraph(string text, string begin_format = "", string end_format = "", int flags = 0x01)
+	function AddParagraph(string text, string format = "", int flags = 0x01)
 		Trace(DEBUG_MSG + "AddParagraph has been called in an invalid state.")
 	endfunction
 	
@@ -432,43 +432,33 @@ int property CURRENT_FONT
 	endfunction
 endproperty
 
-string property FONT_HEADER
-    string function Get()
-		if _font == FONT_PAPER
-			return "<font color='#723012'>"
-		endif
-        return "<font color='#c1a57a'>"
-    endfunction
-endproperty
+string function FONT_HEADER(string text = "")
+	if _font == FONT_PAPER
+		return "<font color='#723012'>" + text + "</font>"
+	endif
+	return "<font color='#c1a57a'>" + text + "</font>"
+endfunction
 
-string property FONT_HELP
-    string function Get()
-		if _font == FONT_PAPER
-			return "<font color='#0c2263'>"
-		endif
-        return "<font color='#a6bffe'>"
-    endfunction
-endproperty
+string function FONT_HELP(string text = "")
+	if _font == FONT_PAPER
+		return "<font color='#0c2263'>" + text + "</font>"
+	endif
+	return "<font color='#a6bffe'>" + text + "</font>"
+endfunction
 
-string property FONT_ENABLED
-    string function Get()
-		if _font == FONT_PAPER
-			return "<font color='#135a09'>"
-		endif
-        return "<font color='#c7ea46'>"
-    endfunction
-endproperty
+string function FONT_ENABLED(string text = "")
+	if _font == FONT_PAPER
+		return "<font color='#135a09'>" + text + "</font>"
+	endif
+	return "<font color='#c7ea46'>" + text + "</font>"
+endfunction
 
-string property FONT_DISABLED
-    string function Get()
-		if _font == FONT_PAPER
-			return "<font color='#d05300'>"
-		endif
-        return "<font color='#ff7417'>"
-    endfunction
-endproperty
-
-string property FONT_END = "</font>" autoreadonly
+string function FONT_DISABLED(string text = "")
+	if _font == FONT_PAPER
+		return "<font color='#d05300'>" + text + "</font>"
+	endif
+	return "<font color='#ff7417'>" + text + "</font>"
+endfunction
 
 ; PROPERTIES
 nl_mcm property UNSAFE_RAW_MCM
@@ -512,18 +502,16 @@ function SetCommonStore(string new_value)
 	_MCM.SetCommonStore(_page_name, new_value)
 endfunction
 
-function AddParagraph(string text, string begin_format = "", string end_format = "", int flags = 0x01)
+function AddParagraph(string text, string format = "", int flags = 0x01)
 {
 	A convenience function to add a paragraph of text to the mcm page. \
-	Text splitting occurs when the max line length is reached,or when a newline character (\n) is encountered.
+	Text splitting occurs when the max line length is reached,or when a newline character (\n) is encountered. \
+	NOTE: You need to use the format parameter for fonts
 	@param text - The text to add as a paragraph to the page
-	@param begin_format - The format string to append at the start of each paragraph line. \
-	Can be used to for example add html coloring to the paragraph text
-	@param end_format - The format string to append at the end of each paragraph line. \
-	Can be used to for example add html coloring to the paragraph text
+	@param format - The format/font to wrap the text in.
 	@param flags - The default flag of the added text options 
 }
-	_MCM.AddParagraph(text, begin_format, end_format, flags)
+	_MCM.AddParagraph(text, format, flags)
 endfunction
 
 int function SetModName(string name)

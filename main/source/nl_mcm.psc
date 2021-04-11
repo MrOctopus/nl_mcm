@@ -723,10 +723,23 @@ int function DeleteMCMSavedPreset(string preset_path)
 	return OK
 endfunction
 
-function AddParagraph(string text, string begin_format = "", string end_format = "", int flags = 0x01)
+function AddParagraph(string text, string format = "", int flags = 0x01)
+	string begin_format = ""
+	string end_format = ""
+
+	if format != ""
+		string[] formats = StringUtil.Split(format, "</")
+
+		if formats.length == 2
+			begin_format = formats[0]
+			end_format = "</" + formats[1]
+		endif
+	endif
+
 	int i = 0
 	int j = StringUtil.GetLength(text)
 	
+	; This is ugly, but the most efficient method of doing it
 	while i < j
 		string line
 		int i_nl = StringUtil.Find(text, "\n", i)

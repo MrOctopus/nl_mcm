@@ -8,6 +8,6 @@ event OnPageDraw()
 	SetCursorFillMode(TOP_TO_BOTTOM)
 	
 	; Left side
-	AddHeaderOption(FONT_HEADER + "Info" + FONT_END)
-	AddParagraph("Welcome to the secret section :)!", FONT_HELP, FONT_END)
+	AddHeaderOption(FONT_HEADER("Info"))
+	AddParagraph("Welcome to the secret section :)!", FONT_HELP())
 endevent

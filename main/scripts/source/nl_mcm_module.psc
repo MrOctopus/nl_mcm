@@ -46,7 +46,7 @@ auto state _inactive
 		Guard()
 	endevent
 
-	function AddParagraph(string text, string begin_format = "", string end_format = "", int flags = 0x01)
+	function AddParagraph(string text, string format = "", int flags = 0x01)
 		Guard()
 	endfunction
 	
@@ -297,35 +297,25 @@ int property CURRENT_FONT
 	endfunction
 endproperty
 
-string property FONT_HEADER
-    string function Get()
-		Guard()
-        return ERROR as string
-    endfunction
-endproperty
+string function FONT_HEADER(string text = "")
+	Guard()
+	return ERROR as string
+endfunction
 
-string property FONT_HELP
-    string function Get()
-		Guard()
-        return ERROR as string
-    endfunction
-endproperty
+string function FONT_HELP(string text = "")
+	Guard()
+	return ERROR as string
+endfunction
 
-string property FONT_ENABLED
-    string function Get()
-		Guard()
-        return ERROR as string
-    endfunction
-endproperty
+string function FONT_ENABLED(string text = "")
+	Guard()
+	return ERROR as string
+endfunction
 
-string property FONT_DISABLED
-    string function Get()
-		Guard()
-        return ERROR as string
-    endfunction
-endproperty
-
-string property FONT_END = "</font>" autoreadonly
+string function FONT_DISABLED(string text = "")
+	Guard()
+	return ERROR as string
+endfunction
 
 ; PROPERTIES
 nl_mcm property UNSAFE_RAW_MCM
@@ -351,7 +341,7 @@ function SetCommonStore(string new_value)
 	Guard()
 endfunction
 
-function AddParagraph(string text, string begin_format = "", string end_format = "", int flags = 0x01)
+function AddParagraph(string text, string format = "", int flags = 0x01)
 	Guard()
 endfunction
 
