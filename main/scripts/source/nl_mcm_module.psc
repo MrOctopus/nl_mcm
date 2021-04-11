@@ -297,22 +297,32 @@ int property CURRENT_FONT
 	endfunction
 endproperty
 
-string function FONT_HEADER(string text = "")
+string function FONT_PRIMARY(string text = "")
 	Guard()
 	return ERROR as string
 endfunction
 
-string function FONT_HELP(string text = "")
+string function FONT_SECONDARY(string text = "")
 	Guard()
 	return ERROR as string
 endfunction
 
-string function FONT_ENABLED(string text = "")
+string function FONT_SUCCESS(string text = "")
 	Guard()
 	return ERROR as string
 endfunction
 
-string function FONT_DISABLED(string text = "")
+string function FONT_DANGER(string text = "")
+	Guard()
+	return ERROR as string
+endfunction
+
+string function FONT_WARNING(string text = "")
+	Guard()
+	return ERROR as string
+endfunction
+
+string function FONT_INFO(string text = "")
 	Guard()
 	return ERROR as string
 endfunction

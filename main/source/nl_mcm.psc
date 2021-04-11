@@ -731,7 +731,7 @@ function AddParagraph(string text, string format = "", int flags = 0x01)
 		string[] formats = StringUtil.Split(format, "</")
 
 		if formats.length == 2
-			begin_format = formats[0]
+			begin_format = "<" + formats[0]
 			end_format = "</" + formats[1]
 		endif
 	endif

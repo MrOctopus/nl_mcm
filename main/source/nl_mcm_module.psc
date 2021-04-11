@@ -432,32 +432,46 @@ int property CURRENT_FONT
 	endfunction
 endproperty
 
-string function FONT_HEADER(string text = "")
+string function FONT_PRIMARY(string text = "")
 	if _font == FONT_PAPER
-		return "<font color='#723012'>" + text + "</font>"
+		return "<font color='#005500'>" + text + "</font>"
 	endif
-	return "<font color='#c1a57a'>" + text + "</font>"
+	return "<font color='#EDDA87'>" + text + "</font>"
 endfunction
 
-string function FONT_HELP(string text = "")
+string function FONT_SECONDARY(string text = "")
 	if _font == FONT_PAPER
-		return "<font color='#0c2263'>" + text + "</font>"
+		return "<font color='#412600'>" + text + "</font>"
 	endif
-	return "<font color='#a6bffe'>" + text + "</font>"
+	return "<font color='#6B7585'>" + text + "</font>"
 endfunction
 
-string function FONT_ENABLED(string text = "")
+string function FONT_SUCCESS(string text = "")
 	if _font == FONT_PAPER
-		return "<font color='#135a09'>" + text + "</font>"
+		return "<font color='#006D00'>" + text + "</font>"
 	endif
-	return "<font color='#c7ea46'>" + text + "</font>"
+	return "<font color='#51DB2E'>" + text + "</font>"
 endfunction
 
-string function FONT_DISABLED(string text = "")
+string function FONT_DANGER(string text = "")
 	if _font == FONT_PAPER
-		return "<font color='#d05300'>" + text + "</font>"
+		return "<font color='#5E000E'>" + text + "</font>"
 	endif
-	return "<font color='#ff7417'>" + text + "</font>"
+	return "<font color='#C73636'>" + text + "</font>"
+endfunction
+
+string function FONT_WARNING(string text = "")
+	if _font == FONT_PAPER
+		return "<font color='#FFFF00'>" + text + "</font>"
+	endif
+	return "<font color='#EAAB00'>" + text + "</font>"
+endfunction
+
+string function FONT_INFO(string text = "")
+	if _font == FONT_PAPER
+		return "<font color='#121C4A'>" + text + "</font>"
+	endif
+	return "<font color='#A2BEFF'>" + text + "</font>"
 endfunction
 
 ; PROPERTIES

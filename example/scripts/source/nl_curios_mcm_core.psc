@@ -31,29 +31,29 @@ event OnPageDraw()
 	SetCursorFillMode(TOP_TO_BOTTOM)
 	
 	; Left side
-	AddHeaderOption(FONT_HEADER("Core"))
-	AddParagraph("Hello there! This mcm acts as a core for all my small miscellaneous mods. Be on the lookout for new pages!", FONT_HELP())
+	AddHeaderOption(FONT_PRIMARY("Core"))
+	AddParagraph("Hello there! This mcm acts as a core for all my small miscellaneous mods. Be on the lookout for new pages!", FONT_INFO())
 	AddEmptyOption()
 	AddEmptyOption()
 
-	AddHeaderOption(FONT_HEADER("Thanks to"))
-	AddParagraph("Duncan\nKojak\nFireundubh", FONT_ENABLED())
+	AddHeaderOption(FONT_PRIMARY("Thanks to"))
+	AddParagraph("Duncan\nKojak\nFireundubh", FONT_INFO())
 
 	; Right side
 	SetCursorPosition(1)
-	AddHeaderOption(FONT_HEADER("Misc"))
+	AddHeaderOption(FONT_PRIMARY("Misc"))
 	AddToggleOptionST("options_toggle_font", "Toggle font color", CURRENT_FONT)
 	AddEmptyOption()
 
-	AddHeaderOption(FONT_HEADER("Fun"))
+	AddHeaderOption(FONT_PRIMARY("Fun"))
 
 	if _show_secret_page
-		AddTextOptionST("fun_show_page", "", FONT_DISABLED("Discovered!"), OPTION_FLAG_DISABLED)
+		AddTextOptionST("fun_show_page", "", FONT_WARNING("Discovered!"), OPTION_FLAG_DISABLED)
 	else
-		AddTextOptionST("fun_show_page", "", FONT_ENABLED("Hidden..."))
+		AddTextOptionST("fun_show_page", "", FONT_SUCCESS("Hidden..."))
 	endif
 
-	AddTextOptionST("fun_exit_mcm", "", FONT_ENABLED("CLICK ME!"))
+	AddTextOptionST("fun_exit_mcm", "", FONT_DANGER("CLICK ME!"))
 endevent
 
 ;-------------\
