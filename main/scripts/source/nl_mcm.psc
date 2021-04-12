@@ -207,9 +207,8 @@ function SetSplashScreen(string path, float x, float y)
 	Guard()
 endfunction
 
-int function SetFont(int font)
+function SetFont(int font)
 	Guard()
-	return ERROR
 endfunction
 
 function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)
