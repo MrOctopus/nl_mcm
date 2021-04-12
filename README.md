@@ -12,13 +12,14 @@ An object-oriented module based extension of SkyUI MCM scripts.
 	- You could make a quest dynamicaly add or remove pages from the MCM menu
 * Automatic paragraph handling 
 	- Supports html formatting
-* Built in font formats for different purposes
+* Built-in font formats for different purposes
 	- Switch between them dynamically!
+	- Fonts will automatically switch depending on the installed UI skin
 * Exit MCM functionality
 	- Allows you to exit the mcm menu/journal, so you can add buttons that will forcefully close the mcm
 * Individual page version support
 	- You can now update pages individually instead of the whole MCM using a new version tracking system
-* Built in preset saving functionality
+* Built-in preset saving functionality
 	- Requires JContainers
 
 ## Releases

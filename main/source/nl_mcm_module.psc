@@ -274,9 +274,8 @@ auto state _inactive
 ; MODULE \ API \
 ;--------------------------------------------------------
 
-	int function SetModName(string name)
+	function SetModName(string name)
 		_mod_name = name
-		return OK
 	endfunction
 
 	function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
@@ -289,13 +288,10 @@ auto state _inactive
 		_font = font
 	endfunction
 
-	int function KeepTryingToRegister()
+	function KeepTryingToRegister()
 		if _page_name == ""
-			return ERROR
+			RegisterForMenu(JOURNAL_MENU)
 		endif
-		RegisterForMenu(JOURNAL_MENU)
-		
-		return OK
 	endfunction
 
 	int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")				
@@ -341,17 +337,16 @@ auto state _inactive
 	endfunction
 endstate
 
-int function KeepTryingToRegister()
-	return ERROR
+function KeepTryingToRegister()
+	Trace(DEBUG_MSG + "KeepTryingToRegister has been called in an invalid state.")
 endfunction
 
-int function StopTryingToRegister()
+function StopTryingToRegister()
 	UnregisterForMenu(JOURNAL_MENU)
-	int error_code = OK
 
 	if _MCM
 		if _mod_name
-			error_code = _MCM.SetModName(_mod_name)
+			_MCM.SetModName(_mod_name)
 		endif
 
 		if _splash_path
@@ -371,8 +366,6 @@ int function StopTryingToRegister()
 	_splash_path = ""
 	_splash_x = 0.0
 	_splash_y = 0.0
-
-	return error_code
 endfunction
 
 int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
@@ -428,6 +421,9 @@ int property CURRENT_FONT
 	@get Current font
 }
     int function Get()
+		if _font > FONT_PAPER
+			return FONT_DEFAULT
+		endif
 		return _font
 	endfunction
 endproperty
@@ -528,13 +524,12 @@ function AddParagraph(string text, string format = "", int flags = 0x01)
 	_MCM.AddParagraph(text, format, flags)
 endfunction
 
-int function SetModName(string name)
+function SetModName(string name)
 {
 	Set the mod page name. Can only be used before the MCM has been initialized.
 	@param name - The mod's name
-	@return Error Code
 }
-	return _MCM.SetModName(name)
+	_MCM.SetModName(name)
 endfunction
 
 function SetSplashScreen(string path, float x = 0.0, float y = 0.0)

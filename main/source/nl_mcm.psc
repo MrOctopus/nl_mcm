@@ -50,6 +50,10 @@ int property EVENT_OPEN = 3 autoreadonly
 int property EVENT_ACCEPT = 4 autoreadonly
 int property EVENT_CHANGE = 5 autoreadonly
 
+; FONTS
+int property FONT_DEFAULT = 0x00 autoreadonly
+int property FONT_PAPER = 0x01 autoreadonly
+
 ;----\----------\
 ; MCM \ INTERNAL \
 ;--------------------------------------------------------
@@ -69,7 +73,7 @@ float _splash_x
 float _splash_y
 
 int _buffered
-int _font
+int _font = -1
 
 bool _initialized
 bool _busy_jcontainer
@@ -626,8 +630,19 @@ event OnPageReset(string page)
 	
 		int i = Pages.Find(page)
 		_modules[i]._OnPageDraw(_font)
-	elseif _splash_path != ""
-		LoadCustomContent(_splash_path, _splash_x, _splash_y)
+	else
+		if _splash_path != ""
+			LoadCustomContent(_splash_path, _splash_x, _splash_y)
+		endif
+
+		if _font == -1
+			; Hack to check if Dear Diary is installed
+			if Ui.GetString(JOURNAL_MENU, MENU_ROOT + ".contentHolder.background._url") == "Interface/deardiary/configpanel/configpanel%5FBG.swf"
+				_font = FONT_PAPER
+			else
+				_font = FONT_DEFAULT
+			endif
+		endif
 	endif
 endevent
 
@@ -779,14 +794,10 @@ function AddParagraph(string text, string format = "", int flags = 0x01)
 	endwhile
 endfunction
 
-int function SetModName(string name)
-	if _initialized
-		return ERROR
+function SetModName(string name)
+	if !_initialized
+		ModName = name
 	endif
-	
-	ModName = name
-
-	return OK
 endfunction
 
 function SetSplashScreen(string path, float x, float y)
@@ -796,7 +807,9 @@ function SetSplashScreen(string path, float x, float y)
 endfunction
 
 function SetFont(int font)
-	_font = font
+	if _font >= 0
+		_font = font
+	endif
 endfunction
 
 function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)

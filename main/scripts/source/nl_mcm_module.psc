@@ -217,9 +217,8 @@ auto state _inactive
 ; MODULE \ API \
 ;--------------------------------------------------------
 
-	int function SetModName(string name)
+	function SetModName(string name)
 		Guard()
-		return ERROR
 	endfunction
 
 	function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
@@ -230,9 +229,8 @@ auto state _inactive
 		Guard()
 	endfunction
 
-	int function KeepTryingToRegister()
+	function KeepTryingToRegister()
 		Guard()
-		return ERROR
 	endfunction
 
 	int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")				
@@ -246,14 +244,12 @@ auto state _inactive
 	endfunction
 endstate
 
-int function KeepTryingToRegister()
+function KeepTryingToRegister()
 	Guard()
-	return ERROR
 endfunction
 
-int function StopTryingToRegister()
+function StopTryingToRegister()
 	Guard()
-	return ERROR
 endfunction
 
 int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
@@ -355,9 +351,8 @@ function AddParagraph(string text, string format = "", int flags = 0x01)
 	Guard()
 endfunction
 
-int function SetModName(string name)
+function SetModName(string name)
 	Guard()
-	return ERROR
 endfunction
 
 function SetSplashScreen(string path, float x = 0.0, float y = 0.0)

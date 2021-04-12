@@ -6,7 +6,7 @@ bool _show_secret_page
 ; REGISTER MOD PAGE \
 ;--------------------------------------------------------
 
-; Before register
+; - Before register
 event OnInit()
 	; It's good practice to check if we actually succeeded
 	; in registering the module.
@@ -18,7 +18,7 @@ event OnInit()
 	SetModName("NeverLost's Curios")
 endevent
 
-; After register
+; - After register
 event OnPageInit()
 	; Nothing to do yet!
 endevent
@@ -29,7 +29,7 @@ endevent
 
 event OnPageDraw()
 	SetCursorFillMode(TOP_TO_BOTTOM)
-	
+
 	; Left side
 	AddHeaderOption(FONT_PRIMARY("Core"))
 	AddParagraph("Hello there! This mcm acts as a core for all my small miscellaneous mods. Be on the lookout for new pages!", FONT_INFO())
@@ -42,7 +42,7 @@ event OnPageDraw()
 	; Right side
 	SetCursorPosition(1)
 	AddHeaderOption(FONT_PRIMARY("Misc"))
-	AddToggleOptionST("options_toggle_font", "Toggle font color", CURRENT_FONT)
+	AddToggleOptionST("misc_toggle_font", "Toggle font color", CURRENT_FONT)
 	AddEmptyOption()
 
 	AddHeaderOption(FONT_PRIMARY("Fun"))
@@ -60,7 +60,7 @@ endevent
 ; PAGE OPTIONS \
 ;--------------------------------------------------------
 
-state options_toggle_font
+state misc_toggle_font
 	event OnDefaultST()
 		SetFont(FONT_DEFAULT)
 		ForcePageReset()

@@ -45,6 +45,10 @@ int property EVENT_OPEN = 3 autoreadonly
 int property EVENT_ACCEPT = 4 autoreadonly
 int property EVENT_CHANGE = 5 autoreadonly
 
+; FONTS
+int property FONT_DEFAULT = 0x00 autoreadonly
+int property FONT_PAPER = 0x01 autoreadonly
+
 ;---------\--------\
 ; CRITICAL \ EVENTS \
 ;--------------------------------------------------------
@@ -195,17 +199,17 @@ function AddParagraph(string text, string format = "", int flags = 0x01)
 	Guard()
 endfunction
 
-int function SetModName(string name)
+function SetModName(string name)
 	Guard()
-	return ERROR
 endfunction
 
 function SetSplashScreen(string path, float x, float y)
 	Guard()
 endfunction
 
-function SetFont(int font)
+int function SetFont(int font)
 	Guard()
+	return ERROR
 endfunction
 
 function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)
