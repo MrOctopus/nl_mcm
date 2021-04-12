@@ -29,8 +29,6 @@
   <ZipFiles Output="@Dist">
     <ZipFile Name="@ModName - English" RootDir="@MCM" Compression="deflate">
       <Include>scripts</Include>
-      <Include>interface</Include>
-      <Include>*.esl</Include>
     </ZipFile>
   </ZipFiles>
 </PapyrusProject>

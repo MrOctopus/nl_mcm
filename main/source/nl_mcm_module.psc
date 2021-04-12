@@ -51,7 +51,7 @@ event _OnPageDraw(int font)
 	int version = GetVersion()
 	
 	if _current_version < version
-		_MCM.ShowMessage("$nl_mcm_update{" + _current_version + "}{" + version + "}", false, "$nl_mcm_ok", "")
+		_MCM.ShowMessage("New module version: " + _current_version + " -> " + version + "\nUPDATING", false, "$OK", "")
 		OnVersionUpdateBase(version)
 		OnVersionUpdate(version)
 		_current_version = version

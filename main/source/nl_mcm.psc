@@ -248,10 +248,10 @@ event OnKeyMapChangeST(int keycode, string conflict_control, string conflict_nam
 		
 		; Mod conflict
 		if conflict_name != ""
-			msg = "$nl_mcm_keyconflict_mod{" + conflict_name + "}"
+			msg = "$SKI_MSG2{[" + conflict_name + "]}"
 		; Vanilla conflict
 		else
-			msg = "$nl_mcm_keyconflict_vanilla{" + conflict_control + "}"
+			msg = "$SKI_MSG2{[" + conflict_control + "]}"
         endIf
 		
 		if !ShowMessage(msg, true, "$Yes", "$No")
