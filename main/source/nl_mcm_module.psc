@@ -695,51 +695,30 @@ function AddKeyMapOptionST(string a_stateName, string a_text, int a_keyCode, int
 endfunction
 
 function SetOptionFlagsST(int a_flags, bool a_noUpdate = false, string a_stateName = "")
-	if a_stateName == ""
-		a_stateName = GetState()
-	endif
 	_MCM.SetOptionFlagsST(a_flags, a_noUpdate, a_stateName)
 endfunction
 
 function SetTextOptionValueST(string a_value, bool a_noUpdate = false, string a_stateName = "")
-	if a_stateName == ""
-		a_stateName = GetState()
-	endif
 	_MCM.SetTextOptionValueST(a_value, a_noUpdate, a_stateName)
 endfunction
 
 function SetToggleOptionValueST(bool a_checked, bool a_noUpdate = false, string a_stateName = "")
-	if a_stateName == ""
-		a_stateName = GetState()
-	endif
 	_MCM.SetToggleOptionValueST(a_checked, a_noUpdate, a_stateName)
 endfunction
 
 function SetSliderOptionValueST(float a_value, string a_formatString = "{0}", bool a_noUpdate = false, string a_stateName = "")	
-	if a_stateName == ""
-		a_stateName = GetState()
-	endif
 	_MCM.SetSliderOptionValueST(a_value, a_formatString, a_noUpdate, a_stateName)
 endfunction
 
 function SetMenuOptionValueST(string a_value, bool a_noUpdate = false, string a_stateName = "")
-	if a_stateName == ""
-		a_stateName = GetState()
-	endif
 	_MCM.SetMenuOptionValueST(a_value, a_noUpdate, a_stateName)
 endfunction
 
 function SetColorOptionValueST(int a_color, bool a_noUpdate = false, string a_stateName = "")
-	if a_stateName == ""
-		a_stateName = GetState()
-	endif
 	_MCM.SetColorOptionValueST(a_color, a_noUpdate, a_stateName)
 endfunction
 
 function SetKeyMapOptionValueST(int a_keyCode, bool a_noUpdate = false, string a_stateName = "")
-	if a_stateName == ""
-		a_stateName = GetState()
-	endif
 	_MCM.SetKeyMapOptionValueST(a_keyCode, a_noUpdate, a_stateName)
 endfunction
 

@@ -1,4 +1,8 @@
 Scriptname nl_curios_mcm_core extends nl_mcm_module
+{
+	@author NeverLost
+	@version 1.0
+}
 
 bool _show_secret_page
 
@@ -37,7 +41,7 @@ event OnPageDraw()
 	AddEmptyOption()
 
 	AddHeaderOption(FONT_PRIMARY("Thanks to"))
-	AddParagraph("Duncan\nKojak\nFireundubh", FONT_INFO())
+	AddParagraph("Dunc001\nKojak747\nFireundubh", FONT_INFO())
 
 	; Right side
 	SetCursorPosition(1)

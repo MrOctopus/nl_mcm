@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - 'main/**'
-      - 'example/**'
+      - 'examples/**'
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.x']
-        project-path: ['main\sse', 'example\sse']
+        project-path: ['main\sse', 'examples\nl_curios\sse', 'examples\nl_utilities\sse']
     env:
       python-arch: x64
 
@@ -23,6 +23,12 @@ jobs:
     - uses: actions/checkout@v2
       with:
         path: ./repo
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        architecture:  ${{ env.python-arch }}
 
     - id: cache
       uses: actions/cache@v2
@@ -39,12 +45,6 @@ jobs:
         repository: MrOctopus/papyrus-compiler
         token: ${{ secrets.PRIVATE_TOKEN }}
         path: ./compiler
-
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-        architecture:  ${{ env.python-arch }}
 
     - name: Get latest Pyro release
       id: pyro_asset

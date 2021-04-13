@@ -4,14 +4,15 @@
   Flags="TESV_Papyrus_Flags.flg"
   Output="@Example\scripts"
   Optimize="true" 
-  Anonymize="true" 
+  Anonymize="true"
+  Package="true"
   Zip="true">
   <Variables>
-    <Variable Name="Namespace" Value="NeverLost's Curios"/>
+    <Variable Name="Namespace" Value="NeverLost's Utilities"/>
     <Variable Name="ModName" Value="@Namespace - SSE"/>
-    <Variable Name="MCM" Value="..\main"/>
+    <Variable Name="MCM" Value="..\..\main"/>
     <Variable Name="Example" Value="."/>
-    <Variable Name="Dist" Value="..\dist"/>
+    <Variable Name="Dist" Value="..\..\dist"/>
   </Variables>
   <Imports>
     <Import>@Example\scripts\source</Import>
@@ -23,10 +24,15 @@
   <Folders>
     <Folder NoRecurse="true">@Example\scripts\source</Folder>
   </Folders>
+  <Packages Output="@Example">
+    <Package Name="@Namespace" RootDir="@Example">
+      <Include>scripts</Include>
+    </Package>
+  </Packages>
   <ZipFiles Output="@Dist">
     <ZipFile Name="@ModName" RootDir="@Example" Compression="deflate">
-      <Include>*.esl</Include>
-      <Include>scripts</Include>
+      <Include>*.esp</Include>
+      <Include>*.bsa</Include>
     </ZipFile>
   </ZipFiles>
 </PapyrusProject>

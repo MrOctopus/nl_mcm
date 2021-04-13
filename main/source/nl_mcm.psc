@@ -293,7 +293,7 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 	; We buffer _modules at init to avoid multiple external resize calls
 	if !_initialized
 		; First module 
-		if !Pages
+		if !_modules
 			_modules = new nl_mcm_module[128]
 			Pages = new string[128]
 			_pages_z = new int[128]

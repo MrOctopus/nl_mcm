@@ -27,7 +27,7 @@
     <Folder NoRecurse="true">@MCM\source</Folder>
   </Folders>
   <ZipFiles Output="@Dist">
-    <ZipFile Name="@ModName - English" RootDir="@MCM" Compression="deflate">
+    <ZipFile Name="@ModName" RootDir="@MCM" Compression="deflate">
       <Include>scripts</Include>
     </ZipFile>
   </ZipFiles>

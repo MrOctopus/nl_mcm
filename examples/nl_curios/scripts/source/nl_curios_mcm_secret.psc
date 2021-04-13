@@ -1,4 +1,8 @@
 Scriptname nl_curios_mcm_secret extends nl_mcm_module
+{
+	@author NeverLost
+	@version 1.0
+}
 
 ;----------\
 ; DRAW PAGE \
