@@ -17,7 +17,7 @@ jobs:
         python-version: ['3.x']
         project-path: 
         - 'main\sse.ppj'
-        - 'examplse\sse.ppj'
+        - 'examples\sse.ppj'
         - 'examples\nl_curios\sse.ppj'
         - 'examples\nl_utilities\sse.ppj'
     env:
