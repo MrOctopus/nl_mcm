@@ -5,7 +5,6 @@
   Output="@MergedExample\scripts"
   Optimize="true" 
   Anonymize="true"
-  Package="true"
   Zip="true">
   <Variables>
     <Variable Name="Namespace" Value="NeverLost's Curios Merged"/>
@@ -28,16 +27,13 @@
     <Folder NoRecurse="true">@CuriosExample\scripts\source</Folder>
 	  <Folder NoRecurse="true">@UtilitiesExample\scripts\source</Folder>
   </Folders>
-  <Packages Output="@MergedExample">
-    <Package Name="@Namespace" RootDir="@MergedExample">
-      <Include>scripts</Include>
-    </Package>
-  </Packages>
   <ZipFiles Output="@Dist">
     <ZipFile Name="@ModName" RootDir="@MergedExample" Compression="deflate">
+      <Include Path="scripts\source">@CuriosExample\scripts\source</Include>
+      <Include Path="scripts\source">@UtilitiesExample\scripts\source</Include>
+      <Include>scripts</Include>
       <Include Path=".">**\*.esp</Include>
 	    <Include Path=".">**\*.esl</Include>
-      <Include NoRecurse="true">*.bsa</Include>
     </ZipFile>
   </ZipFiles>
 </PapyrusProject>

@@ -191,6 +191,8 @@ event OnUpdate()
 	_mutex_modules = False
 endevent
 
+; Possible thrown exception
+; Don't worry though, the mutex will still release
 event OnConfigClose()
 	while _mutex_modules
 		Utility.WaitMenuMode(SPINLOCK_TIMER)
