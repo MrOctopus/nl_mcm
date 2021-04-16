@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+    - main
     paths:
-      - 'main/**'
-      - 'examples/**'
+    - 'main/**'
+    - 'examples/**'
 
 jobs:
   build:
@@ -15,7 +15,11 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.x']
-        project-path: ['main\sse', 'examples\nl_curios\sse', 'examples\nl_utilities\sse']
+        project-path: 
+        - 'main\sse.ppj'
+        - 'examplse\sse.ppj'
+        - 'examples\nl_curios\sse.ppj'
+        - 'examples\nl_utilities\sse.ppj'
     env:
       python-arch: x64
 
@@ -63,7 +67,7 @@ jobs:
 
     - name: Build releases
       run: |
-        .\pyro\pyro --game-path . --compiler-path ${Env:ppj_c} --flags-path ${Env:ppj_f} --access-token ${Env:ppj_t} .\repo\${Env:ppj_p}.ppj
+        .\pyro\pyro --game-path . --compiler-path ${Env:ppj_c} --flags-path ${Env:ppj_f} --access-token ${Env:ppj_t} .\repo\${Env:ppj_p}
       env: 
         ppj_c: compiler\PapyrusCompiler.exe
         ppj_f: compiler\TESV_Papyrus_Flags.flg

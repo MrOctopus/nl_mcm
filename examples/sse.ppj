@@ -1,0 +1,43 @@
+<PapyrusProject
+  xmlns="PapyrusProject.xsd"
+  Game="SSE"
+  Flags="TESV_Papyrus_Flags.flg"
+  Output="@MergedExample\scripts"
+  Optimize="true" 
+  Anonymize="true"
+  Package="true"
+  Zip="true">
+  <Variables>
+    <Variable Name="Namespace" Value="NeverLost's Curios Merged"/>
+    <Variable Name="ModName" Value="@Namespace - SSE"/>
+    <Variable Name="MCM" Value="..\main"/>
+	  <Variable Name="Dist" Value="..\dist"/>
+    <Variable Name="MergedExample" Value="."/>
+    <Variable Name="CuriosExample" Value="@MergedExample\nl_curios"/>
+    <Variable Name="UtilitiesExample" Value="@MergedExample\nl_utilities"/>
+  </Variables>
+  <Imports>
+	  <Import>@UtilitiesExample\scripts\source</Import>
+    <Import>@CuriosExample\scripts\source</Import>
+    <Import>@MCM\scripts\source</Import>
+    <Import>https://github.com/schlangster/skyui/tree/master/dist/Data/Scripts/Source</Import>
+    <Import>https://github.com/MrOctopus/nl_online/tree/main/skse64/source</Import>
+    <Import>https://github.com/MrOctopus/nl_online/tree/main/sse/source</Import>
+  </Imports>
+  <Folders>
+    <Folder NoRecurse="true">@CuriosExample\scripts\source</Folder>
+	  <Folder NoRecurse="true">@UtilitiesExample\scripts\source</Folder>
+  </Folders>
+  <Packages Output="@MergedExample">
+    <Package Name="@Namespace" RootDir="@MergedExample">
+      <Include>scripts</Include>
+    </Package>
+  </Packages>
+  <ZipFiles Output="@Dist">
+    <ZipFile Name="@ModName" RootDir="@MergedExample" Compression="deflate">
+      <Include Path=".">**\*.esp</Include>
+	    <Include Path=".">**\*.esl</Include>
+      <Include NoRecurse="true">*.bsa</Include>
+    </ZipFile>
+  </ZipFiles>
+</PapyrusProject>
