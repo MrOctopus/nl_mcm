@@ -14,13 +14,13 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        python-version: ['3.x']
         project-path: 
         - 'main\sse.ppj'
         - 'examples\sse.ppj'
         - 'examples\nl_curios\sse.ppj'
         - 'examples\nl_utilities\sse.ppj'
     env:
+      python-version: 3.x
       python-arch: x64
 
     steps:
@@ -28,22 +28,13 @@ jobs:
       with:
         path: ./repo
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python ${{ env.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ env.python-version }}
         architecture:  ${{ env.python-arch }}
 
-    - id: cache
-      uses: actions/cache@v2
-      with:
-        path: |
-          compiler
-          pyro
-        key: ${{ runner.os }}-compilers
-
     - name: Pull papyrus compiler
-      if: steps.cache.outputs.cache-hit != 'true'
       uses: actions/checkout@v2
       with:
         repository: MrOctopus/papyrus-compiler
@@ -52,15 +43,13 @@ jobs:
 
     - name: Get latest Pyro release
       id: pyro_asset
-      if: steps.cache.outputs.cache-hit != 'true'
       uses: MrOctopus/download-asset-action@main
       with:
         repository: fireundubh/pyro
         excludes: draft
         asset: pyro
-    
+
     - name: Extract Pyro
-      if: steps.cache.outputs.cache-hit != 'true'
       run: 7z x ${Env:release_name} -opyro
       env: 
         release_name: ${{ steps.pyro_asset.outputs.name }}

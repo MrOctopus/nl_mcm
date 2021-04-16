@@ -12,18 +12,18 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        python-version: ['3.x']
+    env:
+      python-version: 3.x
 
     steps:
     - uses: actions/checkout@v2
       with:
         path: ./nl_mcm
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python ${{ env.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{ env.python-version }}
 
     - name: PaPyDoc repo
       uses: actions/checkout@v2
