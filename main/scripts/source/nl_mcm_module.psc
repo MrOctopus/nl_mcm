@@ -34,7 +34,7 @@ event _OnPageEvent(string state_name, int event_id, float f, string str)
 endevent
 
 auto state _inactive
-	event OnMenuOpen(string name)
+	event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
 		Guard()
 	endevent
 
@@ -251,6 +251,10 @@ endfunction
 function StopTryingToRegister()
 	Guard()
 endfunction
+
+event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
+	Guard()
+endevent
 
 int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
 	Guard()

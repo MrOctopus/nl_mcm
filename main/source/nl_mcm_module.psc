@@ -33,10 +33,10 @@ endproperty
 ; PERMANENT
 nl_mcm _MCM
 
+string _page_name
+
 int _current_version
 int _font
-
-string _page_name
 int _z
 
 ; CACHE
@@ -87,7 +87,7 @@ event _OnPageEvent(string state_name, int event_id, float f, string str)
 endevent
 
 auto state _inactive
-	event OnMenuOpen(string name)
+	event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
 		int return_code = RegisterModule(_page_name, _z, _quest_editorid)
 		
 		if return_code == OK || return_code == ERROR_MCM_NONE
@@ -289,8 +289,8 @@ auto state _inactive
 	endfunction
 
 	function KeepTryingToRegister()
-		if _page_name == ""
-			RegisterForMenu(JOURNAL_MENU)
+		if _page_name != ""
+			RegisterForModEvent("SKICP_configManagerReady", "_OnConfigManagerReady")
 		endif
 	endfunction
 
@@ -342,7 +342,7 @@ function KeepTryingToRegister()
 endfunction
 
 function StopTryingToRegister()
-	UnregisterForMenu(JOURNAL_MENU)
+	UnregisterForModEvent("SKICP_configManagerReady")
 
 	if _MCM
 		if _mod_name
@@ -367,6 +367,10 @@ function StopTryingToRegister()
 	_splash_x = 0.0
 	_splash_y = 0.0
 endfunction
+
+event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
+	Trace(DEBUG_MSG + "_OnConfigManagerReady has been called in an invalid state.")
+endevent
 
 int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
 	return ERROR

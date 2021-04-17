@@ -4,6 +4,10 @@ Scriptname nl_curios_mcm_core extends nl_mcm_module
 	@version 1.0
 }
 
+int _mcm_hotkey = 0xC5
+
+bool _queue_open_event
+bool _journal_open
 bool _show_secret_page
 
 ;------------------\
@@ -14,7 +18,7 @@ bool _show_secret_page
 event OnInit()
 	; It's good practice to check if we actually succeeded
 	; in registering the module.
-	if RegisterModule("Core", 0) != OK
+	if RegisterModule("Core") != OK
 		KeepTryingToRegister()
 	endif
 
@@ -24,7 +28,8 @@ endevent
 
 ; - After register
 event OnPageInit()
-	; Nothing to do yet!
+	RegisterForMenu(JOURNAL_MENU)
+	RegisterForKey(_mcm_hotkey)
 endevent
 
 ;----------\
@@ -47,6 +52,7 @@ event OnPageDraw()
 	SetCursorPosition(1)
 	AddHeaderOption(FONT_PRIMARY("Misc"))
 	AddToggleOptionST("misc_toggle_font", "Toggle font color", CURRENT_FONT)
+	AddKeyMapOptionST("misc_key_mcm", "Quick mcm Key", _mcm_hotkey)
 	AddEmptyOption()
 
 	AddHeaderOption(FONT_PRIMARY("Fun"))
@@ -85,6 +91,24 @@ state misc_toggle_font
 	endevent
 endstate
 
+state misc_key_mcm
+	event OnDefaultST()
+		UnregisterForKey(_mcm_hotkey)
+		_mcm_hotkey = 0xC5
+		SetKeyMapOptionValueST(0xC5)
+	endevent
+
+	event OnHighlightST()
+		SetInfoText("")
+	endevent
+
+	event OnKeyMapChangeST(int keycode)
+		UnregisterForKey(_mcm_hotkey)
+		_mcm_hotkey = keycode
+		SetKeyMapOptionValueST(keycode)
+	endevent
+endstate
+
 state fun_show_page
 	event OnHighlightST()
 		SetInfoText("Do you dare?")
@@ -106,3 +130,29 @@ state fun_exit_mcm
 		ExitMCM(true)
 	endevent
 endstate
+
+;---------------\
+; MCM QUICK OPEN \
+;--------------------------------------------------------
+
+event OnMenuOpen(String menu_name)
+	_journal_open = true
+
+	if _queue_open_event
+		_queue_open_event = false
+		Ui.Invoke(JOURNAL_MENU, "_root.QuestJournalFader.Menu_mc.ConfigPanelOpen")
+	endif
+endevent
+
+event OnMenuClose(String menu_name)
+	_journal_open = false
+endevent
+
+event OnKeyDown(Int keycode)
+	if _journal_open
+		return
+	endif
+
+	_queue_open_event = true
+	Input.TapKey(Input.GetMappedKey("Journal"))
+endevent
