@@ -25,6 +25,9 @@
     <Import>https://github.com/MrOctopus/nl_online/tree/main/skse64/source</Import>
     <Import>https://github.com/MrOctopus/nl_online/tree/main/sse/source</Import>
   </Imports>
+  <Scripts>
+    <Script>nl_util.psc</Script>
+  </Scripts>
   <Folders>
     <Folder NoRecurse="true">@MCM\source</Folder>
     <Folder NoRecurse="true">@CuriosExample\scripts\source</Folder>
