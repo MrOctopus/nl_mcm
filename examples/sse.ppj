@@ -18,12 +18,15 @@
   <Imports>
 	  <Import>@UtilitiesExample\scripts\source</Import>
     <Import>@CuriosExample\scripts\source</Import>
-    <Import>@MCM\scripts\source</Import>
+    <Import>@MCM\source</Import>
+    <Import>https://github.com/MrOctopus/nl_util/tree/main/dist/scripts/source</Import>
+    <Import>https://github.com/MrOctopus/nl_online/tree/main/jcontainersse/source</Import>
     <Import>https://github.com/schlangster/skyui/tree/master/dist/Data/Scripts/Source</Import>
     <Import>https://github.com/MrOctopus/nl_online/tree/main/skse64/source</Import>
     <Import>https://github.com/MrOctopus/nl_online/tree/main/sse/source</Import>
   </Imports>
   <Folders>
+    <Folder NoRecurse="true">@MCM\source</Folder>
     <Folder NoRecurse="true">@CuriosExample\scripts\source</Folder>
 	  <Folder NoRecurse="true">@UtilitiesExample\scripts\source</Folder>
   </Folders>
