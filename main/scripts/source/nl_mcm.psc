@@ -15,7 +15,13 @@ endfunction
 string property MCM_EXT = ".nlset" autoreadonly
 string property MCM_PATH_SETTINGS
 	string function get()
-		return "Data/NL_MCM/" + ModName + "/"
+		Guard()
+	endfunction
+endproperty
+
+int property MCM_ID
+	int function get()
+		Guard()
 	endfunction
 endproperty
 
@@ -32,10 +38,6 @@ int property ERROR_MODULE_FULL = -1 autoreadonly
 int property ERROR_MODULE_TAKEN = -2 autoreadonly
 int property ERROR_MODULE_INIT = -3 autoreadonly
 int property ERROR_MODULE_NONE = -4 autoreadonly
-
-int property ERROR_PRESET_NONE = -100 autoreadonly
-int property ERROR_PRESET_LOADING = -200 autoreadonly
-int property ERROR_PRESET_BUSY = -300 autoreadonly
 
 ; EVENT CODES
 int property EVENT_DEFAULT = 0 autoreadonly
@@ -79,27 +81,22 @@ endEvent
 
 int function _RegisterModule(nl_mcm_module module, string page_name, int z)				
 	Guard()
-	return ERROR
 endfunction
 
 int function _UnregisterModule(string page_name)
 	Guard()
-	return ERROR
 endfunction
 
-int function SaveMCMToPreset(string preset_path)
+function SaveMCMToPreset(string preset_path)
 	Guard()
-	return ERROR
 endFunction
 
-int function LoadMCMFromPreset(string preset_path)
+function LoadMCMFromPreset(string preset_path)
 	Guard()
-	return ERROR
 endFunction
 
 string function GetCommonStore(string page_name, bool lock)
 	Guard()
-	return ERROR as string
 endfunction
 
 function SetCommonStore(string page_name, string new_value)
@@ -116,7 +113,6 @@ endfunction
 
 string function GetCustomControl(int a_keycode)
 	Guard()
-	return ""
 endfunction
 
 function SetPage(String a_page, Int a_index)	
@@ -130,6 +126,14 @@ endFunction
 event OnInit()
 	Guard()
 endevent
+
+event OnConfigManagerReset(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
+	Guard()
+endEvent
+
+event OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
+	Guard()
+ endEvent
 
 ; Possible thrown exception
 event OnPageReset(string page)
@@ -185,14 +189,12 @@ function RelayPageEvent(string state_name, int event_id, float f = -1.0, string 
 	Guard()
 endfunction
 
-int function GetMCMSavedPresets(string[] presets, string default, string dir_path)
+string[] function GetMCMSavedPresets(string default, string dir_path)
 	Guard()
-	return ERROR
 endfunction
 
-int function DeleteMCMSavedPreset(string preset_path)
+function DeleteMCMSavedPreset(string preset_path)
 	Guard()
-	return ERROR
 endfunction
 
 function AddParagraph(string text, string format = "", int flags = 0x01)
@@ -203,19 +205,19 @@ function SetModName(string name)
 	Guard()
 endfunction
 
-function SetSplashScreen(string path, float x, float y)
+function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
 	Guard()
 endfunction
 
-function SetFont(int font)
+function SetFont(int font = 0x00)
 	Guard()
 endfunction
 
-function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)
+function SetSliderDialog(float value, float range_start, float range_end, float interval, float default = 0.0)
 	Guard()
 endFunction 
 
-function SetMenuDialog(string[] options, int start_i, int default_i)
+function SetMenuDialog(string[] options, int start_i, int default_i = 0)
     Guard()
 endFunction
 

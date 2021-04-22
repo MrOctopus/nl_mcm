@@ -21,7 +21,6 @@ string property JOURNAL_MENU = "Journal Menu" autoreadonly
 string property DEBUG_MSG
 	string function Get()
 		Guard()
-		return ERROR as string
 	endfunction
 endproperty
 
@@ -50,7 +49,7 @@ auto state _inactive
 		Guard()
 	endfunction
 	
-	function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)
+	function SetSliderDialog(float value, float range_start, float range_end, float interval, float default = 0.0)
 		Guard()
 	endFunction 
 	
@@ -66,24 +65,20 @@ auto state _inactive
 		Guard()
 	endfunction
 
-	int function SaveMCMToPreset(string preset_path)
+	function SaveMCMToPreset(string preset_path)
 		Guard()
-		return ERROR
 	endfunction
 	
-	int function LoadMCMFromPreset(string preset_path)
+	function LoadMCMFromPreset(string preset_path)
 		Guard()
-		return ERROR
 	endfunction
 	
-	int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
+	string[] function GetMCMSavedPresets(string default, string dir_path = ".")
 		Guard()
-		return ERROR
 	endfunction 
 	
-	int function DeleteMCMSavedPreset(string preset_path)
+	function DeleteMCMSavedPreset(string preset_path)
 		Guard()
-		return ERROR
 	endfunction
 
 	function SetCursorFillMode(int a_fillMode)
@@ -92,12 +87,10 @@ auto state _inactive
 	
 	int function AddHeaderOption(string a_text, int a_flags = 0)
 		Guard()
-		return ERROR
 	endfunction
 	
 	int function AddEmptyOption()
 		Guard()
-		return ERROR
 	endfunction
 	
 	function AddTextOptionST(string a_stateName, string a_text, string a_value, int a_flags = 0)
@@ -210,7 +203,6 @@ auto state _inactive
 	
 	bool function ShowMessage(string a_message, bool a_withCancel = true, string a_acceptLabel = "$Accept", string a_cancelLabel = "$Cancel")
 		Guard()
-		return ERROR as bool
 	endfunction
 
 ;-------\-----\
@@ -235,12 +227,10 @@ auto state _inactive
 
 	int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")				
 		Guard()
-		return ERROR
 	endfunction
 		
 	int function UnregisterModule()
 		Guard()
-		return ERROR
 	endfunction
 endstate
 
@@ -258,12 +248,10 @@ endevent
 
 int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
 	Guard()
-	return ERROR
 endfunction
 
 int function UnregisterModule()
 	Guard()
-	return ERROR
 endfunction
 
 ;--------\-----\
@@ -282,10 +270,6 @@ int property ERROR_MODULE_NONE = -4 autoreadonly
 int property ERROR_MCM_NONEQUEST = -10 autoreadonly
 int property ERROR_MCM_NONE = -10 autoreadonly
 
-int property ERROR_PRESET_NONE = -100 autoreadonly
-int property ERROR_PRESET_LOADING = -200 autoreadonly
-int property ERROR_PRESET_BUSY = -300 autoreadonly
-
 ; FONTS
 int property FONT_DEFAULT = 0x00 autoreadonly
 int property FONT_PAPER = 0x01 autoreadonly
@@ -293,58 +277,54 @@ int property FONT_PAPER = 0x01 autoreadonly
 int property CURRENT_FONT
     int function Get()
 		Guard()
-		return ERROR
 	endfunction
 endproperty
 
 string function FONT_PRIMARY(string text = "")
 	Guard()
-	return ERROR as string
 endfunction
 
 string function FONT_SECONDARY(string text = "")
 	Guard()
-	return ERROR as string
 endfunction
 
 string function FONT_SUCCESS(string text = "")
 	Guard()
-	return ERROR as string
 endfunction
 
 string function FONT_DANGER(string text = "")
 	Guard()
-	return ERROR as string
 endfunction
 
 string function FONT_WARNING(string text = "")
 	Guard()
-	return ERROR as string
 endfunction
 
 string function FONT_INFO(string text = "")
 	Guard()
-	return ERROR as string
 endfunction
 
 ; PROPERTIES
 nl_mcm property UNSAFE_RAW_MCM
     nl_mcm function Get()
 		Guard()
-        return None
     endfunction
 endproperty
 
 quest property OWNING_QUEST
 	quest function Get()
 		Guard()
-		return None
+	endfunction
+endproperty
+
+int property MCM_ID
+	int function get()
+		Guard()
 	endfunction
 endproperty
 
 string function GetCommonStore(bool lock)
 	Guard()
-	return ERROR as string
 endfunction
 
 function SetCommonStore(string new_value)
@@ -367,7 +347,7 @@ function SetFont(int font = 0x00)
 	Guard()
 endfunction
 
-function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)
+function SetSliderDialog(float value, float range_start, float range_end, float interval, float default = 0.0)
 	Guard()
 endFunction 
 
@@ -383,24 +363,20 @@ function ExitMCM(bool fully = false)
 	Guard()
 endfunction
 
-int function SaveMCMToPreset(string preset_path)
+function SaveMCMToPreset(string preset_path)
 	Guard()
-	return ERROR
 endfunction
 
-int function LoadMCMFromPreset(string preset_path)
+function LoadMCMFromPreset(string preset_path)
 	Guard()
-	return ERROR
 endfunction
 
-int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
+string[] function GetMCMSavedPresets(string default, string dir_path = ".")
 	Guard()
-	return ERROR
 endfunction 
 
-int function DeleteMCMSavedPreset(string preset_path)
+function DeleteMCMSavedPreset(string preset_path)
 	Guard()
-	return ERROR
 endfunction
 
 ;--------\----------\
@@ -419,7 +395,7 @@ int property TOP_TO_BOTTOM = 2 autoReadonly
 ; VERSION
 int property CurrentVersion hidden
     int function Get()
-        return ERROR
+		Guard()
     endFunction
 endproperty
 
@@ -429,12 +405,10 @@ endfunction
 
 int function AddHeaderOption(string a_text, int a_flags = 0)
 	Guard()
-	return ERROR
 endfunction
 
 int function AddEmptyOption()
 	Guard()
-	return ERROR
 endfunction
 
 function AddTextOptionST(string a_stateName, string a_text, string a_value, int a_flags = 0)
@@ -547,7 +521,6 @@ endfunction
 
 bool function ShowMessage(string a_message, bool a_withCancel = true, string a_acceptLabel = "$Accept", string a_cancelLabel = "$Cancel")
 	Guard()
-	return ERROR
 endfunction
 
 ;-------------\
@@ -555,12 +528,11 @@ endfunction
 ;--------------------------------------------------------
 
 int function GetVersion()
-	return ERROR
+	Guard()
 endfunction
 
 int function SaveData()
 	Guard()
-	return ERROR
 endfunction
 
 function LoadData(int jObj)

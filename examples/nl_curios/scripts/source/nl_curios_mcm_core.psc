@@ -4,10 +4,9 @@ Scriptname nl_curios_mcm_core extends nl_mcm_module
 	@version 1.0
 }
 
+int[] _mcm_select_type
 int _mcm_hotkey = 0xC5
 
-bool _queue_open_event
-bool _journal_open
 bool _show_secret_page
 
 ;------------------\
@@ -28,6 +27,8 @@ endevent
 
 ; - After register
 event OnPageInit()
+	_mcm_select_type = new int[2]
+	_mcm_select_type[1] = 1
 	RegisterForMenu(JOURNAL_MENU)
 	RegisterForKey(_mcm_hotkey)
 endevent
@@ -135,24 +136,74 @@ endstate
 ; MCM QUICK OPEN \
 ;--------------------------------------------------------
 
-event OnMenuOpen(String menu_name)
+
+float property _quick_e_cd_time = 0.5 autoreadonly
+
+bool _quick_e_open
+bool _quick_e_cd
+bool _journal_open
+
+event OnUpdate()
+	_quick_e_cd = false
+endevent
+
+; What the fuck is happening here?
+event OnMenuOpen(string menu_name)
 	_journal_open = true
 
-	if _queue_open_event
-		_queue_open_event = false
-		Ui.Invoke(JOURNAL_MENU, "_root.QuestJournalFader.Menu_mc.ConfigPanelOpen")
-	endif
-endevent
-
-event OnMenuClose(String menu_name)
-	_journal_open = false
-endevent
-
-event OnKeyDown(Int keycode)
-	if _journal_open
+	if !_quick_e_open || _quick_e_cd
 		return
 	endif
 
-	_queue_open_event = true
-	Input.TapKey(Input.GetMappedKey("Journal"))
+	_quick_e_open = false
+	_quick_e_cd = true
+	_mcm_select_type[0] = MCM_ID
+
+	; Let's avoid crashing shall we?
+	if _mcm_select_type[0] < 0
+		_quick_e_cd = false
+		return
+	endif
+
+	string sort_event = MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.entryList.sortOn"
+
+	; Numeric sortOn
+	int handle = UiCallback.Create(JOURNAL_MENU, sort_event)
+	UiCallback.PushString(handle, "modIndex")
+	UiCallback.PushInt(handle, 16)
+
+	; Alphabetic caseinsensitive sortOn
+	int handle2 = UiCallback.Create(JOURNAL_MENU, sort_event)
+	UiCallback.PushString(handle2, "text")
+	UiCallback.PushInt(handle2, 1)
+
+	; Wait 0.2 seconds for the ConfigManager to setNames
+	Utility.Wait(0.2)
+	UiCallback.Send(handle)
+	Ui.Invoke(JOURNAL_MENU, "_root.QuestJournalFader.Menu_mc.ConfigPanelOpen")
+	Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.doSetSelectedIndex", _mcm_select_type)
+	Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.onItemPress", _mcm_select_type)
+	UiCallback.Send(handle2)
+
+	RegisterForSingleUpdate(_quick_e_cd_time)
+endevent
+
+event OnMenuClose(string menu_name)
+	_journal_open = false
+endevent
+
+event OnKeyDown(int keycode)
+	; We need to be careful here to avoid crashing
+	if _quick_e_cd
+		return
+	endif
+
+	if _journal_open
+		_quick_e_cd = true
+		ExitMCM(true)
+		RegisterForSingleUpdate(_quick_e_cd_time)
+	else
+		_quick_e_open = true
+		Input.TapKey(Input.GetMappedKey("Journal"))
+	endif
 endevent

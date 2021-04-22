@@ -107,7 +107,7 @@ auto state _inactive
 		Trace(DEBUG_MSG + "AddParagraph has been called in an invalid state.")
 	endfunction
 	
-	function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)
+	function SetSliderDialog(float value, float range_start, float range_end, float interval, float default = 0.0)
 		Trace(DEBUG_MSG + "SetSliderDialog has been called in an invalid state.")
 	endFunction 
 	
@@ -123,24 +123,21 @@ auto state _inactive
 		Trace(DEBUG_MSG + "ExitMCM has been called in an invalid state.")
 	endfunction
 
-	int function SaveMCMToPreset(string preset_path)
+	function SaveMCMToPreset(string preset_path)
 		Trace(DEBUG_MSG + "SaveMCMToPreset has been called in an invalid state.")
-		return ERROR
 	endfunction
 	
-	int function LoadMCMFromPreset(string preset_path)
+	function LoadMCMFromPreset(string preset_path)
 		Trace(DEBUG_MSG + "LoadMCMFromPreset has been called in an invalid state.")
-		return ERROR
 	endfunction
 	
-	int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
+	string[] function GetMCMSavedPresets(string default, string dir_path = ".")
 		Trace(DEBUG_MSG + "GetMCMSavedPresets has been called in an invalid state.")
-		return ERROR
+		return None
 	endfunction 
 	
-	int function DeleteMCMSavedPreset(string preset_path)
+	function DeleteMCMSavedPreset(string preset_path)
 		Trace(DEBUG_MSG + "DeleteMCMSavedPreset has been called in an invalid state.")
-		return ERROR
 	endfunction
 
 	function SetCursorFillMode(int a_fillMode)
@@ -149,12 +146,12 @@ auto state _inactive
 	
 	int function AddHeaderOption(string a_text, int a_flags = 0)
 		Trace(DEBUG_MSG + "AddHeaderOption has been called in an invalid state.")
-		return ERROR
+		return ERROR_MODULE_INIT
 	endfunction
 	
 	int function AddEmptyOption()
 		Trace(DEBUG_MSG + "AddEmptyOption has been called in an invalid state.")
-		return ERROR
+		return ERROR_MODULE_INIT
 	endfunction
 	
 	function AddTextOptionST(string a_stateName, string a_text, string a_value, int a_flags = 0)
@@ -267,7 +264,7 @@ auto state _inactive
 	
 	bool function ShowMessage(string a_message, bool a_withCancel = true, string a_acceptLabel = "$Accept", string a_cancelLabel = "$Cancel")
 		Trace(DEBUG_MSG + "ShowMessage has been called in an invalid state.")
-		return ERROR as bool
+		return false
 	endfunction
 
 ;-------\-----\
@@ -409,10 +406,6 @@ int property ERROR_MODULE_NONE = -4 autoreadonly
 int property ERROR_MCM_NONEQUEST = -10 autoreadonly
 int property ERROR_MCM_NONE = -10 autoreadonly
 
-int property ERROR_PRESET_NONE = -100 autoreadonly
-int property ERROR_PRESET_LOADING = -200 autoreadonly
-int property ERROR_PRESET_BUSY = -300 autoreadonly
-
 ; FONTS
 int property FONT_DEFAULT = 0x00 autoreadonly
 { Default font color }
@@ -497,6 +490,16 @@ quest property OWNING_QUEST
 	endfunction
 endproperty
 
+int property MCM_ID
+{
+	Retrieve's the mcm's mod id
+	@get Mcm id
+}
+	int function get()
+		return _MCM.MCM_ID
+	endfunction
+endproperty
+
 string function GetCommonStore(bool lock)
 {
 	Get the shared common store string. \
@@ -555,7 +558,7 @@ function SetFont(int font = 0x00)
 	_MCM.SetFont(font)
 endfunction
 
-function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)
+function SetSliderDialog(float value, float range_start, float range_end, float interval, float default = 0.0)
 {
 	A convenience function to set all of the slider data using only 1 function.
 	@param value - The value the slider is set at
@@ -591,7 +594,7 @@ function ExitMCM(bool fully = false)
 	Exits the current MCM.
 	@param fully - If set to true, it will exit the quest journal too
 }
-	if GetString(JOURNAL_MENU, MENU_ROOT + ".titlebar.textField.text") != _page_name
+	if GetString(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.decorTitle.textHolder.textField.text") != _MCM.ModName
 		return
 	endif
 	
@@ -604,42 +607,38 @@ function ExitMCM(bool fully = false)
 	endif
 endfunction
 
-int function SaveMCMToPreset(string preset_path)
+function SaveMCMToPreset(string preset_path)
 {
 	Calls the local SaveData function on all module scripts, storing the resulting JObjects under the given file name.
 	@param preset_path - The path to the preset to store the settings under
-	@return Error code
 }
-	return _MCM.SaveMCMToPreset(preset_path)
+	_MCM.SaveMCMToPreset(preset_path)
 endfunction
 	
-int function LoadMCMFromPreset(string preset_path)
+function LoadMCMFromPreset(string preset_path)
 {
 	Calls the local LoadData function on all module scripts, using the JObjects loaded from the given file.
 	@param preset_path - The path to the preset to load settings from
-	@return Error code
 }
-	return _MCM.LoadMCMFromPreset(preset_path)
+	_MCM.LoadMCMFromPreset(preset_path)
 endfunction
 	
-int function GetMCMSavedPresets(string[] none_array, string default, string dir_path = ".")
+string[] function GetMCMSavedPresets(string default, string dir_path = ".")
 {
 	Get an array containing the name of all saved presets.
-	@param presets - An empty/none list to store the results in
 	@param default - A default string to fill the list with. Used to create a "fake exit" button for mcm menus
 	@param dir_path - The directory path of the presets. Defaults to current mcm menu directory 
-	@return Error code
+	@return Saved preset names at given path
 }
-	return _MCM.GetMCMSavedPresets(none_array, default, dir_path)
+	return _MCM.GetMCMSavedPresets(default, dir_path)
 endfunction 
 	
-int function DeleteMCMSavedPreset(string preset_path)
+function DeleteMCMSavedPreset(string preset_path)
 {
 	Delete a given preset from the settings folder. 
 	@param preset_path - The path to the preset to delete
-	@return Error code
 }
-	return _MCM.DeleteMCMSavedPreset(preset_path)
+	_MCM.DeleteMCMSavedPreset(preset_path)
 endfunction
 
 ;--------\----------\

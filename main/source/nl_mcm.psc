@@ -23,6 +23,12 @@ string property MCM_PATH_SETTINGS
 	endfunction
 endproperty
 
+int property MCM_ID
+	int function get()
+		return _id
+	endfunction
+endproperty
+
 ; MISC CONSTANTS
 float property SPINLOCK_TIMER = 0.4 autoreadonly
 float property BUFFER_TIMER = 2.0 autoreadonly
@@ -37,10 +43,6 @@ int property ERROR_MODULE_FULL = -1 autoreadonly
 int property ERROR_MODULE_TAKEN = -2 autoreadonly
 int property ERROR_MODULE_INIT = -3 autoreadonly
 int property ERROR_MODULE_NONE = -4 autoreadonly
-
-int property ERROR_PRESET_NONE = -100 autoreadonly
-int property ERROR_PRESET_LOADING = -200 autoreadonly
-int property ERROR_PRESET_BUSY = -300 autoreadonly
 
 ; EVENT CODES
 int property EVENT_DEFAULT = 0 autoreadonly
@@ -73,6 +75,7 @@ float _splash_x
 float _splash_y
 
 int _buffered
+int _id = -1
 int _font = -1
 
 bool _initialized
@@ -177,7 +180,13 @@ event OnGameReload()
 	parent.OnGameReload()
 endevent
 
-event OnUpdate()	
+event OnUpdate()
+	; Registering for single update can fuck everything else up
+	; so we need to bulletproof this
+	if _initialized
+		return
+	endif
+	
 	_mutex_modules = True
 
 	Pages = Utility.ResizeStringArray(Pages, _buffered)
@@ -450,17 +459,13 @@ int function _UnregisterModule(string page_name)
 	return OK
 endfunction
 
-int function SaveMCMToPreset(string preset_path)
+function SaveMCMToPreset(string preset_path)
 	if !JContainers.isInstalled()
-		return ERROR
+		return
 	endif
 	
-	if preset_path == ""
-		return ERROR_PRESET_NONE
-	endif
-	
-	if _busy_jcontainer
-		return ERROR_PRESET_BUSY
+	if preset_path == "" || _busy_jcontainer
+		return
 	endif
 	
 	_busy_jcontainer = true
@@ -476,9 +481,11 @@ int function SaveMCMToPreset(string preset_path)
 	int i = 0
 	while i < Pages.Length
 		int jData = _modules[i].SaveData()
+
 		if jData > 0
 			JMap.setObj(jPreset, Pages[i], jData)
 		endif
+
 		i += 1
 	endwhile
 	
@@ -489,23 +496,16 @@ int function SaveMCMToPreset(string preset_path)
 	endif
 	
 	_busy_jcontainer = false
-	
 	JValue.zeroLifetime(jPreset)
-	
-	return OK
 endfunction
 
-int function LoadMCMFromPreset(string preset_path)
+function LoadMCMFromPreset(string preset_path)
 	if !JContainers.isInstalled()
-		return ERROR
+		return
 	endif
 	
-	if preset_path == ""
-		return ERROR_PRESET_NONE
-	endif
-	
-	if _busy_jcontainer
-		return ERROR_PRESET_BUSY
+	if preset_path == "" || _busy_jcontainer
+		return
 	endif
 
 	_busy_jcontainer = True
@@ -516,7 +516,7 @@ int function LoadMCMFromPreset(string preset_path)
 	
 	if jPreset == 0
 		_busy_jcontainer = false
-		return ERROR_PRESET_LOADING
+		return
 	endif
 	
 	_mutex_modules = true
@@ -524,18 +524,17 @@ int function LoadMCMFromPreset(string preset_path)
 	int i = 0
 	while i < Pages.Length
 		int jData = JMap.getObj(jPreset, Pages[i])
+
 		if jData > 0
 			_modules[i].LoadData(jData)
 		endif
+
 		i += 1
 	endwhile
 	
 	_mutex_modules = false	
 	_busy_jcontainer = false
-	
 	JValue.zeroLifetime(jPreset)
-	
-	return OK
 endfunction
 
 string function GetCommonStore(string page_name, bool lock)
@@ -625,6 +624,27 @@ event OnInit()
 	_owning_quest = self as quest
 endevent
 
+event OnConfigManagerReset(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
+	_id = -1
+	RegisterForModEvent("SKICP_configManagerReady", "OnConfigManagerReady")
+endEvent
+
+event OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
+	SKI_ConfigManager newManager = a_sender as SKI_ConfigManager
+
+	if newManager == none || _id >= 0
+		return
+	endif
+
+	_id = newManager.RegisterMod(self, ModName)
+
+	if _id >= 0
+		; Unregister to avoid polling events
+		UnregisterForModEvent("SKICP_configManagerReady")
+		Debug.Trace(self + ": Registered " + ModName + " at MCM.")
+	endif
+ endEvent
+
 ; Possible thrown exception
 event OnPageReset(string page)
 	if page != ""
@@ -698,18 +718,18 @@ function RelayPageEvent(string state_name, int event_id, float f = -1.0, string 
 	_modules[i]._OnPageEvent(state_name, event_id, f, str)
 endfunction
 
-int function GetMCMSavedPresets(string[] presets, string default, string dir_path)
+string[] function GetMCMSavedPresets(string default, string dir_path)
 	if !JContainers.isInstalled()
-		return ERROR
+		return None
 	endif
 	
 	string[] dir_presets = JContainers.contentsOfDirectoryAtPath(MCM_PATH_SETTINGS + dir_path, MCM_EXT)	
 	
 	if dir_presets.Length == 0
-		return ERROR_PRESET_NONE
+		 None
 	endif
 	
-	presets = Utility.CreateStringArray(dir_presets.length + 1, default)
+	string[] presets = Utility.CreateStringArray(dir_presets.length + 1, default)
 	int i
 	
 	while i < dir_presets.length
@@ -717,27 +737,21 @@ int function GetMCMSavedPresets(string[] presets, string default, string dir_pat
 		i += 1
 	endwhile
 	
-	return OK
+	return presets
 endfunction
 
-int function DeleteMCMSavedPreset(string preset_path)
+function DeleteMCMSavedPreset(string preset_path)
 	if !JContainers.isInstalled()
-		return ERROR
+		return
 	endif
 	
-	if preset_path == ""
-		return ERROR_MODULE_NONE
-	endif
-	
-	if _busy_jcontainer
-		return ERROR_PRESET_BUSY
+	if preset_path == "" || _busy_jcontainer
+		return
 	endif
 	
 	_busy_jcontainer = True
 	JContainers.removeFileAtPath(MCM_PATH_SETTINGS + preset_path + MCM_EXT)
 	_busy_jcontainer = False
-	
-	return OK
 endfunction
 
 function AddParagraph(string text, string format = "", int flags = 0x01)
@@ -802,26 +816,26 @@ function SetModName(string name)
 	endif
 endfunction
 
-function SetSplashScreen(string path, float x, float y)
+function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
 	_splash_path = path
 	_splash_x = x
 	_splash_y = y
 endfunction
 
-function SetFont(int font)
+function SetFont(int font = 0x00)
 	if _font >= 0
 		_font = font
 	endif
 endfunction
 
-function SetSliderDialog(float value, float range_start, float range_end, float interval, float default)
+function SetSliderDialog(float value, float range_start, float range_end, float interval, float default = 0.0)
 	SetSliderDialogRange(range_start, range_end)
     SetSliderDialogStartValue(value)
     SetSliderDialogInterval(interval)
     SetSliderDialogDefaultValue(default)
 endFunction 
 
-function SetMenuDialog(string[] options, int start_i, int default_i)
+function SetMenuDialog(string[] options, int start_i, int default_i = 0)
     SetMenuDialogOptions(options)
 	SetMenuDialogStartIndex(start_i)
     SetMenuDialogDefaultIndex(default_i)
