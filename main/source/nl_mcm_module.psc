@@ -492,7 +492,8 @@ endproperty
 
 int property MCM_ID
 {
-	Retrieve's the mcm's mod id
+	Retrieve's the mcm's mod id. \
+	Note: Don't cache this, as it might change on gamereloads.
 	@get Mcm id
 }
 	int function get()

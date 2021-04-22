@@ -5,7 +5,7 @@ Scriptname nl_curios_mcm_core extends nl_mcm_module
 }
 
 int[] _mcm_select_type
-int _mcm_hotkey = 0xC5
+int _mcm_hotkey = -1
 
 bool _show_secret_page
 
@@ -95,8 +95,8 @@ endstate
 state misc_key_mcm
 	event OnDefaultST()
 		UnregisterForKey(_mcm_hotkey)
-		_mcm_hotkey = 0xC5
-		SetKeyMapOptionValueST(0xC5)
+		_mcm_hotkey = -1
+		SetKeyMapOptionValueST(-1)
 	endevent
 
 	event OnHighlightST()
@@ -143,11 +143,6 @@ bool _quick_e_open
 bool _quick_e_cd
 bool _journal_open
 
-event OnUpdate()
-	_quick_e_cd = false
-endevent
-
-; What the fuck is happening here?
 event OnMenuOpen(string menu_name)
 	_journal_open = true
 
@@ -185,7 +180,8 @@ event OnMenuOpen(string menu_name)
 	Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.onItemPress", _mcm_select_type)
 	UiCallback.Send(handle2)
 
-	RegisterForSingleUpdate(_quick_e_cd_time)
+	Utility.Wait(_quick_e_cd_time)
+	_quick_e_cd = false
 endevent
 
 event OnMenuClose(string menu_name)
@@ -201,7 +197,8 @@ event OnKeyDown(int keycode)
 	if _journal_open
 		_quick_e_cd = true
 		ExitMCM(true)
-		RegisterForSingleUpdate(_quick_e_cd_time)
+		Utility.Wait(_quick_e_cd_time)
+		_quick_e_cd = false
 	else
 		_quick_e_open = true
 		Input.TapKey(Input.GetMappedKey("Journal"))
