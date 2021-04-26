@@ -7,7 +7,6 @@ Scriptname nl_mcm_module extends Quest
 	@version 1.0.0
 }
 
-import Ui
 import Debug
 
 ;-------\----------\
@@ -118,9 +117,15 @@ auto state _inactive
 	function RefreshPages()
 		Trace(DEBUG_MSG + "RefreshPages has been called in an invalid state.")
 	endfunction
+
+	int function OpenMCM(bool skip_journal_check = false)
+		Trace(DEBUG_MSG + "OpenMCM has been called in an invalid state.")
+		return ERROR_MODULE_INIT
+	endfunction
 	
-	function ExitMCM(bool fully = false)
-		Trace(DEBUG_MSG + "ExitMCM has been called in an invalid state.")
+	int function CloseMCM(bool close_journal = false)
+		Trace(DEBUG_MSG + "CloseMCM has been called in an invalid state.")
+		return ERROR_MODULE_INIT
 	endfunction
 
 	function SaveMCMToPreset(string preset_path)
@@ -404,7 +409,12 @@ int property ERROR_MODULE_INIT = -3 autoreadonly
 int property ERROR_MODULE_NONE = -4 autoreadonly
 
 int property ERROR_MCM_NONEQUEST = -10 autoreadonly
-int property ERROR_MCM_NONE = -10 autoreadonly
+int property ERROR_MCM_NONE = -20 autoreadonly
+
+int property ERROR_MENU_NOID = -100 autoreadonly
+int property ERROR_MENU_COOLDOWN = -200 autoreadonly
+int property ERROR_MENU_JOURNALCLOSED = -300 autoreadonly
+int property ERROR_MENU_NOTOWNER = -400 autoreadonly
 
 ; FONTS
 int property FONT_DEFAULT = 0x00 autoreadonly
@@ -590,22 +600,22 @@ function RefreshPages()
 	_MCM.RefreshPages()
 endfunction
 
-function ExitMCM(bool fully = false)
+int function OpenMCM(bool skip_journal_check = false)
 {
-	Exits the current MCM.
-	@param fully - If set to true, it will exit the quest journal too
+	Opens the MCM menu directly if the journal menu is already open. \
+	Note: See nl_curios_mcm_core for a demonstration.
+	@param skip_journal_check - If set to true, this will skip the IsJournalOpen check. \
+	this should only be used if you're sure it's already open (e.g inside an OnOpenMenu event)
 }
-	if GetString(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.decorTitle.textHolder.textField.text") != _MCM.ModName
-		return
-	endif
-	
-	InvokeInt(JOURNAL_MENU, MENU_ROOT + ".changeFocus", 0)
-	Invoke(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.showList")
-	
-	if fully
-		Invoke(JOURNAL_MENU, "_root.QuestJournalFader.Menu_mc.ConfigPanelClose")
-		InvokeBool(JOURNAL_MENU, "_root.QuestJournalFader.Menu_mc.CloseMenu", true)
-	endif
+	return _MCM.OpenMCM(skip_journal_check)
+endfunction
+
+int function CloseMCM(bool close_journal = false)
+{
+	Close the current MCM.
+	@param close_journal - If set to true, it will close the quest journal too
+}
+	return _MCM.CloseMCM(close_journal)
 endfunction
 
 function SaveMCMToPreset(string preset_path)

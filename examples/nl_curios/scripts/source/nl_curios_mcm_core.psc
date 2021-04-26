@@ -4,7 +4,6 @@ Scriptname nl_curios_mcm_core extends nl_mcm_module
 	@version 1.0
 }
 
-int[] _mcm_select_type
 int _mcm_hotkey = -1
 
 bool _show_secret_page
@@ -27,8 +26,6 @@ endevent
 
 ; - After register
 event OnPageInit()
-	_mcm_select_type = new int[2]
-	_mcm_select_type[1] = 1
 	RegisterForMenu(JOURNAL_MENU)
 	RegisterForKey(_mcm_hotkey)
 endevent
@@ -106,6 +103,7 @@ state misc_key_mcm
 	event OnKeyMapChangeST(int keycode)
 		UnregisterForKey(_mcm_hotkey)
 		_mcm_hotkey = keycode
+		RegisterForKey(_mcm_hotkey)
 		SetKeyMapOptionValueST(keycode)
 	endevent
 endstate
@@ -128,7 +126,7 @@ state fun_exit_mcm
 	endevent
 
 	event OnSelectST()
-		ExitMCM(true)
+		CloseMCM(close_journal = true)
 	endevent
 endstate
 
@@ -136,71 +134,60 @@ endstate
 ; MCM QUICK OPEN \
 ;--------------------------------------------------------
 
+; There are several ways to write the quick mcm open
+; but this is the quickest and best one
 
-float property _quick_e_cd_time = 0.5 autoreadonly
-
-bool _quick_e_open
-bool _quick_e_cd
 bool _journal_open
+bool _quick_open
 
 event OnMenuOpen(string menu_name)
 	_journal_open = true
 
-	if !_quick_e_open || _quick_e_cd
+	if !_quick_open
 		return
 	endif
 
-	_quick_e_open = false
-	_quick_e_cd = true
-	_mcm_select_type[0] = MCM_ID
+	_quick_open = false
 
-	; Let's avoid crashing shall we?
-	if _mcm_select_type[0] < 0
-		_quick_e_cd = false
-		return
-	endif
-
-	string sort_event = MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.entryList.sortOn"
-
-	; Numeric sortOn
-	int handle = UiCallback.Create(JOURNAL_MENU, sort_event)
-	UiCallback.PushString(handle, "modIndex")
-	UiCallback.PushInt(handle, 16)
-
-	; Alphabetic caseinsensitive sortOn
-	int handle2 = UiCallback.Create(JOURNAL_MENU, sort_event)
-	UiCallback.PushString(handle2, "text")
-	UiCallback.PushInt(handle2, 1)
-
-	; Wait 0.2 seconds for the ConfigManager to setNames
-	Utility.Wait(0.2)
-	UiCallback.Send(handle)
-	Ui.Invoke(JOURNAL_MENU, "_root.QuestJournalFader.Menu_mc.ConfigPanelOpen")
-	Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.doSetSelectedIndex", _mcm_select_type)
-	Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.onItemPress", _mcm_select_type)
-	UiCallback.Send(handle2)
-
-	Utility.Wait(_quick_e_cd_time)
-	_quick_e_cd = false
+	while OpenMCM(skip_journal_check = true) == ERROR_MENU_COOLDOWN
+		Utility.WaitMenuMode(0.1)
+	endwhile
 endevent
 
 event OnMenuClose(string menu_name)
 	_journal_open = false
+	_quick_open = false
 endevent
 
 event OnKeyDown(int keycode)
-	; We need to be careful here to avoid crashing
-	if _quick_e_cd
-		return
-	endif
-
 	if _journal_open
-		_quick_e_cd = true
-		ExitMCM(true)
-		Utility.Wait(_quick_e_cd_time)
-		_quick_e_cd = false
+		CloseMCM(close_journal = true)
 	else
-		_quick_e_open = true
+		_quick_open = true
 		Input.TapKey(Input.GetMappedKey("Journal"))
 	endif
 endevent
+
+
+; Another method is to do everything solely in the OnKeyDown event, but this is not very efficient:
+;/
+event OnKeyDown(int keycode)
+	if Ui.IsMenuOpen(JOURNAL_MENU)
+		CloseMCM(close_journal = true)
+	else
+		int upper_wait_limit = 5
+		Input.TapKey(Input.GetMappedKey("Journal"))
+
+		while upper_wait_limit > 0 
+			int error_code = OpenMCM() 
+		
+			if error_code == ERROR_MENU_JOURNALCLOSED || error_code == ERROR_MENU_COOLDOWN 
+				Utility.WaitMenuMode(0.3)
+				upper_wait_limit -= 1
+			else
+				upper_wait_limit = 0
+			endif
+		endwhile
+	endif
+endevent
+/;

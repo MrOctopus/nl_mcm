@@ -61,7 +61,11 @@ auto state _inactive
 		Guard()
 	endfunction
 	
-	function ExitMCM(bool fully = false)
+	int function OpenMCM(bool skip_journal_check = false)
+		Guard()
+	endfunction
+	
+	int function CloseMCM(bool close_journal = false)
 		Guard()
 	endfunction
 
@@ -268,7 +272,12 @@ int property ERROR_MODULE_INIT = -3 autoreadonly
 int property ERROR_MODULE_NONE = -4 autoreadonly
 
 int property ERROR_MCM_NONEQUEST = -10 autoreadonly
-int property ERROR_MCM_NONE = -10 autoreadonly
+int property ERROR_MCM_NONE = -20 autoreadonly
+
+int property ERROR_MENU_NOID = -100 autoreadonly
+int property ERROR_MENU_COOLDOWN = -200 autoreadonly
+int property ERROR_MENU_JOURNALCLOSED = -300 autoreadonly
+int property ERROR_MENU_NOTOWNER = -400 autoreadonly
 
 ; FONTS
 int property FONT_DEFAULT = 0x00 autoreadonly
@@ -359,7 +368,11 @@ function RefreshPages()
 	Guard()
 endfunction
 
-function ExitMCM(bool fully = false)
+int function OpenMCM(bool skip_journal_check = false)
+	Guard()
+endfunction
+
+int function CloseMCM(bool close_journal = false)
 	Guard()
 endfunction
 

@@ -30,7 +30,7 @@ int property MCM_ID
 endproperty
 
 ; MISC CONSTANTS
-float property SPINLOCK_TIMER = 0.4 autoreadonly
+float property SPINLOCK_TIMER = 0.3 autoreadonly
 float property BUFFER_TIMER = 2.0 autoreadonly
 int property LINE_LENGTH = 47 autoreadonly
 {Max line length for a mcm column}
@@ -43,6 +43,11 @@ int property ERROR_MODULE_FULL = -1 autoreadonly
 int property ERROR_MODULE_TAKEN = -2 autoreadonly
 int property ERROR_MODULE_INIT = -3 autoreadonly
 int property ERROR_MODULE_NONE = -4 autoreadonly
+
+int property ERROR_MENU_NOID = -100 autoreadonly
+int property ERROR_MENU_COOLDOWN = -200 autoreadonly
+int property ERROR_MENU_JOURNALCLOSED = -300 autoreadonly
+int property ERROR_MENU_NOTOWNER = -400 autoreadonly
 
 ; EVENT CODES
 int property EVENT_DEFAULT = 0 autoreadonly
@@ -83,6 +88,7 @@ bool _busy_jcontainer
 bool _mutex_modules
 bool _mutex_store
 bool _mutex_page
+bool _ctd_lock
 
 ;---------\--------\
 ; CRITICAL \ EVENTS \
@@ -845,3 +851,82 @@ function RefreshPages()
 	SetPage("", -1)
 	Ui.InvokeStringA(JOURNAL_MENU, MENU_ROOT + ".setPageNames", Pages)
 endFunction
+
+int function OpenMCM(bool skip_journal_check = false)
+	; MCM_ID Must be available
+	; else, we might ctd
+	if select_type[0] < 0
+		return ERROR_MENU_NOID
+	endif
+
+	if _ctd_lock
+		return ERROR_MENU_COOLDOWN
+	endif
+
+	; Lock
+	_ctd_lock = true
+
+	int[] select_type = new int[2]
+	select_type[0] = _id
+	select_type[1] = 1
+	
+	; Journal must be open
+	if !skip_journal_check && !Ui.IsMenuOpen(JOURNAL_MENU)
+		_ctd_lock = false
+		return ERROR_MENU_JOURNALCLOSED
+	endif
+
+	string sort_event = MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.entryList.sortOn"
+
+	; Numeric sortOn
+	int handle = UiCallback.Create(JOURNAL_MENU, sort_event)
+	UiCallback.PushString(handle, "modIndex")
+	UiCallback.PushInt(handle, 16)
+
+	; Alphabetic caseinsensitive sortOn
+	int handle2 = UiCallback.Create(JOURNAL_MENU, sort_event)
+	UiCallback.PushString(handle2, "text")
+	UiCallback.PushInt(handle2, 1)
+
+	; Wait 0.3 seconds for the ConfigManager to setNames
+	Utility.WaitMenuMode(SPINLOCK_TIMER)
+	UiCallback.Send(handle)
+	Ui.Invoke(JOURNAL_MENU, "_root.QuestJournalFader.Menu_mc.ConfigPanelOpen")
+	Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.doSetSelectedIndex", select_type)
+	Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.onItemPress", select_type)
+	UiCallback.Send(handle2)
+	
+	; Cooldown
+	Utility.WaitMenuMode(SPINLOCK_TIMER)
+	_ctd_lock = false
+
+	return OK
+endfunction
+
+int function CloseMCM(bool close_journal = false)
+	if _ctd_lock
+		return ERROR_MENU_COOLDOWN
+	endif
+
+	; Lock
+	_ctd_lock = true
+
+	if Ui.GetString(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.decorTitle.textHolder.textField.text") != ModName
+		_ctd_lock = false
+		return ERROR_MENU_NOTOWNER
+	endif
+	
+	Ui.InvokeInt(JOURNAL_MENU, MENU_ROOT + ".changeFocus", 0)
+	Ui.Invoke(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.showList")
+	
+	if close_journal
+		Ui.Invoke(JOURNAL_MENU, "_root.QuestJournalFader.Menu_mc.ConfigPanelClose")
+		Ui.InvokeBool(JOURNAL_MENU, "_root.QuestJournalFader.Menu_mc.CloseMenu", true)
+	endif
+
+	; Cooldown
+	Utility.WaitMenuMode(SPINLOCK_TIMER)
+	_ctd_lock = false
+
+	return OK
+endfunction

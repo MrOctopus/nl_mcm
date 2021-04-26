@@ -39,6 +39,11 @@ int property ERROR_MODULE_TAKEN = -2 autoreadonly
 int property ERROR_MODULE_INIT = -3 autoreadonly
 int property ERROR_MODULE_NONE = -4 autoreadonly
 
+int property ERROR_MENU_NOID = -100 autoreadonly
+int property ERROR_MENU_COOLDOWN = -200 autoreadonly
+int property ERROR_MENU_JOURNALCLOSED = -300 autoreadonly
+int property ERROR_MENU_NOTOWNER = -400 autoreadonly
+
 ; EVENT CODES
 int property EVENT_DEFAULT = 0 autoreadonly
 int property EVENT_HIGHLIGHT = 1 autoreadonly
@@ -224,6 +229,14 @@ endFunction
 function RefreshPages()
 	Guard()
 endFunction
+
+int function OpenMCM(bool skip_journal_check = false)
+	Guard()
+endfunction
+
+int function CloseMCM(bool close_journal = false)
+	Guard()
+endfunction
 
 ;------\
 ; GUARD \
