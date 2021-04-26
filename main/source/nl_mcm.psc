@@ -855,7 +855,7 @@ endFunction
 int function OpenMCM(bool skip_journal_check = false)
 	; MCM_ID Must be available
 	; else, we might ctd
-	if select_type[0] < 0
+	if _id < 0
 		return ERROR_MENU_NOID
 	endif
 
