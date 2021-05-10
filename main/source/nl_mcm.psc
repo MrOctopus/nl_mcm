@@ -821,7 +821,7 @@ string[] function GetMCMSavedPresets(string default, string dir_path)
 	string[] dir_presets = JContainers.contentsOfDirectoryAtPath(MCM_PATH_SETTINGS + dir_path, MCM_EXT)	
 	
 	if dir_presets.Length == 0
-		 None
+		return None
 	endif
 	
 	string[] presets = Utility.CreateStringArray(dir_presets.length + 1, default)
