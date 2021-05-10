@@ -65,7 +65,7 @@ int property MCM_QUICK_HOTKEY
 	function Set(int keycode)
 		; Unregister
 		if keycode == -1
-			UnregisterForKey(keycode)
+			UnregisterForKey(_mcm_hotkey)
 			UnregisterForMenu(JOURNAL_MENU)
 		else
 			; Reregister
@@ -77,8 +77,9 @@ int property MCM_QUICK_HOTKEY
 			endif
 
 			RegisterForKey(keycode)
-			_mcm_hotkey = keycode
 		endif
+
+		_mcm_hotkey = keycode
 	endfunction
 endproperty
 
