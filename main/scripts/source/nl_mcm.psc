@@ -13,17 +13,6 @@ endfunction
 ;--------------------------------------------------------
 
 string property MCM_EXT = ".nlset" autoreadonly
-string property MCM_PATH_SETTINGS
-	string function get()
-		Guard()
-	endfunction
-endproperty
-
-int property MCM_ID
-	int function get()
-		Guard()
-	endfunction
-endproperty
 
 ; MISC CONSTANTS
 float property SPINLOCK_TIMER = 0.4 autoreadonly
@@ -39,11 +28,6 @@ int property ERROR_MODULE_TAKEN = -2 autoreadonly
 int property ERROR_MODULE_INIT = -3 autoreadonly
 int property ERROR_MODULE_NONE = -4 autoreadonly
 
-int property ERROR_MENU_NOID = -100 autoreadonly
-int property ERROR_MENU_COOLDOWN = -200 autoreadonly
-int property ERROR_MENU_JOURNALCLOSED = -300 autoreadonly
-int property ERROR_MENU_NOTOWNER = -400 autoreadonly
-
 ; EVENT CODES
 int property EVENT_DEFAULT = 0 autoreadonly
 int property EVENT_HIGHLIGHT = 1 autoreadonly
@@ -55,6 +39,29 @@ int property EVENT_CHANGE = 5 autoreadonly
 ; FONTS
 int property FONT_DEFAULT = 0x00 autoreadonly
 int property FONT_PAPER = 0x01 autoreadonly
+
+; ADVANCED
+string property MCM_PATH_SETTINGS
+	string function Get()
+		Guard()
+	endfunction
+endproperty
+
+int property MCM_ID
+	int function Get()
+		Guard()
+	endfunction
+endproperty
+
+int property MCM_QUICK_HOTKEY
+	int function Get()
+		Guard()
+	endfunction
+
+	function Set(int keycode)
+		Guard()
+	endfunction
+endproperty
 
 ;---------\--------\
 ; CRITICAL \ EVENTS \
@@ -185,6 +192,18 @@ event OnInputAcceptST(string str)
     Guard()
 endEvent
 
+event OnMenuOpen(string menu_name)
+	Guard()
+endevent
+
+event OnMenuClose(string menu_name)
+	Guard()
+endevent
+
+event OnKeyDown(int keycode)
+	Guard()
+endevent
+
 ;-------------\-----------\
 ; NON-CRITICAL \ FUNCTIONS \
 ;--------------------------------------------------------
@@ -230,11 +249,11 @@ function RefreshPages()
 	Guard()
 endFunction
 
-int function OpenMCM(bool skip_journal_check = false)
+function OpenMCM(bool skip_journal_check = false)
 	Guard()
 endfunction
 
-int function CloseMCM(bool close_journal = false)
+function CloseMCM(bool close_journal = false)
 	Guard()
 endfunction
 

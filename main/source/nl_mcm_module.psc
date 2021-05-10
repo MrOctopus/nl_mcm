@@ -20,9 +20,6 @@ int property EVENT_OPEN = 3 autoreadonly
 int property EVENT_ACCEPT = 4 autoreadonly
 int property EVENT_CHANGE = 5 autoreadonly
 
-string property MENU_ROOT = "_root.ConfigPanelFader.configPanel" autoreadonly
-string property JOURNAL_MENU = "Journal Menu" autoreadonly
-
 string property DEBUG_MSG
 	string function Get()
 		return "NL_MCM(" + _page_name + "): "
@@ -117,15 +114,9 @@ auto state _inactive
 	function RefreshPages()
 		Trace(DEBUG_MSG + "RefreshPages has been called in an invalid state.")
 	endfunction
-
-	int function OpenMCM(bool skip_journal_check = false)
-		Trace(DEBUG_MSG + "OpenMCM has been called in an invalid state.")
-		return ERROR_MODULE_INIT
-	endfunction
 	
-	int function CloseMCM(bool close_journal = false)
+	function CloseMCM(bool close_journal = false)
 		Trace(DEBUG_MSG + "CloseMCM has been called in an invalid state.")
-		return ERROR_MODULE_INIT
 	endfunction
 
 	function SaveMCMToPreset(string preset_path)
@@ -411,11 +402,6 @@ int property ERROR_MODULE_NONE = -4 autoreadonly
 int property ERROR_MCM_NONEQUEST = -10 autoreadonly
 int property ERROR_MCM_NONE = -20 autoreadonly
 
-int property ERROR_MENU_NOID = -100 autoreadonly
-int property ERROR_MENU_COOLDOWN = -200 autoreadonly
-int property ERROR_MENU_JOURNALCLOSED = -300 autoreadonly
-int property ERROR_MENU_NOTOWNER = -400 autoreadonly
-
 ; FONTS
 int property FONT_DEFAULT = 0x00 autoreadonly
 { Default font color }
@@ -511,6 +497,22 @@ int property MCM_ID
 	endfunction
 endproperty
 
+int property MCM_QUICK_HOTKEY
+{
+	If this hotkey is set, it allows the user to immediately open or close the mcm menu \
+	by pressing the defined hotkey.
+	@get Get the current quickhotkey for the mcm
+	@set Set the new quickhotkey for the mcm
+}
+	int function Get()
+		return _MCM.MCM_QUICK_HOTKEY
+	endfunction
+
+	function Set(int keycode)
+		_MCM.MCM_QUICK_HOTKEY = keycode
+	endfunction
+endproperty
+
 string function GetCommonStore(bool lock)
 {
 	Get the shared common store string. \
@@ -600,22 +602,12 @@ function RefreshPages()
 	_MCM.RefreshPages()
 endfunction
 
-int function OpenMCM(bool skip_journal_check = false)
-{
-	Opens the MCM menu directly if the journal menu is already open. \
-	Note: See nl_curios_mcm_core for a demonstration.
-	@param skip_journal_check - If set to true, this will skip the IsJournalOpen check. \
-	this should only be used if you're sure it's already open (e.g inside an OnOpenMenu event)
-}
-	return _MCM.OpenMCM(skip_journal_check)
-endfunction
-
-int function CloseMCM(bool close_journal = false)
+function CloseMCM(bool close_journal = false)
 {
 	Close the current MCM.
 	@param close_journal - If set to true, it will close the quest journal too
 }
-	return _MCM.CloseMCM(close_journal)
+	_MCM.CloseMCM(close_journal)
 endfunction
 
 function SaveMCMToPreset(string preset_path)
