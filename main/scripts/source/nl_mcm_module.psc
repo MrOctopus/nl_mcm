@@ -320,7 +320,7 @@ int property MCM_ID
 	endfunction
 endproperty
 
-int property MCM_QUICK_HOTKEY
+int property MCM_QuickHotkey
 	int function Get()
 		Guard()
 	endfunction

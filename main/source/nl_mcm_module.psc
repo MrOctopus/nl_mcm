@@ -497,7 +497,7 @@ int property MCM_ID
 	endfunction
 endproperty
 
-int property MCM_QUICK_HOTKEY
+int property MCM_QuickHotkey
 {
 	If this hotkey is set, it allows the user to immediately open or close the mcm menu \
 	by pressing the defined hotkey.
@@ -505,11 +505,11 @@ int property MCM_QUICK_HOTKEY
 	@set Set the new quickhotkey for the mcm
 }
 	int function Get()
-		return _MCM.MCM_QUICK_HOTKEY
+		return _MCM.MCM_QuickHotkey
 	endfunction
 
 	function Set(int keycode)
-		_MCM.MCM_QUICK_HOTKEY = keycode
+		_MCM.MCM_QuickHotkey = keycode
 	endfunction
 endproperty
 

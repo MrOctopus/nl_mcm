@@ -57,7 +57,7 @@ int property MCM_ID
 	endfunction
 endproperty
 
-int property MCM_QUICK_HOTKEY
+int property MCM_QuickHotkey
 	int function Get()
 		return _mcm_hotkey
 	endfunction
@@ -768,16 +768,29 @@ event OnMenuOpen(string menu_name)
 
 	; Numeric sortOn
 	int handle = UiCallback.Create(JOURNAL_MENU, sort_event)
+	
+	if !handle
+		_ctd_lock = false
+		return 
+	endif
+	
 	UiCallback.PushString(handle, "modIndex")
 	UiCallback.PushInt(handle, 16)
 
 	; Alphabetic caseinsensitive sortOn
 	int handle2 = UiCallback.Create(JOURNAL_MENU, sort_event)
+
+	if !handle2
+		_ctd_lock = false
+		return 
+	endif
+
 	UiCallback.PushString(handle2, "text")
 	UiCallback.PushInt(handle2, 1)
 
 	; Wait 0.3 seconds for the ConfigManager to setNames
 	Utility.WaitMenuMode(SPINLOCK_TIMER)
+
 	UiCallback.Send(handle)
 	Ui.Invoke(JOURNAL_MENU, "_root.QuestJournalFader.Menu_mc.ConfigPanelOpen")
 	Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.doSetSelectedIndex", select_type)

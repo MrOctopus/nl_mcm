@@ -47,7 +47,7 @@ event OnPageDraw()
 	SetCursorPosition(1)
 	AddHeaderOption(FONT_PRIMARY("Misc"))
 	AddToggleOptionST("misc_toggle_font", "Toggle font color", CURRENT_FONT)
-	AddKeyMapOptionST("misc_key_mcm", "Quick mcm Key", MCM_QUICK_HOTKEY)
+	AddKeyMapOptionST("misc_key_mcm", "Quick mcm Key", MCM_QuickHotkey)
 	AddEmptyOption()
 
 	AddHeaderOption(FONT_PRIMARY("Fun"))
@@ -88,7 +88,7 @@ endstate
 
 state misc_key_mcm
 	event OnDefaultST()
-		MCM_QUICK_HOTKEY = -1
+		MCM_QuickHotkey = -1
 		SetKeyMapOptionValueST(-1)
 	endevent
 
@@ -97,7 +97,7 @@ state misc_key_mcm
 	endevent
 
 	event OnKeyMapChangeST(int keycode)
-		MCM_QUICK_HOTKEY = keycode
+		MCM_QuickHotkey = keycode
 		SetKeyMapOptionValueST(keycode)
 	endevent
 endstate
