@@ -954,10 +954,6 @@ function RefreshPages()
 	Ui.InvokeStringA(JOURNAL_MENU, MENU_ROOT + ".setPageNames", Pages)
 endFunction
 
-function OpenMCM()
-	
-endfunction
-
 function CloseMCM(bool close_journal = false)
 	if _ctd_lock
 		return
