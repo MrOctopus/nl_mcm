@@ -748,8 +748,8 @@ endEvent
     
 ; Possible thrown exception
 event OnMenuAcceptST(int i)
-	int i = Pages.Find(CurrentPage)
-	_modules[i]._OnPageEvent(GetState(), EVENT_ACCEPT, i, "")
+	int j = Pages.Find(CurrentPage)
+	_modules[j]._OnPageEvent(GetState(), EVENT_ACCEPT, i, "")
 endEvent
 
 ; Possible thrown exception
