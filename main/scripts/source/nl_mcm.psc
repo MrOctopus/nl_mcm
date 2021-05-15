@@ -172,6 +172,10 @@ event OnColorOpenST()
     Guard()
 endEvent
 
+event OnInputOpenST()
+	Guard()
+endEvent
+
 event OnSliderAcceptST(float f)
     Guard()
 endEvent
@@ -182,10 +186,6 @@ endEvent
     
 event OnColorAcceptST(int col)
     Guard()
-endEvent
-
-event OnInputOpenST()
-	Guard()
 endEvent
 
 event OnInputAcceptST(string str)
@@ -207,11 +207,6 @@ endevent
 ;-------------\-----------\
 ; NON-CRITICAL \ FUNCTIONS \
 ;--------------------------------------------------------
-
-; Possible thrown exception
-function RelayPageEvent(string state_name, int event_id, float f = -1.0, string str = "")
-	Guard()
-endfunction
 
 string[] function GetMCMSavedPresets(string default, string dir_path)
 	Guard()

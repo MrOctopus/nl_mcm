@@ -270,8 +270,10 @@ event OnDefaultST()
 		_key_store = nl_util.DelGroupVal(_key_store, current_page, old_keycode as string)
 		_mutex_store = False
 	endif
-	
-    RelayPageEvent(current_state, EVENT_DEFAULT)
+
+	; Possible thrown exception
+	int i = Pages.Find(current_page)
+	_modules[i]._OnPageEvent(current_state, EVENT_DEFAULT, -1.0, "")
 endEvent
 
 event OnKeyMapChangeST(int keycode, string conflict_control, string conflict_name)	
@@ -311,7 +313,9 @@ event OnKeyMapChangeST(int keycode, string conflict_control, string conflict_nam
 	_key_store = nl_util.DelGroupVal(_key_store, current_page, old_keycode as string)
 	_mutex_store = False
 	
-	RelayPageEvent(current_state, EVENT_CHANGE, keycode)
+	; Possible thrown exception
+	int i = Pages.Find(current_page)
+	_modules[i]._OnPageEvent(current_state, EVENT_CHANGE, keycode, "")
 endEvent
 
 ;---------\-----------\
@@ -700,44 +704,64 @@ event OnPageReset(string page)
 	endif
 endevent
 
+; Possible thrown exception
 event OnHighlightST()
-    RelayPageEvent(GetState(), EVENT_HIGHLIGHT)
+	int i = Pages.Find(CurrentPage)
+	_modules[i]._OnPageEvent(GetState(), EVENT_HIGHLIGHT, -1.0, "")
 endEvent
 
+; Possible thrown exception
 event OnSelectST()
-    RelayPageEvent(GetState(), EVENT_SELECT)
+	int i = Pages.Find(CurrentPage)
+	_modules[i]._OnPageEvent(GetState(), EVENT_SELECT, -1.0, "")
 endEvent
 
+; Possible thrown exception
 event OnSliderOpenST()
-    RelayPageEvent(GetState(), EVENT_OPEN)
+	int i = Pages.Find(CurrentPage)
+	_modules[i]._OnPageEvent(GetState(), EVENT_OPEN, -1.0, "")
 endEvent
 
+; Possible thrown exception
 event OnMenuOpenST()
-    RelayPageEvent(GetState(), EVENT_OPEN)
+	int i = Pages.Find(CurrentPage)
+	_modules[i]._OnPageEvent(GetState(), EVENT_OPEN, -1.0, "")
 endEvent
 
+; Possible thrown exception
 event OnColorOpenST()
-    RelayPageEvent(GetState(), EVENT_OPEN)
+	int i = Pages.Find(CurrentPage)
+	_modules[i]._OnPageEvent(GetState(), EVENT_OPEN, -1.0, "")
 endEvent
 
-event OnSliderAcceptST(float f)
-    RelayPageEvent(GetState(), EVENT_ACCEPT, f)
-endEvent
-    
-event OnMenuAcceptST(int i)
-    RelayPageEvent(GetState(), EVENT_ACCEPT, i)
-endEvent
-    
-event OnColorAcceptST(int col)
-    RelayPageEvent(GetState(), EVENT_ACCEPT, col)
-endEvent
-
+; Possible thrown exception
 event OnInputOpenST()
-	RelayPageEvent(GetState(), EVENT_ACCEPT)
+	int i = Pages.Find(CurrentPage)
+	_modules[i]._OnPageEvent(GetState(), EVENT_OPEN, -1.0, "")
 endEvent
 
+; Possible thrown exception
+event OnSliderAcceptST(float f)
+	int i = Pages.Find(CurrentPage)
+	_modules[i]._OnPageEvent(GetState(), EVENT_ACCEPT, f, "")
+endEvent
+    
+; Possible thrown exception
+event OnMenuAcceptST(int i)
+	int i = Pages.Find(CurrentPage)
+	_modules[i]._OnPageEvent(GetState(), EVENT_ACCEPT, i, "")
+endEvent
+
+; Possible thrown exception
+event OnColorAcceptST(int col)
+	int i = Pages.Find(CurrentPage)
+	_modules[i]._OnPageEvent(GetState(), EVENT_ACCEPT, col, "")
+endEvent
+
+; Possible thrown exception
 event OnInputAcceptST(string str)
-    RelayPageEvent(GetState(), EVENT_ACCEPT, -1.0, str)
+	int i = Pages.Find(CurrentPage)
+	_modules[i]._OnPageEvent(GetState(), EVENT_ACCEPT, -1.0, str)
 endEvent
 
 event OnMenuOpen(string menu_name)
@@ -819,12 +843,6 @@ endevent
 ;-------------\-----------\
 ; NON-CRITICAL \ FUNCTIONS \
 ;--------------------------------------------------------
-
-; Possible thrown exception
-function RelayPageEvent(string state_name, int event_id, float f = -1.0, string str = "")
-	int i = Pages.Find(CurrentPage)
-	_modules[i]._OnPageEvent(state_name, event_id, f, str)
-endfunction
 
 string[] function GetMCMSavedPresets(string default, string dir_path)
 	if !JContainers.isInstalled()
