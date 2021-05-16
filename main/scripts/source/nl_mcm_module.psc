@@ -54,7 +54,11 @@ auto state _inactive
 		Guard()
 	endFunction
 	
-	function RefreshPages()
+	function RefreshPages(bool stay = true)
+		Guard()
+	endfunction
+
+	function GoToPage(string page_name)
 		Guard()
 	endfunction
 	
@@ -308,7 +312,7 @@ nl_mcm property UNSAFE_RAW_MCM
     endfunction
 endproperty
 
-quest property OWNING_QUEST
+quest property MCM_QUEST
 	quest function Get()
 		Guard()
 	endfunction
@@ -362,7 +366,11 @@ function SetMenuDialog(string[] options, int start_i, int default_i = 0)
 	Guard()
 endFunction
 
-function RefreshPages()
+function RefreshPages(bool stay = true)
+	Guard()
+endfunction
+
+function GoToPage(string page_name)
 	Guard()
 endfunction
 

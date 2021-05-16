@@ -180,7 +180,7 @@ event OnSliderAcceptST(float f)
     Guard()
 endEvent
     
-event OnMenuAcceptST(int i)
+event OnMenuAcceptST(int index)
     Guard()
 endEvent
     
@@ -240,11 +240,11 @@ function SetMenuDialog(string[] options, int start_i, int default_i = 0)
     Guard()
 endFunction
 
-function RefreshPages()
+function RefreshPages(bool stay = true)
 	Guard()
 endFunction
 
-function OpenMCM(bool skip_journal_check = false)
+function GoToPage(string page_name)
 	Guard()
 endfunction
 

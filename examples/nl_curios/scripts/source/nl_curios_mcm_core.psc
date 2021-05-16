@@ -4,7 +4,8 @@ Scriptname nl_curios_mcm_core extends nl_mcm_module
 	@version 1.0
 }
 
-bool _show_secret_page
+bool _show_advanced
+bool _show_credits
 
 ;------------------\
 ; REGISTER MOD PAGE \
@@ -27,6 +28,16 @@ event OnPageInit()
 	; Do nothing
 endevent
 
+;---------------\
+; PRESET HANDLER \
+;--------------------------------------------------------
+
+int function SaveData()
+endfunction
+
+function LoadData(int jObj)
+endfunction
+
 ;----------\
 ; DRAW PAGE \
 ;--------------------------------------------------------
@@ -36,29 +47,32 @@ event OnPageDraw()
 
 	; Left side
 	AddHeaderOption(FONT_PRIMARY("Core"))
-	AddParagraph("Hello there! This mcm acts as a core for all my small miscellaneous mods. Be on the lookout for new pages!", FONT_INFO())
-	AddEmptyOption()
-	AddEmptyOption()
-
-	AddHeaderOption(FONT_PRIMARY("Thanks to"))
-	AddParagraph("Dunc001\nKojak747\nFireundubh", FONT_INFO())
+	AddParagraph("Hello there! This MCM acts as a core menu for all of my smaller, miscellaneous mods. Be on the lookout for new pages!", FONT_INFO())
 
 	; Right side
 	SetCursorPosition(1)
 	AddHeaderOption(FONT_PRIMARY("Misc"))
 	AddToggleOptionST("misc_toggle_font", "Toggle font color", CURRENT_FONT)
-	AddKeyMapOptionST("misc_key_mcm", "Quick mcm Key", MCM_QuickHotkey)
+	AddKeyMapOptionST("misc_key_mcm", "Set MCM hotkey", MCM_QuickHotkey)
 	AddEmptyOption()
 
-	AddHeaderOption(FONT_PRIMARY("Fun"))
+	AddHeaderOption(FONT_PRIMARY("Pages"))
 
-	if _show_secret_page
-		AddTextOptionST("fun_show_page", "", FONT_WARNING("Discovered!"), OPTION_FLAG_DISABLED)
+	if _show_advanced
+		AddTextOptionST("mod_show_advanced", FONT_WARNING("Hide"), "Advanced")
 	else
-		AddTextOptionST("fun_show_page", "", FONT_SUCCESS("Hidden..."))
+		AddTextOptionST("mod_show_advanced", FONT_SUCCESS("Show"), "Advanced")
 	endif
 
-	AddTextOptionST("fun_exit_mcm", "", FONT_DANGER("CLICK ME!"))
+	if _show_credits
+		AddTextOptionST("mod_show_credits", FONT_WARNING("Hide"), "Credits")
+	else
+		AddTextOptionST("mod_show_credits", FONT_SUCCESS("Show"), "Credits")
+	endif
+
+	AddEmptyOption()
+	AddHeaderOption(FONT_PRIMARY("Exit MCM?"))
+	AddTextOptionST("exit_mcm", "", FONT_DANGER("Exit Now!"))
 endevent
 
 ;-------------\
@@ -72,7 +86,7 @@ state misc_toggle_font
 	endevent
 
 	event OnHighlightST()
-		SetInfoText("Toggle the font.")
+		SetInfoText("Toggle the font")
 	endevent
 
 	event OnSelectST()
@@ -93,7 +107,7 @@ state misc_key_mcm
 	endevent
 
 	event OnHighlightST()
-		SetInfoText("")
+		SetInfoText("Set the quickopen MCM hotkey")
 	endevent
 
 	event OnKeyMapChangeST(int keycode)
@@ -102,23 +116,43 @@ state misc_key_mcm
 	endevent
 endstate
 
-state fun_show_page
+state mod_show_advanced
 	event OnHighlightST()
-		SetInfoText("Do you dare?")
+		SetInfoText("Show advanced page")
 	endevent
 
 	event OnSelectST()
-		_show_secret_page = true
-		(OWNING_QUEST as nl_curios_mcm_secret).RegisterModule("Secret", 1)
+		_show_advanced = !_show_advanced
+		
+		if _show_advanced
+			((self as Quest) as nl_curios_mcm_advanced).RegisterModule("Advanced", 100)
+		else
+			((self as Quest) as nl_curios_mcm_advanced).UnregisterModule()
+		endif
+
 		RefreshPages()
 	endevent
 endstate
 
-state fun_exit_mcm
+state mod_show_credits
 	event OnHighlightST()
-		SetInfoText("Do you dare?")
+		SetInfoText("Show credits page")
 	endevent
 
+	event OnSelectST()
+		_show_credits = !_show_credits
+		
+		if _show_credits
+			((self as Quest) as nl_curios_mcm_credits).RegisterModule("Credits", 1000)
+		else
+			((self as Quest) as nl_curios_mcm_credits).UnregisterModule()
+		endif
+
+		RefreshPages()
+	endevent
+endstate
+
+state exit_mcm
 	event OnSelectST()
 		CloseMCM(close_journal = true)
 	endevent

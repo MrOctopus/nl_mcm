@@ -747,9 +747,9 @@ event OnSliderAcceptST(float f)
 endEvent
     
 ; Possible thrown exception
-event OnMenuAcceptST(int i)
-	int j = Pages.Find(CurrentPage)
-	_modules[j]._OnPageEvent(GetState(), EVENT_ACCEPT, i, "")
+event OnMenuAcceptST(int index)
+	int i = Pages.Find(CurrentPage)
+	_modules[i]._OnPageEvent(GetState(), EVENT_ACCEPT, index, "")
 endEvent
 
 ; Possible thrown exception
@@ -967,10 +967,35 @@ function SetMenuDialog(string[] options, int start_i, int default_i = 0)
     SetMenuDialogDefaultIndex(default_i)
 endFunction
 
-function RefreshPages()
-	SetPage("", -1)
-	Ui.InvokeStringA(JOURNAL_MENU, MENU_ROOT + ".setPageNames", Pages)
+function RefreshPages(bool stay = true)	
+	if stay
+		Ui.InvokeStringA(JOURNAL_MENU, MENU_ROOT + ".setPageNames", Pages)
+		GoToPage(CurrentPage)
+	else
+		SetPage("", -1)
+		Ui.InvokeStringA(JOURNAL_MENU, MENU_ROOT + ".setPageNames", Pages)
+	endif
 endFunction
+
+function GoToPage(string page_name)
+	if Ui.GetString(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.decorTitle.textHolder.textField.text") != ModName
+		return
+	endif
+
+	int i = Pages.Find(page_name)
+
+	if i == -1
+		return
+	endif
+
+	int[] select_type = new int[2]
+	select_type[0] = i
+	select_type[1] = 1
+
+	Ui.InvokeBool(JOURNAL_MENU, MENU_ROOT + ".unlock", true)
+	Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.subListFader.list.doSetSelectedIndex", select_type)
+	Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.subListFader.list.onItemPress", select_type)
+endfunction
 
 function CloseMCM(bool close_journal = false)
 	if _ctd_lock

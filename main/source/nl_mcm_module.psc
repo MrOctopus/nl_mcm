@@ -111,8 +111,12 @@ auto state _inactive
 		Trace(DEBUG_MSG + "SetMenuDialog has been called in an invalid state.")
 	endFunction
 	
-	function RefreshPages()
+	function RefreshPages(bool stay = true)
 		Trace(DEBUG_MSG + "RefreshPages has been called in an invalid state.")
+	endfunction
+
+	function GoToPage(string page_name)
+		Trace(DEBUG_MSG + "GoToPage has been called in an invalid state.")
 	endfunction
 	
 	function CloseMCM(bool close_journal = false)
@@ -295,14 +299,14 @@ auto state _inactive
 		if quest_editorid == ""
 			_MCM = (self as quest) as nl_mcm
 		else
-			quest mcm_quest = Quest.GetQuest(quest_editorid)
+			quest found_quest = Quest.GetQuest(quest_editorid)
 			
-			if !mcm_quest
+			if !found_quest
 				Notification(DEBUG_MSG + "Quest with editor id " + _quest_editorid + " could not be found.")
 				return ERROR_MCM_NONEQUEST
 			endif
 		
-			_MCM = mcm_quest as nl_mcm
+			_MCM = found_quest as nl_mcm
 		endif
 		
 		if !_MCM
@@ -475,7 +479,7 @@ nl_mcm property UNSAFE_RAW_MCM
 	endfunction
 endproperty
 
-quest property OWNING_QUEST
+quest property MCM_QUEST
 {
 	Grab the owning quest of the main mcm script. \
 	This is identical to casting "UNSAFE_RAW_MCM as quest".
@@ -593,13 +597,22 @@ function SetMenuDialog(string[] options, int start_i, int default_i = 0)
 	_MCM.SetMenuDialog(options, start_i, default_i)
 endFunction
 
-function RefreshPages()
+function RefreshPages(bool stay = true)
 {
 	Refreshes the mod's mcm pages. \
 	Useful for situations where new pages/modules have been registered whilst the player is still in the mod's mcm menu, \
 	which will require the page list to be refreshed.
+	@param stay - Should the user stay on the page
 }
-	_MCM.RefreshPages()
+	_MCM.RefreshPages(stay)
+endfunction
+
+function GoToPage(string page_name)
+{
+	Go to a given mcm page.
+	@param page_name - The page to go to
+}
+	_MCM.GoToPage(page_name)
 endfunction
 
 function CloseMCM(bool close_journal = false)
