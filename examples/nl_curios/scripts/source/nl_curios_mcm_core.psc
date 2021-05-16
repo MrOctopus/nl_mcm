@@ -125,9 +125,9 @@ state mod_show_advanced
 		_show_advanced = !_show_advanced
 		
 		if _show_advanced
-			((self as Quest) as nl_curios_mcm_advanced).RegisterModule("Advanced", 100)
+			(MY_QUEST as nl_curios_mcm_advanced).RegisterModule("Advanced", 100)
 		else
-			((self as Quest) as nl_curios_mcm_advanced).UnregisterModule()
+			(MY_QUEST as nl_curios_mcm_advanced).UnregisterModule()
 		endif
 
 		RefreshPages()
@@ -143,9 +143,9 @@ state mod_show_credits
 		_show_credits = !_show_credits
 		
 		if _show_credits
-			((self as Quest) as nl_curios_mcm_credits).RegisterModule("Credits", 1000)
+			(MY_QUEST as nl_curios_mcm_credits).RegisterModule("Credits", 1000)
 		else
-			((self as Quest) as nl_curios_mcm_credits).UnregisterModule()
+			(MY_QUEST as nl_curios_mcm_credits).UnregisterModule()
 		endif
 
 		RefreshPages()

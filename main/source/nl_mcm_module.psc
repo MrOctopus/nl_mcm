@@ -490,13 +490,24 @@ quest property MCM_QUEST
 	endfunction
 endproperty
 
+quest property MY_QUEST
+{
+	Grab the owning quest of this script. \
+	This is identical to casting "self as quest".
+	@get This quest
+}
+	quest function Get()
+		return self as quest
+	endfunction
+endproperty
+
 int property MCM_ID
 {
 	Retrieve's the mcm's mod id. \
 	Note: Don't cache this, as it might change on gamereloads.
 	@get Mcm id
 }
-	int function get()
+	int function Get()
 		return _MCM.MCM_ID
 	endfunction
 endproperty

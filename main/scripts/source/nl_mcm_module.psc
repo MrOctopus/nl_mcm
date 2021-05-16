@@ -318,8 +318,14 @@ quest property MCM_QUEST
 	endfunction
 endproperty
 
+quest property MY_QUEST
+	quest function Get()
+		Guard()
+	endfunction
+endproperty
+
 int property MCM_ID
-	int function get()
+	int function Get()
 		Guard()
 	endfunction
 endproperty
