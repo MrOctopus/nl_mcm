@@ -19,8 +19,9 @@ event OnInit()
 		KeepTryingToRegister()
 	endif
 
-	; This will cache if the call above fails
+	; These will cache if the call above fails
 	SetModName("NeverLost's Curios")
+	SetLandingPage("Core")
 endevent
 
 ; - After register

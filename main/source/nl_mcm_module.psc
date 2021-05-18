@@ -38,6 +38,7 @@ int _z
 ; CACHE
 string _quest_editorid
 string _mod_name
+string _landing_page
 string _splash_path
 
 float _splash_x
@@ -275,6 +276,10 @@ auto state _inactive
 		_mod_name = name
 	endfunction
 
+	function SetLandingPage(string page_name)
+		_landing_page = page_name
+	endfunction
+
 	function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
 		_splash_path = path
 		_splash_x = x
@@ -346,6 +351,10 @@ function StopTryingToRegister()
 			_MCM.SetModName(_mod_name)
 		endif
 
+		if _landing_page
+			_MCM.SetLandingPage(_landing_page)
+		endif
+
 		if _splash_path
 			_MCM.SetSplashScreen(_splash_path, _splash_x, _splash_y)
 		endif
@@ -360,6 +369,7 @@ function StopTryingToRegister()
 
 	_quest_editorid = ""
 	_mod_name = ""
+	_landing_page = ""
 	_splash_path = ""
 	_splash_x = 0.0
 	_splash_y = 0.0
@@ -565,6 +575,14 @@ function SetModName(string name)
 	@param name - The mod's name
 }
 	_MCM.SetModName(name)
+endfunction
+
+function SetLandingPage(string page_name)
+{
+	Set the MCM landing page.
+	@param page_name - The landing page's name
+}
+	_MCM.SetLandingPage(page_name)
 endfunction
 
 function SetSplashScreen(string path, float x = 0.0, float y = 0.0)

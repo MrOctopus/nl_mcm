@@ -96,6 +96,7 @@ form _missing_form
 string _key_store = ""
 string _common_store = ""
 string _common_store_owner = ""
+string _landing_page
 string _splash_path
 
 float _splash_x
@@ -172,6 +173,10 @@ event OnGameReload()
 			_common_store_owner = ""
 		endif
 
+		if _landing_page == Pages[i]
+			_landing_page = ""
+		endif
+
 		_key_store = nl_util.DelGroup(_key_store, Pages[i])
 		
 		; Compact array
@@ -187,6 +192,10 @@ event OnGameReload()
 
 				if _common_store_owner == Pages[j]
 					_common_store_owner = ""
+				endif
+
+				if _landing_page == Pages[j]
+					_landing_page = ""
 				endif
 
 				_key_store = nl_util.DelGroup(_key_store, Pages[j])
@@ -463,6 +472,14 @@ int function _UnregisterModule(string page_name)
 	
 	int j = Pages.Length - 1
 	_mutex_modules = True
+
+	if _common_store_owner == page_name
+		_common_store_owner = ""
+	endif
+
+	if _landing_page == page_name
+		_landing_page = ""
+	endif
 	
 	if j == 0
 		Pages = None
@@ -679,7 +696,7 @@ event OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, 
 		UnregisterForModEvent("SKICP_configManagerReady")
 		Debug.Trace(self + ": Registered " + ModName + " at MCM.")
 	endif
- endEvent
+endEvent
 
 ; Possible thrown exception
 event OnPageReset(string page)
@@ -689,10 +706,6 @@ event OnPageReset(string page)
 		int i = Pages.Find(page)
 		_modules[i]._OnPageDraw(_font)
 	else
-		if _splash_path != ""
-			LoadCustomContent(_splash_path, _splash_x, _splash_y)
-		endif
-
 		if _font == -1
 			; Hack to check if Dear Diary is installed
 			if Ui.GetString(JOURNAL_MENU, MENU_ROOT + ".contentHolder.background._url") == "Interface/deardiary/configpanel/configpanel%5FBG.swf"
@@ -700,6 +713,12 @@ event OnPageReset(string page)
 			else
 				_font = FONT_DEFAULT
 			endif
+		endif
+
+		if _landing_page != ""
+			parent.SetPage(_landing_page, Pages.Find(_landing_page))
+		elseif _splash_path != ""
+			LoadCustomContent(_splash_path, _splash_x, _splash_y)
 		endif
 	endif
 endevent
@@ -939,6 +958,12 @@ endfunction
 function SetModName(string name)
 	if !_initialized
 		ModName = name
+	endif
+endfunction
+
+function SetLandingPage(string page_name)
+	if Pages.Find(page_name) != -1
+		_landing_page = page_name
 	endif
 endfunction
 

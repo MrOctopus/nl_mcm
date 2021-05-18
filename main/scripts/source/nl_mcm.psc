@@ -224,6 +224,10 @@ function SetModName(string name)
 	Guard()
 endfunction
 
+function SetLandingPage(string page_name)
+	Guard()
+endfunction
+
 function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
 	Guard()
 endfunction

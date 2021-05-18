@@ -214,6 +214,10 @@ auto state _inactive
 		Guard()
 	endfunction
 
+	function SetLandingPage(string page_name)
+		Guard()
+	endfunction
+
 	function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
 		Guard()
 	endfunction
@@ -353,6 +357,10 @@ function AddParagraph(string text, string format = "", int flags = 0x01)
 endfunction
 
 function SetModName(string name)
+	Guard()
+endfunction
+
+function SetLandingPage(string page_name)
 	Guard()
 endfunction
 
