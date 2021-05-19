@@ -117,6 +117,10 @@ auto state _inactive
 	function AddKeyMapOptionST(string a_stateName, string a_text, int a_keyCode, int a_flags = 0)	
 		Guard()
 	endfunction
+
+	function AddInputOptionST(string a_stateName, string a_text, string a_value, int a_flags = 0)
+		Guard()
+	endfunction
 	
 	function SetOptionFlagsST(int a_flags, bool a_noUpdate = false, string a_stateName = "")
 		Guard()
@@ -143,6 +147,10 @@ auto state _inactive
 	endfunction
 	
 	function SetKeyMapOptionValueST(int a_keyCode, bool a_noUpdate = false, string a_stateName = "")
+		Guard()
+	endfunction
+
+	function SetInputOptionValueST(string a_value, bool a_noUpdate = false, string a_stateName = "")
 		Guard()
 	endfunction
 	
@@ -179,6 +187,10 @@ auto state _inactive
 	endfunction
 	
 	function SetColorDialogDefaultColor(int a_color)
+		Guard()
+	endfunction
+
+	function SetInputDialogStartText(string a_value)
 		Guard()
 	endfunction
 	
@@ -464,6 +476,10 @@ function AddKeyMapOptionST(string a_stateName, string a_text, int a_keyCode, int
 	Guard()
 endfunction
 
+function AddInputOptionST(string a_stateName, string a_text, string a_value, int a_flags = 0)
+	Guard()
+endfunction
+
 function SetOptionFlagsST(int a_flags, bool a_noUpdate = false, string a_stateName = "")
 	Guard()
 endfunction
@@ -489,6 +505,10 @@ function SetColorOptionValueST(int a_color, bool a_noUpdate = false, string a_st
 endfunction
 
 function SetKeyMapOptionValueST(int a_keyCode, bool a_noUpdate = false, string a_stateName = "")
+	Guard()
+endfunction
+
+function SetInputOptionValueST(string a_value, bool a_noUpdate = false, string a_stateName = "")
 	Guard()
 endfunction
 
@@ -525,6 +545,10 @@ function SetColorDialogStartColor(int a_color)
 endfunction
 
 function SetColorDialogDefaultColor(int a_color)
+	Guard()
+endfunction
+
+function SetInputDialogStartText(string a_value)
 	Guard()
 endfunction
 

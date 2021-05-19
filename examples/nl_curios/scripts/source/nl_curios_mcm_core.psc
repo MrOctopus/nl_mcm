@@ -21,7 +21,7 @@ event OnInit()
 
 	; These will cache if the call above fails
 	SetModName("NeverLost's Curios")
-	SetLandingPage("Core")
+	;SetLandingPage("Core")
 endevent
 
 ; - After register
@@ -52,11 +52,6 @@ event OnPageDraw()
 
 	; Right side
 	SetCursorPosition(1)
-	AddHeaderOption(FONT_PRIMARY("Misc"))
-	AddToggleOptionST("misc_toggle_font", "Toggle font color", CURRENT_FONT)
-	AddKeyMapOptionST("misc_key_mcm", "Set MCM hotkey", MCM_QuickHotkey)
-	AddEmptyOption()
-
 	AddHeaderOption(FONT_PRIMARY("Pages"))
 
 	if _show_advanced
@@ -79,43 +74,6 @@ endevent
 ;-------------\
 ; PAGE OPTIONS \
 ;--------------------------------------------------------
-
-state misc_toggle_font
-	event OnDefaultST()
-		SetFont(FONT_DEFAULT)
-		ForcePageReset()
-	endevent
-
-	event OnHighlightST()
-		SetInfoText("Toggle the font")
-	endevent
-
-	event OnSelectST()
-		if CURRENT_FONT == FONT_DEFAULT
-			SetFont(FONT_PAPER)
-		else
-			SetFont(FONT_DEFAULT)
-		endif
-
-		ForcePageReset()
-	endevent
-endstate
-
-state misc_key_mcm
-	event OnDefaultST()
-		MCM_QuickHotkey = -1
-		SetKeyMapOptionValueST(-1)
-	endevent
-
-	event OnHighlightST()
-		SetInfoText("Set the quickopen MCM hotkey")
-	endevent
-
-	event OnKeyMapChangeST(int keycode)
-		MCM_QuickHotkey = keycode
-		SetKeyMapOptionValueST(keycode)
-	endevent
-endstate
 
 state mod_show_advanced
 	event OnHighlightST()

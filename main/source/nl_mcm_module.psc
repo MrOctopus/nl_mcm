@@ -178,6 +178,10 @@ auto state _inactive
 	function AddKeyMapOptionST(string a_stateName, string a_text, int a_keyCode, int a_flags = 0)	
 		Trace(DEBUG_MSG + "AddKeyMapOptionST has been called in an invalid state.")
 	endfunction
+
+	function AddInputOptionST(string a_stateName, string a_text, string a_value, int a_flags = 0)
+		Trace(DEBUG_MSG + "AddInputOptionST has been called in an invalid state.")
+	endfunction
 	
 	function SetOptionFlagsST(int a_flags, bool a_noUpdate = false, string a_stateName = "")
 		Trace(DEBUG_MSG + "SetOptionFlagsST has been called in an invalid state.")
@@ -205,6 +209,10 @@ auto state _inactive
 	
 	function SetKeyMapOptionValueST(int a_keyCode, bool a_noUpdate = false, string a_stateName = "")
 		Trace(DEBUG_MSG + "SetKeyMapOptionValueST has been called in an invalid state.")
+	endfunction
+
+	function SetInputOptionValueST(string a_value, bool a_noUpdate = false, string a_stateName = "")
+		Trace(DEBUG_MSG + "SetInputOptionValueST has been called in an invalid state.")
 	endfunction
 	
 	function SetSliderDialogStartValue(float a_value)
@@ -241,6 +249,10 @@ auto state _inactive
 	
 	function SetColorDialogDefaultColor(int a_color)
 		Trace(DEBUG_MSG + "SetColorDialogDefaultColor has been called in an invalid state.")
+	endfunction
+
+	function SetInputDialogStartText(string a_value)
+		Trace(DEBUG_MSG + "SetInputDialogStartText has been called in an invalid state.")
 	endfunction
 	
 	function SetCursorPosition(int a_position)
@@ -742,6 +754,10 @@ function AddKeyMapOptionST(string a_stateName, string a_text, int a_keyCode, int
 	_MCM.AddKeyMapOptionST(a_stateName, a_text, a_keyCode, a_flags)
 endfunction
 
+function AddInputOptionST(string a_stateName, string a_text, string a_value, int a_flags = 0)
+	_MCM.AddInputOptionST(a_stateName, a_text, a_value, a_flags)
+endfunction
+
 function SetOptionFlagsST(int a_flags, bool a_noUpdate = false, string a_stateName = "")
 	_MCM.SetOptionFlagsST(a_flags, a_noUpdate, a_stateName)
 endfunction
@@ -768,6 +784,10 @@ endfunction
 
 function SetKeyMapOptionValueST(int a_keyCode, bool a_noUpdate = false, string a_stateName = "")
 	_MCM.SetKeyMapOptionValueST(a_keyCode, a_noUpdate, a_stateName)
+endfunction
+
+function SetInputOptionValueST(string a_value, bool a_noUpdate = false, string a_stateName = "")
+	_MCM.SetInputOptionValueST(a_value, a_noUpdate, a_stateName)
 endfunction
 
 function SetSliderDialogStartValue(float a_value)
@@ -804,6 +824,10 @@ endfunction
 
 function SetColorDialogDefaultColor(int a_color)
 	_MCM.SetColorDialogDefaultColor(a_color)
+endfunction
+
+function SetInputDialogStartText(string a_value)
+	_MCM.SetInputDialogStartText(a_value)
 endfunction
 
 function SetCursorPosition(int a_position)

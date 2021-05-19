@@ -962,7 +962,7 @@ function SetModName(string name)
 endfunction
 
 function SetLandingPage(string page_name)
-	if Pages.Find(page_name) != -1
+	if page_name == "" || Pages.Find(page_name) != -1
 		_landing_page = page_name
 	endif
 endfunction

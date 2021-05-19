@@ -18,8 +18,103 @@ event OnPageDraw()
 
 	; Right side
 	SetCursorPosition(1)
+	AddHeaderOption(FONT_PRIMARY("Misc"))
+	AddToggleOptionST("misc_toggle_font", "Toggle font color", CURRENT_FONT)
+	AddKeyMapOptionST("misc_key_mcm", "Set MCM hotkey", MCM_QuickHotkey)
+	
+	AddEmptyOption()
+	AddInputOptionST("misc_input_landingpage", "Set the MCM landing page", "")
+	AddInputOptionST("misc_input_setsplash", "Set splash settings", "")
+	AddInputOptionST("misc_input_goto", "Go to page", "")
+
+	AddEmptyOption()
 	AddHeaderOption(FONT_PRIMARY("User presets"))
 endevent
+
+state misc_toggle_font
+	event OnDefaultST()
+		SetFont(FONT_DEFAULT)
+		ForcePageReset()
+	endevent
+
+	event OnHighlightST()
+		SetInfoText("Toggle the font")
+	endevent
+
+	event OnSelectST()
+		if CURRENT_FONT == FONT_DEFAULT
+			SetFont(FONT_PAPER)
+		else
+			SetFont(FONT_DEFAULT)
+		endif
+
+		ForcePageReset()
+	endevent
+endstate
+
+state misc_key_mcm
+	event OnDefaultST()
+		MCM_QuickHotkey = -1
+		SetKeyMapOptionValueST(-1)
+	endevent
+
+	event OnHighlightST()
+		SetInfoText("Set the quickopen MCM hotkey")
+	endevent
+
+	event OnKeyMapChangeST(int keycode)
+		MCM_QuickHotkey = keycode
+		SetKeyMapOptionValueST(keycode)
+	endevent
+endstate
+
+state misc_input_landingpage
+	event OnHighlightST()
+		SetInfoText("Set the MCM landing page")
+	endevent
+
+	event OnInputOpenST()
+		SetInputDialogStartText("Specify the page name")
+	endevent
+	
+	event OnInputAcceptST(string str)
+		SetLandingPage(str)
+	endevent
+endstate
+
+state misc_input_setsplash
+	event OnHighlightST()
+		SetInfoText("Set the splash settings")
+	endevent
+
+	event OnInputOpenST()
+		SetInputDialogStartText("Specify the path settings in the format path,x,y")
+	endevent
+	
+	event OnInputAcceptST(string str)
+		string[] settings = StringUtil.Split(str, ",")
+
+		if settings.length != 3
+			return
+		endif
+
+		SetSplashScreen(settings[0], settings[1] as float, settings[2] as float)
+	endevent
+endstate
+
+state misc_input_goto
+	event OnHighlightST()
+		SetInfoText("Go to a specific mod page")
+	endevent
+
+	event OnInputOpenST()
+		;SetInputDialogStartText("Specify the page name")
+	endevent
+	
+	event OnInputAcceptST(string str)
+		GoToPage(str)
+	endevent
+endstate
 
 state return_page
 	event OnHighlightST()
