@@ -14,6 +14,8 @@ event OnPageDraw()
 	; Left side
 	AddHeaderOption(FONT_PRIMARY("Mod goal"))
 	AddParagraph("Placeholder for some high and lofty goal description.", FONT_INFO())
+	
+	AddEmptyOption()
     AddTextOptionST("return_page", FONT_INFO("Return to main page"), "")
 
 	; Right side

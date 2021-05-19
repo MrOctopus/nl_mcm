@@ -14,6 +14,8 @@ event OnPageDraw()
 	; Left side
 	AddHeaderOption(FONT_PRIMARY("Info"))
 	AddParagraph("Welcome to the advanced section :)!", FONT_INFO())
+
+	AddEmptyOption()
 	AddTextOptionST("return_page", FONT_INFO("Return to main page"), "")
 
 	; Right side
@@ -74,7 +76,7 @@ state misc_input_landingpage
 	endevent
 
 	event OnInputOpenST()
-		SetInputDialogStartText("Specify the page name")
+		SetInputDialogStartText("Page name")
 	endevent
 	
 	event OnInputAcceptST(string str)
@@ -88,7 +90,7 @@ state misc_input_setsplash
 	endevent
 
 	event OnInputOpenST()
-		SetInputDialogStartText("Specify the path settings in the format path,x,y")
+		SetInputDialogStartText("path,x,y")
 	endevent
 	
 	event OnInputAcceptST(string str)
@@ -108,7 +110,7 @@ state misc_input_goto
 	endevent
 
 	event OnInputOpenST()
-		;SetInputDialogStartText("Specify the page name")
+		SetInputDialogStartText("Page name")
 	endevent
 	
 	event OnInputAcceptST(string str)

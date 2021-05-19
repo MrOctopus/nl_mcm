@@ -48,6 +48,9 @@ event OnPageDraw()
 	; Left side
 	AddHeaderOption(FONT_PRIMARY("Info"))
 	AddParagraph("This module provides various new cool utilities", FONT_INFO())
+
+	AddEmptyOption()
+	AddTextOptionST("return_page", FONT_INFO("Return to main page"), "")
 	
 	; Right side
 	SetCursorPosition(1)
@@ -171,5 +174,15 @@ state checkp_key_delete
 		nl_checkpoint.KeyDelete = keycode
 		_refresh_keys = true
 		SetKeyMapOptionValueST(keycode)
+	endevent
+endstate
+
+state return_page
+	event OnHighlightST()
+		SetInfoText("Return to the main page")
+	endevent
+
+	event OnSelectST()
+		GoToPage("Core")
 	endevent
 endstate

@@ -21,7 +21,7 @@ event OnInit()
 
 	; These will cache if the call above fails
 	SetModName("NeverLost's Curios")
-	;SetLandingPage("Core")
+	SetLandingPage("Core")
 endevent
 
 ; - After register
