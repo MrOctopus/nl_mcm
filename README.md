@@ -2,6 +2,8 @@
 An object-oriented module based extension of SkyUI MCM scripts.
 
 ## Info
+The current status of this project is that it is ready for use in development.
+However, more feedback is required from other mod authors before the framework can be published on the nexus.
 
 ### Features
 * Modularity
@@ -20,6 +22,10 @@ An object-oriented module based extension of SkyUI MCM scripts.
 	- Close your mcm menu on command
 * Individual page version support
 	- You can now update pages individually instead of the whole MCM using a new version tracking system
+* Extended control over pages
+	- Set landing pages 
+	- Set splash screens
+	- Force page switches
 * Built-in preset saving functionality
 	- Requires JContainers
 
