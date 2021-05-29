@@ -288,8 +288,8 @@ int property ERROR_MCM_NONEQUEST = -10 autoreadonly
 int property ERROR_MCM_NONE = -20 autoreadonly
 
 ; FONTS
-int property FONT_DEFAULT = 0x00 autoreadonly
-int property FONT_PAPER = 0x01 autoreadonly
+int property FONT_TYPE_DEFAULT = 0x00 autoreadonly
+int property FONT_TYPE_PAPER = 0x01 autoreadonly
 
 int property CURRENT_FONT
     int function Get()

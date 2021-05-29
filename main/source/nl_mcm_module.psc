@@ -22,7 +22,7 @@ int property EVENT_CHANGE = 5 autoreadonly
 
 string property DEBUG_MSG
 	string function Get()
-		return "NL_MCM(" + _page_name + "): "
+		return "NL_MCM(" + nl_util.GetFormModName(self) + ", " + _page_name + "): "
 	endfunction
 endproperty
 
@@ -313,34 +313,49 @@ auto state _inactive
 		_page_name = page_name
 		_z = z
 		
-		if quest_editorid == ""
-			_MCM = (self as quest) as nl_mcm
-		else
+		if quest_editorid != ""
 			quest found_quest = Quest.GetQuest(quest_editorid)
 			
 			if !found_quest
-				Notification(DEBUG_MSG + "Quest with editor id " + _quest_editorid + " could not be found.")
+				string error_msg = DEBUG_MSG + "Quest with editor id " + _quest_editorid + " could not be found."
+
+				Trace(error_msg)
+				Notification(error_msg)
+				
 				return ERROR_MCM_NONEQUEST
 			endif
 		
 			_MCM = found_quest as nl_mcm
+		else
+			_MCM = (self as quest) as nl_mcm
 		endif
 		
 		if !_MCM
-			Notification(DEBUG_MSG + "Quest with editor id " + _quest_editorid + " has no nl_mcm attached.")
+			string error_msg = DEBUG_MSG + "Quest with editor id " + _quest_editorid + " has no nl_mcm attached."
+
+			Trace(error_msg)
+			Notification(error_msg)
+
 			return ERROR_MCM_NONE
 		endif
 		
 		int error_code = _MCM._RegisterModule(self, page_name, z)
 		
-		if error_code == OK
+		if error_code != OK
+			string error_msg = ""
+
+			if error_code == ERROR_MODULE_FULL
+				error_msg = DEBUG_MSG + "The hooked MCM has already reached the page limit."
+			elseif error_code == ERROR_MODULE_TAKEN
+				error_msg = DEBUG_MSG + "The hooked MCM already has a page with the same name."
+			endif
+
+			Trace(error_msg)
+			Notification(error_msg)
+		else
 			_current_version = GetVersion()
 			OnPageInit()
 			GoToState("")
-		elseif error_code == ERROR_MODULE_FULL
-			Notification(DEBUG_MSG + "The hooked MCM has already reached the page limit.")
-		elseif error_code == ERROR_MODULE_TAKEN
-			Notification(DEBUG_MSG + "The hooked MCM already has a page with the same name.")
 		endif
 		
 		return error_code
@@ -429,10 +444,10 @@ int property ERROR_MCM_NONEQUEST = -10 autoreadonly
 int property ERROR_MCM_NONE = -20 autoreadonly
 
 ; FONTS
-int property FONT_DEFAULT = 0x00 autoreadonly
-{ Default font color }
-int property FONT_PAPER = 0x01 autoreadonly
-{ Paper font color }
+int property FONT_TYPE_DEFAULT = 0x00 autoreadonly
+{ Default type font }
+int property FONT_TYPE_PAPER = 0x01 autoreadonly
+{ Paper type font }
 
 int property CURRENT_FONT
 {
@@ -440,8 +455,8 @@ int property CURRENT_FONT
 	@get Current font
 }
     int function Get()
-		if _font > FONT_PAPER
-			return FONT_DEFAULT
+		if _font > FONT_TYPE_PAPER
+			return FONT_TYPE_DEFAULT
 		endif
 		return _font
 	endfunction
@@ -453,7 +468,7 @@ string function FONT_PRIMARY(string text = "")
 	Switches automatically depending on the installed UI skin.
 	@param text - The string to wrap in color
 }
-	if _font == FONT_PAPER
+	if _font == FONT_TYPE_PAPER
 		return "<font color='#005500'>" + text + "</font>"
 	endif
 	return "<font color='#EDDA87'>" + text + "</font>"
@@ -465,7 +480,7 @@ string function FONT_SECONDARY(string text = "")
 	Switches automatically depending on the installed UI skin.
 	@param text - The string to wrap in color
 }
-	if _font == FONT_PAPER
+	if _font == FONT_TYPE_PAPER
 		return "<font color='#412600'>" + text + "</font>"
 	endif
 	return "<font color='#6B7585'>" + text + "</font>"
@@ -477,7 +492,7 @@ string function FONT_SUCCESS(string text = "")
 	Switches automatically depending on the installed UI skin.
 	@param text - The string to wrap in color
 }
-	if _font == FONT_PAPER
+	if _font == FONT_TYPE_PAPER
 		return "<font color='#006D00'>" + text + "</font>"
 	endif
 	return "<font color='#51DB2E'>" + text + "</font>"
@@ -489,7 +504,7 @@ string function FONT_DANGER(string text = "")
 	Switches automatically depending on the installed UI skin.
 	@param text - The string to wrap in color
 }
-	if _font == FONT_PAPER
+	if _font == FONT_TYPE_PAPER
 		return "<font color='#5E000E'>" + text + "</font>"
 	endif
 	return "<font color='#C73636'>" + text + "</font>"
@@ -501,7 +516,7 @@ string function FONT_WARNING(string text = "")
 	Switches automatically depending on the installed UI skin.
 	@param text - The string to wrap in color
 }
-	if _font == FONT_PAPER
+	if _font == FONT_TYPE_PAPER
 		return "<font color='#FFFF00'>" + text + "</font>"
 	endif
 	return "<font color='#EAAB00'>" + text + "</font>"
@@ -513,7 +528,7 @@ string function FONT_INFO(string text = "")
 	Switches automatically depending on the installed UI skin.
 	@param text - The string to wrap in color
 }
-	if _font == FONT_PAPER
+	if _font == FONT_TYPE_PAPER
 		return "<font color='#121C4A'>" + text + "</font>"
 	endif
 	return "<font color='#A2BEFF'>" + text + "</font>"
@@ -524,7 +539,7 @@ string function FONT_CUSTOM(string text = "", string color)
 	Wraps a string in a custom font type formatting. \
 	Does not switch automatically depending on the installed UI skin.
 	@param text - The string to wrap in color
-	@param color - The color code, RGB format (FFFFFF)
+	@param color - The color code, RGB format (#FFFFFF)
 }
 	return "<font color='" + color + "'>" + text + "</font>"
 endfunction
@@ -649,9 +664,9 @@ endfunction
 
 function SetFont(int font = 0x00)
 {
-	Set font color. \
-	See: [Default Color](#FONT_DEFAULT) and [Paper Color](#FONT_PAPER).
-	@param font - The new font color
+	Set font type. \
+	See: [Default Color](#FONT_TYPE_DEFAULT) and [Paper Color](#FONT_TYPE_PAPER).
+	@param font - The new font type
 }
 	_MCM.SetFont(font)
 endfunction

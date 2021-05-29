@@ -35,7 +35,7 @@ endevent
 
 state misc_toggle_font
 	event OnDefaultST()
-		SetFont(FONT_DEFAULT)
+		SetFont(FONT_TYPE_DEFAULT)
 		ForcePageReset()
 	endevent
 
@@ -44,10 +44,10 @@ state misc_toggle_font
 	endevent
 
 	event OnSelectST()
-		if CURRENT_FONT == FONT_DEFAULT
-			SetFont(FONT_PAPER)
+		if CURRENT_FONT == FONT_TYPE_DEFAULT
+			SetFont(FONT_TYPE_PAPER)
 		else
-			SetFont(FONT_DEFAULT)
+			SetFont(FONT_TYPE_DEFAULT)
 		endif
 
 		ForcePageReset()

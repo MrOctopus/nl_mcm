@@ -37,8 +37,8 @@ int property EVENT_ACCEPT = 4 autoreadonly
 int property EVENT_CHANGE = 5 autoreadonly
 
 ; FONTS
-int property FONT_DEFAULT = 0x00 autoreadonly
-int property FONT_PAPER = 0x01 autoreadonly
+int property FONT_TYPE_DEFAULT = 0x00 autoreadonly
+int property FONT_TYPE_PAPER = 0x01 autoreadonly
 
 ; ADVANCED
 string property MCM_PATH_SETTINGS

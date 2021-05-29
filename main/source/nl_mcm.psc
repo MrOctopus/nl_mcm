@@ -37,8 +37,8 @@ int property EVENT_ACCEPT = 4 autoreadonly
 int property EVENT_CHANGE = 5 autoreadonly
 
 ; FONTS
-int property FONT_DEFAULT = 0x00 autoreadonly
-int property FONT_PAPER = 0x01 autoreadonly
+int property FONT_TYPE_DEFAULT = 0x00 autoreadonly
+int property FONT_TYPE_PAPER = 0x01 autoreadonly
 
 ; ADVANCED
 string property MCM_PATH_SETTINGS
@@ -709,9 +709,9 @@ event OnPageReset(string page)
 		if _font == -1
 			; Hack to check if Dear Diary is installed
 			if Ui.GetString(JOURNAL_MENU, MENU_ROOT + ".contentHolder.background._url") == "Interface/deardiary/configpanel/configpanel%5FBG.swf"
-				_font = FONT_PAPER
+				_font = FONT_TYPE_PAPER
 			else
-				_font = FONT_DEFAULT
+				_font = FONT_TYPE_DEFAULT
 			endif
 		endif
 
