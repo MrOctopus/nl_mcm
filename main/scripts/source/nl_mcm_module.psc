@@ -616,6 +616,8 @@ event OnPageDraw()
 	Guard()
 endevent
 
+; BASIC
+
 event OnDefaultST()
 	Guard()
 endevent
@@ -662,6 +664,44 @@ endevent
 
 event OnKeyMapChangeST(int keycode)
 	Guard()
+endevent
+
+; ADVANCED
+
+event OnDefaultST_EX(string state_id)
+endevent
+
+event OnHighlightST_EX(string state_id)
+endevent
+
+event OnSelectST_EX(string state_id)
+endevent
+
+event OnSliderOpenST_EX(string state_id)
+endevent
+
+event OnMenuOpenST_EX(string state_id)
+endevent
+
+event OnColorOpenST_EX(string state_id)
+endevent
+
+event OnSliderAcceptST_EX(string state_id, float f)
+endevent
+
+event OnMenuAcceptST_EX(string state_id, int i)
+endevent
+
+event OnColorAcceptST_EX(string state_id, int col)
+endevent
+
+event OnInputOpenST_EX(string state_id)
+endevent
+
+event OnInputAcceptST_EX(string state_id, string str)
+endevent
+
+event OnKeyMapChangeST_EX(string state_id, int keycode)
 endevent
 
 ;------\

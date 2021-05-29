@@ -16,6 +16,14 @@ event OnPageDraw()
 	AddParagraph("Welcome to the advanced section :)!", FONT_INFO())
 
 	AddEmptyOption()
+	AddTextOptionST("misc_test_advanced", FONT_INFO("Test normal"), "")
+	int i = 1
+	while i <= 3
+		AddTextOptionST("misc_test_advanced___" + i, FONT_INFO("Test advanced " + i), "")
+		i += 1
+	endwhile
+
+	AddEmptyOption()
 	AddTextOptionST("return_page", FONT_INFO("Return to main page"), "")
 
 	; Right side
@@ -32,6 +40,28 @@ event OnPageDraw()
 	AddEmptyOption()
 	AddHeaderOption(FONT_PRIMARY("User presets"))
 endevent
+
+;-------------\
+; PAGE OPTIONS \
+;--------------------------------------------------------
+
+state misc_test_advanced
+	event OnHighlightST()
+		SetInfoText("This is normal option")
+	endevent
+
+	event OnSelectST()
+		ShowMessage("This is normal option")
+	endevent
+
+	event OnHighlightST_EX(string state_id)
+		SetInfoText("This is advanced option: " + state_id)
+	endevent
+
+	event OnSelectST_EX(string state_id)
+		ShowMessage("This is advanced option: " + state_id)
+	endevent
+endstate
 
 state misc_toggle_font
 	event OnDefaultST()

@@ -60,26 +60,55 @@ event _OnPageDraw(int font)
 endevent
 
 event _OnPageEvent(string state_name, int event_id, float f, string str)
-	GoToState(state_name)
+	int index = StringUtil.Find(state_name, "___")
+	
+	; Basic
+	if index == -1
+		GoToState(state_name)
 
-	if event_id == EVENT_DEFAULT
-		OnDefaultST()
-	elseif event_id == EVENT_HIGHLIGHT
-		OnHighlightST()
-	elseif event_id == EVENT_SELECT
-		OnSelectST()
-	elseif event_id == EVENT_OPEN
-		OnSliderOpenST()
-		OnMenuOpenST()
-		OnColorOpenST()
-		OnInputOpenST()
-	elseif event_id == EVENT_ACCEPT
-		OnSliderAcceptST(f)
-		OnMenuAcceptST(f as int)
-		OnColorAcceptST(f as int)
-		OnInputAcceptST(str)
-	elseif event_id == EVENT_CHANGE
-		OnKeyMapChangeST(f as int)
+		if event_id == EVENT_DEFAULT
+			OnDefaultST()
+		elseif event_id == EVENT_HIGHLIGHT
+			OnHighlightST()
+		elseif event_id == EVENT_SELECT
+			OnSelectST()
+		elseif event_id == EVENT_OPEN
+			OnSliderOpenST()
+			OnMenuOpenST()
+			OnColorOpenST()
+			OnInputOpenST()
+		elseif event_id == EVENT_ACCEPT
+			OnSliderAcceptST(f)
+			OnMenuAcceptST(f as int)
+			OnColorAcceptST(f as int)
+			OnInputAcceptST(str)
+		elseif event_id == EVENT_CHANGE
+			OnKeyMapChangeST(f as int)
+		endif
+	; Advanced
+	else
+		GoToState(StringUtil.Substring(state_name, 0, index))
+		string leftover = StringUtil.Substring(state_name, index + 3)
+
+		if event_id == EVENT_DEFAULT
+			OnDefaultST_EX(leftover)
+		elseif event_id == EVENT_HIGHLIGHT
+			OnHighlightST_EX(leftover)
+		elseif event_id == EVENT_SELECT
+			OnSelectST_EX(leftover)
+		elseif event_id == EVENT_OPEN
+			OnSliderOpenST_EX(leftover)
+			OnMenuOpenST_EX(leftover)
+			OnColorOpenST_EX(leftover)
+			OnInputOpenST_Ex(leftover)
+		elseif event_id == EVENT_ACCEPT
+			OnSliderAcceptST_EX(leftover, f)
+			OnMenuAcceptST_EX(leftover, f as int)
+			OnColorAcceptST_EX(leftover, f as int)
+			OnInputAcceptST_EX(leftover, str)
+		elseif event_id == EVENT_CHANGE
+			OnKeyMapChangeST_EX(leftover, f as int)
+		endif
 	endif
 endevent
 
@@ -938,6 +967,8 @@ endevent
 event OnPageDraw()
 endevent
 
+; BASIC
+
 event OnDefaultST()
 endevent
 
@@ -972,4 +1003,42 @@ event OnInputAcceptST(string str)
 endevent
 
 event OnKeyMapChangeST(int keycode)
+endevent
+
+; ADVANCED
+
+event OnDefaultST_EX(string state_id)
+endevent
+
+event OnHighlightST_EX(string state_id)
+endevent
+
+event OnSelectST_EX(string state_id)
+endevent
+
+event OnSliderOpenST_EX(string state_id)
+endevent
+
+event OnMenuOpenST_EX(string state_id)
+endevent
+
+event OnColorOpenST_EX(string state_id)
+endevent
+
+event OnSliderAcceptST_EX(string state_id, float f)
+endevent
+
+event OnMenuAcceptST_EX(string state_id, int i)
+endevent
+
+event OnColorAcceptST_EX(string state_id, int col)
+endevent
+
+event OnInputOpenST_EX(string state_id)
+endevent
+
+event OnInputAcceptST_EX(string state_id, string str)
+endevent
+
+event OnKeyMapChangeST_EX(string state_id, int keycode)
 endevent
