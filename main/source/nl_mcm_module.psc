@@ -448,6 +448,11 @@ int property CURRENT_FONT
 endproperty
 
 string function FONT_PRIMARY(string text = "")
+{
+	Wraps a string in the FONT_PRIMARY type formatting. \
+	Switches automatically depending on the installed UI skin.
+	@param text - The string to wrap in color
+}
 	if _font == FONT_PAPER
 		return "<font color='#005500'>" + text + "</font>"
 	endif
@@ -455,6 +460,11 @@ string function FONT_PRIMARY(string text = "")
 endfunction
 
 string function FONT_SECONDARY(string text = "")
+{
+	Wraps a string in the FONT_SECONDARY type formatting. \
+	Switches automatically depending on the installed UI skin.
+	@param text - The string to wrap in color
+}
 	if _font == FONT_PAPER
 		return "<font color='#412600'>" + text + "</font>"
 	endif
@@ -462,6 +472,11 @@ string function FONT_SECONDARY(string text = "")
 endfunction
 
 string function FONT_SUCCESS(string text = "")
+{
+	Wraps a string in the FONT_SUCCESS type formatting. \
+	Switches automatically depending on the installed UI skin.
+	@param text - The string to wrap in color
+}
 	if _font == FONT_PAPER
 		return "<font color='#006D00'>" + text + "</font>"
 	endif
@@ -469,6 +484,11 @@ string function FONT_SUCCESS(string text = "")
 endfunction
 
 string function FONT_DANGER(string text = "")
+{
+	Wraps a string in the FONT_DANGER type formatting. \
+	Switches automatically depending on the installed UI skin.
+	@param text - The string to wrap in color
+}
 	if _font == FONT_PAPER
 		return "<font color='#5E000E'>" + text + "</font>"
 	endif
@@ -476,6 +496,11 @@ string function FONT_DANGER(string text = "")
 endfunction
 
 string function FONT_WARNING(string text = "")
+{
+	Wraps a string in the FONT_WARNING type formatting. \
+	Switches automatically depending on the installed UI skin.
+	@param text - The string to wrap in color
+}
 	if _font == FONT_PAPER
 		return "<font color='#FFFF00'>" + text + "</font>"
 	endif
@@ -483,10 +508,25 @@ string function FONT_WARNING(string text = "")
 endfunction
 
 string function FONT_INFO(string text = "")
+{
+	Wraps a string in the FONT_INFO type formatting. \
+	Switches automatically depending on the installed UI skin.
+	@param text - The string to wrap in color
+}
 	if _font == FONT_PAPER
 		return "<font color='#121C4A'>" + text + "</font>"
 	endif
 	return "<font color='#A2BEFF'>" + text + "</font>"
+endfunction
+
+string function FONT_CUSTOM(string text = "", string color)
+{
+	Wraps a string in a custom font type formatting. \
+	Does not switch automatically depending on the installed UI skin.
+	@param text - The string to wrap in color
+	@param color - The color code, RGB format (FFFFFF)
+}
+	return "<font color='" + color + "'>" + text + "</font>"
 endfunction
 
 ; PROPERTIES

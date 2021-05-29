@@ -321,6 +321,10 @@ string function FONT_INFO(string text = "")
 	Guard()
 endfunction
 
+string function FONT_CUSTOM(string text = "", string color)
+	Guard()
+endfunction
+
 ; PROPERTIES
 nl_mcm property UNSAFE_RAW_MCM
     nl_mcm function Get()
