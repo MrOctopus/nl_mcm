@@ -87,6 +87,12 @@ endproperty
 ; MCM \ INTERNAL \
 ;--------------------------------------------------------
 
+; NONE POINTERS, DONT ASK ME WHY
+string[] _none_string_ptr
+int[] _none_int_ptr
+
+; GO ON
+
 nl_mcm_module[] _modules
 int[] _pages_z
 
@@ -207,8 +213,8 @@ event OnGameReload()
 		_mutex_store = False
 
 		if active_modules == 0
-			Pages = None
-			_pages_z = None
+			Pages = _none_string_ptr
+			_pages_z = _none_int_ptr
 		else
 			Pages = Utility.ResizeStringArray(Pages, active_modules)
 			_pages_z = Utility.ResizeIntArray(_pages_z, active_modules)
@@ -482,8 +488,8 @@ int function _UnregisterModule(string page_name)
 	endif
 	
 	if j == 0
-		Pages = None
-		_pages_z = None
+		Pages = _none_string_ptr
+		_pages_z = _none_int_ptr
 	else
 		while i < j
 			int k = i + 1
@@ -528,12 +534,21 @@ function SaveMCMToPreset(string preset_path)
 	while _mutex_modules
 		Utility.WaitMenuMode(SPINLOCK_TIMER)
 	endwhile
-	
-	_mutex_modules = true
-	
+
+	nl_mcm_module[] modules_tmp = new nl_mcm_module[128]
+	int len = Pages.Length
 	int i = 0
-	while i < Pages.Length
-		int jData = _modules[i].SaveData()
+
+	while i < len
+		modules_tmp[i] = _modules[i]
+		i += 1
+	endwhile
+
+	i = 0
+	
+	while i < len
+		; Possible thrown exception
+		int jData = modules_tmp[i].SaveData()
 
 		if jData > 0
 			JMap.setObj(jPreset, Pages[i], jData)
@@ -542,50 +557,10 @@ function SaveMCMToPreset(string preset_path)
 		i += 1
 	endwhile
 	
-	_mutex_modules = false
-	
 	if JMap.count(jPreset) > 0
 		JValue.writeTofile(jPreset, MCM_PATH_SETTINGS + preset_path + MCM_EXT)
 	endif
 	
-	_busy_jcontainer = false
-	JValue.zeroLifetime(jPreset)
-endfunction
-
-function LoadMCMFromPreset(string preset_path)
-	if !JContainers.isInstalled()
-		return
-	endif
-	
-	if preset_path == "" || _busy_jcontainer
-		return
-	endif
-
-	_busy_jcontainer = True
-	
-	int jPreset
-	
-	jPreset = JValue.readFromFile(MCM_PATH_SETTINGS + preset_path + MCM_EXT)
-	
-	if jPreset == 0
-		_busy_jcontainer = false
-		return
-	endif
-	
-	_mutex_modules = true
-	
-	int i = 0
-	while i < Pages.Length
-		int jData = JMap.getObj(jPreset, Pages[i])
-
-		if jData > 0
-			_modules[i].LoadData(jData)
-		endif
-
-		i += 1
-	endwhile
-	
-	_mutex_modules = false	
 	_busy_jcontainer = false
 	JValue.zeroLifetime(jPreset)
 endfunction
@@ -863,26 +838,83 @@ endevent
 ; NON-CRITICAL \ FUNCTIONS \
 ;--------------------------------------------------------
 
-string[] function GetMCMSavedPresets(string default, string dir_path)
+int function GetNumMCMSavedPresets(string dir_path = "")
 	if !JContainers.isInstalled()
-		return None
+		return 0
+	endif
+
+	return JContainers.contentsOfDirectoryAtPath(MCM_PATH_SETTINGS + dir_path, MCM_EXT).length
+endfunction
+
+string[] function GetMCMSavedPresets(string default, string dir_path = "")
+	if !JContainers.isInstalled()
+		return _none_string_ptr
 	endif
 	
 	string[] dir_presets = JContainers.contentsOfDirectoryAtPath(MCM_PATH_SETTINGS + dir_path, MCM_EXT)	
 	
-	if dir_presets.Length == 0
-		return None
+	if dir_presets.length == 0
+		return _none_string_ptr
 	endif
 	
 	string[] presets = Utility.CreateStringArray(dir_presets.length + 1, default)
+	int path_index = StringUtil.GetLength(MCM_PATH_SETTINGS)
 	int i
 	
 	while i < dir_presets.length
-		presets[i + 1] = StringUtil.Substring(dir_presets[i], 0, StringUtil.Find(dir_presets[i], MCM_EXT))
+		presets[i + 1] = StringUtil.Substring(dir_presets[i], path_index, StringUtil.Find(dir_presets[i], MCM_EXT) - path_index)
 		i += 1
 	endwhile
 	
 	return presets
+endfunction
+
+function LoadMCMFromPreset(string preset_path)
+	if !JContainers.isInstalled()
+		return
+	endif
+	
+	if preset_path == "" || _busy_jcontainer
+		return
+	endif
+
+	_busy_jcontainer = True
+	
+	int jPreset = JValue.readFromFile(MCM_PATH_SETTINGS + preset_path + MCM_EXT)
+	
+	if jPreset == 0
+		_busy_jcontainer = false
+		return
+	endif
+
+	string[] page_names = JMap.allKeysPArray(jPreset)
+	int prev_page_length = Pages.length
+	int remaining = page_names.length
+	int failed = 0
+
+	while failed < remaining
+		while failed < remaining && 0 < remaining
+			int jData = JMap.getObj(jPreset, page_names[failed])
+			int i = Pages.Find(page_names[failed])
+
+			if i != -1
+				remaining -= 1
+				page_names[failed] = page_names[remaining]
+				; Possible thrown exception, but we don't care
+				_modules[i].LoadData(jData)
+			else
+				failed += 1
+			endif
+		endwhile
+
+		if Pages.length != prev_page_length
+			prev_page_length = Pages.length
+			failed = 0
+		endif
+	endwhile
+	
+	_busy_jcontainer = false
+	JValue.zeroLifetime(jPreset)
 endfunction
 
 function DeleteMCMSavedPreset(string preset_path)
@@ -894,9 +926,7 @@ function DeleteMCMSavedPreset(string preset_path)
 		return
 	endif
 	
-	_busy_jcontainer = True
 	JContainers.removeFileAtPath(MCM_PATH_SETTINGS + preset_path + MCM_EXT)
-	_busy_jcontainer = False
 endfunction
 
 function AddParagraph(string text, string format = "", int flags = 0x01)

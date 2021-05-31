@@ -17,6 +17,7 @@
   <Imports>
     <Import>@Example\scripts\source</Import>
     <Import>@MCM\scripts\source</Import>
+    <Import>https://github.com/MrOctopus/nl_online/tree/main/jcontainersse/source</Import>
     <Import>https://github.com/schlangster/skyui/tree/master/dist/Data/Scripts/Source</Import>
     <Import>https://github.com/MrOctopus/nl_online/tree/main/skse64/source</Import>
     <Import>https://github.com/MrOctopus/nl_online/tree/main/sse/source</Import>

@@ -4,6 +4,36 @@ Scriptname nl_curios_mcm_advanced extends nl_mcm_module
 	@version 1.0
 }
 
+;---------------\
+; PRESET HANDLER \
+;--------------------------------------------------------
+
+int function SaveData()
+	; It doesn't matter what type of jcontainers object this is.
+	; As long as you load the data the same way you saved it
+	; it's fine
+	int jObj = JMap.object()
+	
+	; If you want to do version checking on save/loads
+	; you should save the version along with the jContainers file
+	JMap.setInt(jObj, "version", GetVersion())
+
+	JMap.setInt(jObj, "mcmhotkey", MCM_QuickHotkey)
+
+	return jObj
+endfunction
+
+function LoadData(int jObj)
+	; Check for incompatible preset version
+	int version = JMap.getInt(jObj, "version")
+
+	if version != GetVersion()
+		return
+	endif
+
+	MCM_QuickHotkey = JMap.getInt(jObj, "mcmhotkey")
+endfunction
+
 ;----------\
 ; DRAW PAGE \
 ;--------------------------------------------------------
@@ -36,9 +66,6 @@ event OnPageDraw()
 	AddInputOptionST("misc_input_landingpage", "Set the MCM landing page", "")
 	AddInputOptionST("misc_input_setsplash", "Set splash settings", "")
 	AddInputOptionST("misc_input_goto", "Go to page", "")
-
-	AddEmptyOption()
-	AddHeaderOption(FONT_PRIMARY("User presets"))
 endevent
 
 ;-------------\
@@ -46,34 +73,26 @@ endevent
 ;--------------------------------------------------------
 
 state misc_test_advanced
-	event OnHighlightST()
-		SetInfoText("This is normal option")
-	endevent
-
-	event OnSelectST()
-		ShowMessage("This is normal option")
-	endevent
-
-	event OnHighlightST_EX(string state_id)
+	event OnHighlightST(string state_id)
 		SetInfoText("This is advanced option: " + state_id)
 	endevent
 
-	event OnSelectST_EX(string state_id)
+	event OnSelectST(string state_id)
 		ShowMessage("This is advanced option: " + state_id)
 	endevent
 endstate
 
 state misc_toggle_font
-	event OnDefaultST()
+	event OnDefaultST(string state_id)
 		SetFont(FONT_TYPE_DEFAULT)
 		ForcePageReset()
 	endevent
 
-	event OnHighlightST()
+	event OnHighlightST(string state_id)
 		SetInfoText("Toggle the font")
 	endevent
 
-	event OnSelectST()
+	event OnSelectST(string state_id)
 		if CURRENT_FONT == FONT_TYPE_DEFAULT
 			SetFont(FONT_TYPE_PAPER)
 		else
@@ -85,45 +104,45 @@ state misc_toggle_font
 endstate
 
 state misc_key_mcm
-	event OnDefaultST()
+	event OnDefaultST(string state_id)
 		MCM_QuickHotkey = -1
 		SetKeyMapOptionValueST(-1)
 	endevent
 
-	event OnHighlightST()
+	event OnHighlightST(string state_id)
 		SetInfoText("Set the quickopen MCM hotkey")
 	endevent
 
-	event OnKeyMapChangeST(int keycode)
+	event OnKeyMapChangeST(string state_id, int keycode)
 		MCM_QuickHotkey = keycode
 		SetKeyMapOptionValueST(keycode)
 	endevent
 endstate
 
 state misc_input_landingpage
-	event OnHighlightST()
+	event OnHighlightST(string state_id)
 		SetInfoText("Set the MCM landing page")
 	endevent
 
-	event OnInputOpenST()
+	event OnInputOpenST(string state_id)
 		SetInputDialogStartText("Page name")
 	endevent
 	
-	event OnInputAcceptST(string str)
+	event OnInputAcceptST(string state_id, string str)
 		SetLandingPage(str)
 	endevent
 endstate
 
 state misc_input_setsplash
-	event OnHighlightST()
+	event OnHighlightST(string state_id)
 		SetInfoText("Set the splash settings")
 	endevent
 
-	event OnInputOpenST()
+	event OnInputOpenST(string state_id)
 		SetInputDialogStartText("path,x,y")
 	endevent
 	
-	event OnInputAcceptST(string str)
+	event OnInputAcceptST(string state_id, string str)
 		string[] settings = StringUtil.Split(str, ",")
 
 		if settings.length != 3
@@ -135,25 +154,25 @@ state misc_input_setsplash
 endstate
 
 state misc_input_goto
-	event OnHighlightST()
+	event OnHighlightST(string state_id)
 		SetInfoText("Go to a specific mod page")
 	endevent
 
-	event OnInputOpenST()
+	event OnInputOpenST(string state_id)
 		SetInputDialogStartText("Page name")
 	endevent
 	
-	event OnInputAcceptST(string str)
+	event OnInputAcceptST(string state_id, string str)
 		GoToPage(str)
 	endevent
 endstate
 
 state return_page
-	event OnHighlightST()
+	event OnHighlightST(string state_id)
 		SetInfoText("Return to the main page")
 	endevent
 
-	event OnSelectST()
+	event OnSelectST(string state_id)
 		GoToPage("Core")
 	endevent
 endstate

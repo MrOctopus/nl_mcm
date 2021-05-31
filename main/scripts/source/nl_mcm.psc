@@ -103,10 +103,6 @@ function SaveMCMToPreset(string preset_path)
 	Guard()
 endFunction
 
-function LoadMCMFromPreset(string preset_path)
-	Guard()
-endFunction
-
 string function GetCommonStore(string page_name, bool lock)
 	Guard()
 endfunction
@@ -208,9 +204,17 @@ endevent
 ; NON-CRITICAL \ FUNCTIONS \
 ;--------------------------------------------------------
 
-string[] function GetMCMSavedPresets(string default, string dir_path)
+int function GetNumMCMSavedPresets(string dir_path = "")
 	Guard()
 endfunction
+
+string[] function GetMCMSavedPresets(string default, string dir_path = "")
+	Guard()
+endfunction
+
+function LoadMCMFromPreset(string preset_path)
+	Guard()
+endFunction
 
 function DeleteMCMSavedPreset(string preset_path)
 	Guard()

@@ -38,6 +38,37 @@ event OnConfigClose()
 	endif
 endevent
 
+;---------------\
+; PRESET HANDLER \
+;--------------------------------------------------------
+
+int function SaveData()
+	; It doesn't matter what type of jcontainers object this is.
+	; As long as you load the data the same way you saved it
+	; it's fine
+	int jObj = JMap.object()
+	
+	JMap.setInt(jObj, "checkpoint", nl_checkpoint.MarkerLimit)
+	JMap.setInt(jObj, "scrollup", nl_checkpoint.KeyUp)
+	JMap.setInt(jObj, "scrolldown", nl_checkpoint.KeyDown)
+	JMap.setInt(jObj, "place", nl_checkpoint.KeyPlace)
+	JMap.setInt(jObj, "move",  nl_checkpoint.KeyMove)
+	JMap.setInt(jObj, "delete", nl_checkpoint.KeyDelete)
+
+	return jObj
+endfunction
+
+function LoadData(int jObj)
+	nl_checkpoint.MarkerLimit = JMap.getInt(jObj, "checkpoint")
+	nl_checkpoint.KeyUp = JMap.getInt(jObj, "scrollup")
+	nl_checkpoint.KeyDown = JMap.getInt(jObj, "scrolldown")
+	nl_checkpoint.KeyPlace = JMap.getInt(jObj, "place")
+	nl_checkpoint.KeyMove = JMap.getInt(jObj, "move")
+	nl_checkpoint.KeyDelete = JMap.getInt(jObj, "delete")
+
+	_refresh_keys = true
+endfunction
+
 ;----------\
 ; DRAW PAGE \
 ;--------------------------------------------------------
@@ -69,36 +100,36 @@ endevent
 ;--------------------------------------------------------
 
 state checkp_limit
-	event OnDefaultST()
+	event OnDefaultST(string state_id)
 		nl_checkpoint.MarkerLimit = 10
 	endevent
 
-	event OnHighlightST()
+	event OnHighlightST(string state_id)
 		SetInfoText("")
 	endevent
 	
-	event OnSliderOpenST()
+	event OnSliderOpenST(string state_id)
 		SetSliderDialog(nl_checkpoint.MarkerLimit, 10, 30, 10.0, 10.0)
 	endevent
 	
-	event OnSliderAcceptST(float f)
+	event OnSliderAcceptST(string state_id, float f)
 		nl_checkpoint.MarkerLimit = f as int
 		SetSliderOptionValueST(f)
 	endevent
 endstate
 
 state checkp_key_up
-	event OnDefaultST()
+	event OnDefaultST(string state_id)
 		nl_checkpoint.KeyUp = 0x4E
 		_refresh_keys = true
 		SetKeyMapOptionValueST(0x4E)
 	endevent
 
-	event OnHighlightST()
+	event OnHighlightST(string state_id)
 		SetInfoText("")
 	endevent
 
-	event OnKeyMapChangeST(int keycode)
+	event OnKeyMapChangeST(string state_id, int keycode)
 		nl_checkpoint.KeyUp = keycode
 		_refresh_keys = true
 		SetKeyMapOptionValueST(keycode)
@@ -106,17 +137,17 @@ state checkp_key_up
 endstate
 
 state checkp_key_dowm
-	event OnDefaultST()
+	event OnDefaultST(string state_id)
 		nl_checkpoint.KeyDown = 0x4A
 		_refresh_keys = true
 		SetKeyMapOptionValueST(0x4A)
 	endevent
 
-	event OnHighlightST()
+	event OnHighlightST(string state_id)
 		SetInfoText("")
 	endevent
 
-	event OnKeyMapChangeST(int keycode)
+	event OnKeyMapChangeST(string state_id, int keycode)
 		nl_checkpoint.KeyDown = keycode
 		_refresh_keys = true
 		SetKeyMapOptionValueST(keycode)
@@ -124,17 +155,17 @@ state checkp_key_dowm
 endstate
 
 state checkp_key_place
-	event OnDefaultST()
+	event OnDefaultST(string state_id)
 		nl_checkpoint.KeyPlace = 0x9C
 		_refresh_keys = true
 		SetKeyMapOptionValueST(0x9C)
 	endevent
 
-	event OnHighlightST()
+	event OnHighlightST(string state_id)
 		SetInfoText("")
 	endevent
 
-	event OnKeyMapChangeST(int keycode)
+	event OnKeyMapChangeST(string state_id, int keycode)
 		nl_checkpoint.KeyPlace = keycode
 		_refresh_keys = true
 		SetKeyMapOptionValueST(keycode)
@@ -142,17 +173,17 @@ state checkp_key_place
 endstate
 
 state checkp_key_move
-	event OnDefaultST()
+	event OnDefaultST(string state_id)
 		nl_checkpoint.KeyMove = 0x37
 		_refresh_keys = true
 		SetKeyMapOptionValueST(0x37)
 	endevent
 
-	event OnHighlightST()
+	event OnHighlightST(string state_id)
 		SetInfoText("")
 	endevent
 
-	event OnKeyMapChangeST(int keycode)
+	event OnKeyMapChangeST(string state_id, int keycode)
 		nl_checkpoint.KeyMove = keycode
 		_refresh_keys = true
 		SetKeyMapOptionValueST(keycode)
@@ -160,17 +191,17 @@ state checkp_key_move
 endstate
 
 state checkp_key_delete
-	event OnDefaultST()
+	event OnDefaultST(string state_id)
 		nl_checkpoint.KeyDelete = 0xB5
 		_refresh_keys = true
 		SetKeyMapOptionValueST(0xB5)
 	endevent
 
-	event OnHighlightST()
+	event OnHighlightST(string state_id)
 		SetInfoText("")
 	endevent
 
-	event OnKeyMapChangeST(int keycode)
+	event OnKeyMapChangeST(string state_id, int keycode)
 		nl_checkpoint.KeyDelete = keycode
 		_refresh_keys = true
 		SetKeyMapOptionValueST(keycode)
@@ -178,11 +209,11 @@ state checkp_key_delete
 endstate
 
 state return_page
-	event OnHighlightST()
+	event OnHighlightST(string state_id)
 		SetInfoText("Return to the main page")
 	endevent
 
-	event OnSelectST()
+	event OnSelectST(string state_id)
 		GoToPage("Core")
 	endevent
 endstate

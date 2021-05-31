@@ -25,11 +25,11 @@ event OnPageDraw()
 endevent
 
 state return_page
-	event OnHighlightST()
+	event OnHighlightST(string state_id)
 		SetInfoText("Return to the main page")
 	endevent
 
-	event OnSelectST()
+	event OnSelectST(string state_id)
 		GoToPage("Core")
 	endevent
 endstate

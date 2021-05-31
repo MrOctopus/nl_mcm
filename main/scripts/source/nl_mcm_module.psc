@@ -4,6 +4,17 @@ Scriptname nl_mcm_module extends Quest
 	@version 1.0.0	
 }
 
+; ------\-------\
+; MODULE \ DEBUG \
+;--------------------------------------------------------
+
+int property DEBUG_FLAG_T = 0x01 autoreadonly
+int property DEBUG_FLAG_N = 0x02 autoreadonly
+
+function DEBUG_MSG(string msg, int flag = 0x01)
+	Guard()
+endfunction
+
 ;-------\----------\
 ; MODULE \ INTERNAL \ - ALSO KNOWN AS, IGNORE THIS SECTION
 ;--------------------------------------------------------
@@ -14,12 +25,6 @@ int property EVENT_SELECT = 2 autoreadonly
 int property EVENT_OPEN = 3 autoreadonly
 int property EVENT_ACCEPT = 4 autoreadonly
 int property EVENT_CHANGE = 5 autoreadonly
-
-string property DEBUG_MSG
-	string function Get()
-		Guard()
-	endfunction
-endproperty
 
 event _OnPageDraw(int font)
 	Guard()
@@ -73,8 +78,12 @@ auto state _inactive
 	function LoadMCMFromPreset(string preset_path)
 		Guard()
 	endfunction
+
+	int function GetNumMCMSavedPresets(string dir_path = "")
+		Guard()
+	endfunction
 	
-	string[] function GetMCMSavedPresets(string default, string dir_path = ".")
+	string[] function GetMCMSavedPresets(string default, string dir_path = "")
 		Guard()
 	endfunction 
 	
@@ -275,6 +284,14 @@ endfunction
 ; MCM API \ NEW \
 ;--------------------------------------------------------
 
+; NONE POINTER TO STRING ARRAY
+; will stay undocumented
+string[] property NONE_STRING_PTR
+	string[] function Get()
+		Guard()
+	endfunction
+endproperty
+
 ; ERROR CODES
 int property OK = 1 autoreadonly
 int property ERROR = 0 autoreadonly
@@ -416,7 +433,11 @@ function LoadMCMFromPreset(string preset_path)
 	Guard()
 endfunction
 
-string[] function GetMCMSavedPresets(string default, string dir_path = ".")
+int function GetNumMCMSavedPresets(string dir_path = "")
+	Guard()
+endfunction
+
+string[] function GetMCMSavedPresets(string default, string dir_path = "")
 	Guard()
 endfunction 
 
@@ -616,92 +637,54 @@ event OnPageDraw()
 	Guard()
 endevent
 
-; BASIC
+; OPTIONS
 
-event OnDefaultST()
+event OnDefaultST(string state_id)
 	Guard()
 endevent
 
-event OnHighlightST()
+event OnHighlightST(string state_id)
 	Guard()
 endevent
 
-event OnSelectST()
+event OnSelectST(string state_id)
 	Guard()
 endevent
 
-event OnSliderOpenST()
+event OnSliderOpenST(string state_id)
 	Guard()
 endevent
 
-event OnMenuOpenST()
+event OnMenuOpenST(string state_id)
 	Guard()
 endevent
 
-event OnColorOpenST()
+event OnColorOpenST(string state_id)
 	Guard()
 endevent
 
-event OnSliderAcceptST(float f)
+event OnSliderAcceptST(string state_id, float f)
 	Guard()
 endevent
 
-event OnMenuAcceptST(int i)
+event OnMenuAcceptST(string state_id, int i)
 	Guard()
 endevent
 
-event OnColorAcceptST(int col)
+event OnColorAcceptST(string state_id, int col)
 	Guard()
 endevent
 
-event OnInputOpenST()
+event OnInputOpenST(string state_id)
 	Guard()
 endevent
 
-event OnInputAcceptST(string str)
+event OnInputAcceptST(string state_id, string str)
 	Guard()
 endevent
 
-event OnKeyMapChangeST(int keycode)
+event OnKeyMapChangeST(string state_id, int keycode)
 	Guard()
-endevent
-
-; ADVANCED
-
-event OnDefaultST_EX(string state_id)
-endevent
-
-event OnHighlightST_EX(string state_id)
-endevent
-
-event OnSelectST_EX(string state_id)
-endevent
-
-event OnSliderOpenST_EX(string state_id)
-endevent
-
-event OnMenuOpenST_EX(string state_id)
-endevent
-
-event OnColorOpenST_EX(string state_id)
-endevent
-
-event OnSliderAcceptST_EX(string state_id, float f)
-endevent
-
-event OnMenuAcceptST_EX(string state_id, int i)
-endevent
-
-event OnColorAcceptST_EX(string state_id, int col)
-endevent
-
-event OnInputOpenST_EX(string state_id)
-endevent
-
-event OnInputAcceptST_EX(string state_id, string str)
-endevent
-
-event OnKeyMapChangeST_EX(string state_id, int keycode)
 endevent
 
 ;------\
@@ -709,6 +692,6 @@ endevent
 ;--------------------------------------------------------
 
 function Guard()
-	Debug.MessageBox("SKI_ConfigBase: Don't recompile this script!")
+	Debug.MessageBox("nl_mcm_module: Don't recompile this script!")
 endFunction
 

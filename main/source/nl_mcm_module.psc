@@ -7,7 +7,34 @@ Scriptname nl_mcm_module extends Quest
 	@version 1.0.0
 }
 
-import Debug
+; ------\-------\
+; MODULE \ DEBUG \
+;--------------------------------------------------------
+
+int property DEBUG_FLAG_T = 0x01 autoreadonly
+{ Trace debug flag }
+int property DEBUG_FLAG_N = 0x02 autoreadonly
+{ Notification debug flag}
+
+function DEBUG_MSG(string msg, int flag = 0x01)
+{
+	Debug helper function for error messages. \
+	Prints to a given debug channel in the format "NL_MCM(ModName, ScriptName, PageName): msg".
+	@param msg - Error message
+	@param flag - Which debug channel to use. \
+	Use either [Trace](#DEBUG_FLAG_T) or [Notifications](#DEBUG_FLAG_N), or both (just add the flags together) FLAG_T + FLAG_N
+}
+	msg = "NL_MCM(" + nl_util.GetFormModName(self) + ", " + nl_util.GetFormScriptName(self) + ", " + _page_name + "): " + msg
+
+	if flag == DEBUG_FLAG_T
+		Debug.Trace(msg)
+	elseif flag == DEBUG_FLAG_N
+		Debug.Notification(msg)
+	else
+		Debug.Trace(msg)
+		Debug.Notification(msg)
+	endif
+endfunction
 
 ;-------\----------\
 ; MODULE \ INTERNAL \ - ALSO KNOWN AS, IGNORE THIS SECTION
@@ -20,11 +47,8 @@ int property EVENT_OPEN = 3 autoreadonly
 int property EVENT_ACCEPT = 4 autoreadonly
 int property EVENT_CHANGE = 5 autoreadonly
 
-string property DEBUG_MSG
-	string function Get()
-		return "NL_MCM(" + nl_util.GetFormModName(self) + ", " + _page_name + "): "
-	endfunction
-endproperty
+; WTF
+string[] _none_string_ptr
 
 ; PERMANENT
 nl_mcm _MCM
@@ -61,54 +85,33 @@ endevent
 
 event _OnPageEvent(string state_name, int event_id, float f, string str)
 	int index = StringUtil.Find(state_name, "___")
-	
-	; Basic
-	if index == -1
-		GoToState(state_name)
+	string state_id = ""
 
-		if event_id == EVENT_DEFAULT
-			OnDefaultST()
-		elseif event_id == EVENT_HIGHLIGHT
-			OnHighlightST()
-		elseif event_id == EVENT_SELECT
-			OnSelectST()
-		elseif event_id == EVENT_OPEN
-			OnSliderOpenST()
-			OnMenuOpenST()
-			OnColorOpenST()
-			OnInputOpenST()
-		elseif event_id == EVENT_ACCEPT
-			OnSliderAcceptST(f)
-			OnMenuAcceptST(f as int)
-			OnColorAcceptST(f as int)
-			OnInputAcceptST(str)
-		elseif event_id == EVENT_CHANGE
-			OnKeyMapChangeST(f as int)
-		endif
-	; Advanced
-	else
+	if index != -1
 		GoToState(StringUtil.Substring(state_name, 0, index))
-		string leftover = StringUtil.Substring(state_name, index + 3)
+		state_id = StringUtil.Substring(state_name, index + 3)
+	else
+		GoToState(state_name)
+	endif
 
-		if event_id == EVENT_DEFAULT
-			OnDefaultST_EX(leftover)
-		elseif event_id == EVENT_HIGHLIGHT
-			OnHighlightST_EX(leftover)
-		elseif event_id == EVENT_SELECT
-			OnSelectST_EX(leftover)
-		elseif event_id == EVENT_OPEN
-			OnSliderOpenST_EX(leftover)
-			OnMenuOpenST_EX(leftover)
-			OnColorOpenST_EX(leftover)
-			OnInputOpenST_Ex(leftover)
-		elseif event_id == EVENT_ACCEPT
-			OnSliderAcceptST_EX(leftover, f)
-			OnMenuAcceptST_EX(leftover, f as int)
-			OnColorAcceptST_EX(leftover, f as int)
-			OnInputAcceptST_EX(leftover, str)
-		elseif event_id == EVENT_CHANGE
-			OnKeyMapChangeST_EX(leftover, f as int)
-		endif
+	if event_id == EVENT_DEFAULT
+		OnDefaultST(state_id)
+	elseif event_id == EVENT_HIGHLIGHT
+		OnHighlightST(state_id)
+	elseif event_id == EVENT_SELECT
+		OnSelectST(state_id)
+	elseif event_id == EVENT_OPEN
+		OnSliderOpenST(state_id)
+		OnMenuOpenST(state_id)
+		OnColorOpenST(state_id)
+		OnInputOpenST(state_id)
+	elseif event_id == EVENT_ACCEPT
+		OnSliderAcceptST(state_id, f)
+		OnMenuAcceptST(state_id, f as int)
+		OnColorAcceptST(state_id, f as int)
+		OnInputAcceptST(state_id, str)
+	elseif event_id == EVENT_CHANGE
+		OnKeyMapChangeST(state_id, f as int)
 	endif
 endevent
 
@@ -122,190 +125,195 @@ auto state _inactive
 	endevent
 
 	event _OnPageDraw(int font)
-		Trace(DEBUG_MSG + "_OnPageDraw has been called in an invalid state.")
+		DEBUG_MSG("_OnPageDraw has been called in an invalid state.")
 	endevent
 
 	event _OnPageEvent(string state_name, int event_id, float f, string str)
-		Trace(DEBUG_MSG + "_OnPageEvent has been called in an invalid state.")
+		DEBUG_MSG("_OnPageEvent has been called in an invalid state.")
 	endevent
 
 	function AddParagraph(string text, string format = "", int flags = 0x01)
-		Trace(DEBUG_MSG + "AddParagraph has been called in an invalid state.")
+		DEBUG_MSG("AddParagraph has been called in an invalid state.")
 	endfunction
 	
 	function SetSliderDialog(float value, float range_start, float range_end, float interval, float default = 0.0)
-		Trace(DEBUG_MSG + "SetSliderDialog has been called in an invalid state.")
+		DEBUG_MSG("SetSliderDialog has been called in an invalid state.")
 	endFunction 
 	
 	function SetMenuDialog(string[] options, int start_i, int default_i = 0)
-		Trace(DEBUG_MSG + "SetMenuDialog has been called in an invalid state.")
+		DEBUG_MSG("SetMenuDialog has been called in an invalid state.")
 	endFunction
 	
 	function RefreshPages(bool stay = true)
-		Trace(DEBUG_MSG + "RefreshPages has been called in an invalid state.")
+		DEBUG_MSG("RefreshPages has been called in an invalid state.")
 	endfunction
 
 	function GoToPage(string page_name)
-		Trace(DEBUG_MSG + "GoToPage has been called in an invalid state.")
+		DEBUG_MSG("GoToPage has been called in an invalid state.")
 	endfunction
 	
 	function CloseMCM(bool close_journal = false)
-		Trace(DEBUG_MSG + "CloseMCM has been called in an invalid state.")
+		DEBUG_MSG("CloseMCM has been called in an invalid state.")
 	endfunction
 
 	function SaveMCMToPreset(string preset_path)
-		Trace(DEBUG_MSG + "SaveMCMToPreset has been called in an invalid state.")
+		DEBUG_MSG("SaveMCMToPreset has been called in an invalid state.")
 	endfunction
 	
 	function LoadMCMFromPreset(string preset_path)
-		Trace(DEBUG_MSG + "LoadMCMFromPreset has been called in an invalid state.")
+		DEBUG_MSG("LoadMCMFromPreset has been called in an invalid state.")
+	endfunction
+
+	int function GetNumMCMSavedPresets(string dir_path = "")
+		DEBUG_MSG("GetNumMCMSavedPresets has been called in an invalid state.")
+		return 0
 	endfunction
 	
-	string[] function GetMCMSavedPresets(string default, string dir_path = ".")
-		Trace(DEBUG_MSG + "GetMCMSavedPresets has been called in an invalid state.")
-		return None
+	string[] function GetMCMSavedPresets(string default, string dir_path = "")
+		DEBUG_MSG("GetMCMSavedPresets has been called in an invalid state.")
+		return _none_string_ptr
 	endfunction 
 	
 	function DeleteMCMSavedPreset(string preset_path)
-		Trace(DEBUG_MSG + "DeleteMCMSavedPreset has been called in an invalid state.")
+		DEBUG_MSG("DeleteMCMSavedPreset has been called in an invalid state.")
 	endfunction
 
 	function SetCursorFillMode(int a_fillMode)
-		Trace(DEBUG_MSG + "SetCursorFillMode has been called in an invalid state.")
+		DEBUG_MSG("SetCursorFillMode has been called in an invalid state.")
 	endfunction
 	
 	int function AddHeaderOption(string a_text, int a_flags = 0)
-		Trace(DEBUG_MSG + "AddHeaderOption has been called in an invalid state.")
+		DEBUG_MSG("AddHeaderOption has been called in an invalid state.")
 		return ERROR_MODULE_INIT
 	endfunction
 	
 	int function AddEmptyOption()
-		Trace(DEBUG_MSG + "AddEmptyOption has been called in an invalid state.")
+		DEBUG_MSG("AddEmptyOption has been called in an invalid state.")
 		return ERROR_MODULE_INIT
 	endfunction
 	
 	function AddTextOptionST(string a_stateName, string a_text, string a_value, int a_flags = 0)
-		Trace(DEBUG_MSG + "AddTextOptionST has been called in an invalid state.")
+		DEBUG_MSG("AddTextOptionST has been called in an invalid state.")
 	endfunction
 	
 	function AddToggleOptionST(string a_stateName, string a_text, bool a_checked, int a_flags = 0)
-		Trace(DEBUG_MSG + "AddToggleOptionST has been called in an invalid state.")
+		DEBUG_MSG("AddToggleOptionST has been called in an invalid state.")
 	endfunction
 	
 	function AddSliderOptionST(string a_stateName, string a_text, float a_value, string a_formatString = "{0}", int a_flags = 0)
-		Trace(DEBUG_MSG + "AddSliderOptionST has been called in an invalid state.")
+		DEBUG_MSG("AddSliderOptionST has been called in an invalid state.")
 	endfunction
 	
 	function AddMenuOptionST(string a_stateName, string a_text, string a_value, int a_flags = 0)
-		Trace(DEBUG_MSG + "AddMenuOptionST has been called in an invalid state.")
+		DEBUG_MSG("AddMenuOptionST has been called in an invalid state.")
 	endfunction
 	
 	function AddColorOptionST(string a_stateName, string a_text, int a_color, int a_flags = 0)
-		Trace(DEBUG_MSG + "AddColorOptionST has been called in an invalid state.")
+		DEBUG_MSG("AddColorOptionST has been called in an invalid state.")
 	endfunction
 	
-	function AddKeyMapOptionST(string a_stateName, string a_text, int a_keyCode, int a_flags = 0)	
-		Trace(DEBUG_MSG + "AddKeyMapOptionST has been called in an invalid state.")
+	function AddKeyMapOptionST(string a_stateName, string a_text, int a_keyCode, int a_flags = 0)
+		DEBUG_MSG("AddKeyMapOptionST has been called in an invalid state.")
 	endfunction
 
 	function AddInputOptionST(string a_stateName, string a_text, string a_value, int a_flags = 0)
-		Trace(DEBUG_MSG + "AddInputOptionST has been called in an invalid state.")
+		DEBUG_MSG("AddInputOptionST has been called in an invalid state.")
 	endfunction
 	
 	function SetOptionFlagsST(int a_flags, bool a_noUpdate = false, string a_stateName = "")
-		Trace(DEBUG_MSG + "SetOptionFlagsST has been called in an invalid state.")
+		DEBUG_MSG("SetOptionFlagsST has been called in an invalid state.")
 	endfunction
 	
 	function SetTextOptionValueST(string a_value, bool a_noUpdate = false, string a_stateName = "")
-		Trace(DEBUG_MSG + "SetTextOptionValueST has been called in an invalid state.")
+		DEBUG_MSG("SetTextOptionValueST has been called in an invalid state.")
 	endfunction
 	
 	function SetToggleOptionValueST(bool a_checked, bool a_noUpdate = false, string a_stateName = "")
-		Trace(DEBUG_MSG + "SetToggleOptionValueST has been called in an invalid state.")
+		DEBUG_MSG("SetToggleOptionValueST has been called in an invalid state.")
 	endfunction
 	
-	function SetSliderOptionValueST(float a_value, string a_formatString = "{0}", bool a_noUpdate = false, string a_stateName = "")	
-		Trace(DEBUG_MSG + "SetSliderOptionValueST has been called in an invalid state.")
+	function SetSliderOptionValueST(float a_value, string a_formatString = "{0}", bool a_noUpdate = false, string a_stateName = "")
+		DEBUG_MSG("SetSliderOptionValueST has been called in an invalid state.")
 	endfunction
 	
 	function SetMenuOptionValueST(string a_value, bool a_noUpdate = false, string a_stateName = "")
-		Trace(DEBUG_MSG + "SetMenuOptionValueST has been called in an invalid state.")
+		DEBUG_MSG("SetMenuOptionValueST has been called in an invalid state.")
 	endfunction
 	
 	function SetColorOptionValueST(int a_color, bool a_noUpdate = false, string a_stateName = "")
-		Trace(DEBUG_MSG + "SetColorOptionValueST has been called in an invalid state.")
+		DEBUG_MSG("SetColorOptionValueST has been called in an invalid state.")
 	endfunction
 	
 	function SetKeyMapOptionValueST(int a_keyCode, bool a_noUpdate = false, string a_stateName = "")
-		Trace(DEBUG_MSG + "SetKeyMapOptionValueST has been called in an invalid state.")
+		DEBUG_MSG("SetKeyMapOptionValueST has been called in an invalid state.")
 	endfunction
 
 	function SetInputOptionValueST(string a_value, bool a_noUpdate = false, string a_stateName = "")
-		Trace(DEBUG_MSG + "SetInputOptionValueST has been called in an invalid state.")
+		DEBUG_MSG("SetInputOptionValueST has been called in an invalid state.")
 	endfunction
 	
 	function SetSliderDialogStartValue(float a_value)
-		Trace(DEBUG_MSG + "SetSliderDialogStartValue has been called in an invalid state.")
+		DEBUG_MSG("SetSliderDialogStartValue has been called in an invalid state.")
 	endfunction
 	
 	function SetSliderDialogDefaultValue(float a_value)
-		Trace(DEBUG_MSG + "SetSliderDialogDefaultValue has been called in an invalid state.")
+		DEBUG_MSG("SetSliderDialogDefaultValue has been called in an invalid state.")
 	endfunction
 	
 	function SetSliderDialogRange(float a_minValue, float a_maxValue)
-		Trace(DEBUG_MSG + "SetSliderDialogRange has been called in an invalid state.")
+		DEBUG_MSG("SetSliderDialogRange has been called in an invalid state.")
 	endfunction
 	
 	function SetSliderDialogInterval(float a_value)
-		Trace(DEBUG_MSG + "SetSliderDialogInterval has been called in an invalid state.")
+		DEBUG_MSG("SetSliderDialogInterval has been called in an invalid state.")
 	endfunction
 	
 	function SetMenuDialogStartIndex(int a_value)
-		Trace(DEBUG_MSG + "SetMenuDialogStartIndex has been called in an invalid state.")
+		DEBUG_MSG("SetMenuDialogStartIndex has been called in an invalid state.")
 	endfunction
 	
 	function SetMenuDialogDefaultIndex(int a_value)
-		Trace(DEBUG_MSG + "SetMenuDialogDefaultIndex has been called in an invalid state.")
+		DEBUG_MSG("SetMenuDialogDefaultIndex has been called in an invalid state.")
 	endfunction
 	
 	function SetMenuDialogOptions(string[] a_options)
-		Trace(DEBUG_MSG + "SetMenuDialogOptions has been called in an invalid state.")
+		DEBUG_MSG("SetMenuDialogOptions has been called in an invalid state.")
 	endfunction
 	
 	function SetColorDialogStartColor(int a_color)
-		Trace(DEBUG_MSG + "SetColorDialogStartColor has been called in an invalid state.")
+		DEBUG_MSG("SetColorDialogStartColor has been called in an invalid state.")
 	endfunction
 	
 	function SetColorDialogDefaultColor(int a_color)
-		Trace(DEBUG_MSG + "SetColorDialogDefaultColor has been called in an invalid state.")
+		DEBUG_MSG("SetColorDialogDefaultColor has been called in an invalid state.")
 	endfunction
 
 	function SetInputDialogStartText(string a_value)
-		Trace(DEBUG_MSG + "SetInputDialogStartText has been called in an invalid state.")
+		DEBUG_MSG("SetInputDialogStartText has been called in an invalid state.")
 	endfunction
 	
 	function SetCursorPosition(int a_position)
-		Trace(DEBUG_MSG + "SetCursorPosition has been called in an invalid state.")
+		DEBUG_MSG("SetCursorPosition has been called in an invalid state.")
 	endfunction
 	
 	function SetInfoText(string a_text)
-		Trace(DEBUG_MSG + "SetInfoText has been called in an invalid state.")
+		DEBUG_MSG("SetInfoText has been called in an invalid state.")
 	endfunction
 	
 	function ForcePageReset()
-		Trace(DEBUG_MSG + "ForcePageReset has been called in an invalid state.")
+		DEBUG_MSG("ForcePageReset has been called in an invalid state.")
 	endfunction
 	
 	function LoadCustomContent(string a_source, float a_x = 0.0, float a_y = 0.0)
-		Trace(DEBUG_MSG + "LoadCustomContent has been called in an invalid state.")
+		DEBUG_MSG("LoadCustomContent has been called in an invalid state.")
 	endfunction
 	
 	function UnloadCustomContent()
-		Trace(DEBUG_MSG + "UnloadCustomContent has been called in an invalid state.")
+		DEBUG_MSG("UnloadCustomContent has been called in an invalid state.")
 	endfunction
 	
 	bool function ShowMessage(string a_message, bool a_withCancel = true, string a_acceptLabel = "$Accept", string a_cancelLabel = "$Cancel")
-		Trace(DEBUG_MSG + "ShowMessage has been called in an invalid state.")
+		DEBUG_MSG("ShowMessage has been called in an invalid state.")
 		return false
 	endfunction
 
@@ -337,7 +345,7 @@ auto state _inactive
 		endif
 	endfunction
 
-	int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")				
+	int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")	
 		_quest_editorid = quest_editorid
 		_page_name = page_name
 		_z = z
@@ -346,11 +354,7 @@ auto state _inactive
 			quest found_quest = Quest.GetQuest(quest_editorid)
 			
 			if !found_quest
-				string error_msg = DEBUG_MSG + "Quest with editor id " + _quest_editorid + " could not be found."
-
-				Trace(error_msg)
-				Notification(error_msg)
-				
+				DEBUG_MSG("Quest with EditorID " + quest_editorid + " could not be found.", DEBUG_FLAG_T + DEBUG_FLAG_N)
 				return ERROR_MCM_NONEQUEST
 			endif
 		
@@ -360,31 +364,24 @@ auto state _inactive
 		endif
 		
 		if !_MCM
-			string error_msg = DEBUG_MSG + "Quest with editor id " + _quest_editorid + " has no nl_mcm attached."
+			if quest_editorid == ""
+				quest_editorid = nl_util.GetFormEditorID(self)
+			endif
 
-			Trace(error_msg)
-			Notification(error_msg)
-
+			DEBUG_MSG("Quest with EditorID " + quest_editorid + " has no nl_mcm attached.", DEBUG_FLAG_T + DEBUG_FLAG_N)
 			return ERROR_MCM_NONE
 		endif
 		
 		int error_code = _MCM._RegisterModule(self, page_name, z)
-		
-		if error_code != OK
-			string error_msg = ""
 
-			if error_code == ERROR_MODULE_FULL
-				error_msg = DEBUG_MSG + "The hooked MCM has already reached the page limit."
-			elseif error_code == ERROR_MODULE_TAKEN
-				error_msg = DEBUG_MSG + "The hooked MCM already has a page with the same name."
-			endif
-
-			Trace(error_msg)
-			Notification(error_msg)
-		else
+		if error_code == OK
 			_current_version = GetVersion()
 			OnPageInit()
 			GoToState("")
+		elseif error_code == ERROR_MODULE_FULL
+			DEBUG_MSG("The hooked MCM has already reached the page limit.", DEBUG_FLAG_T + DEBUG_FLAG_N)
+		elseif error_code == ERROR_MODULE_TAKEN
+			DEBUG_MSG("The hooked MCM already has a page with the same name.", DEBUG_FLAG_T + DEBUG_FLAG_N)
 		endif
 		
 		return error_code
@@ -396,7 +393,7 @@ auto state _inactive
 endstate
 
 function KeepTryingToRegister()
-	Trace(DEBUG_MSG + "KeepTryingToRegister has been called in an invalid state.")
+	DEBUG_MSG("KeepTryingToRegister has been called in an invalid state.")
 endfunction
 
 function StopTryingToRegister()
@@ -432,7 +429,7 @@ function StopTryingToRegister()
 endfunction
 
 event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
-	Trace(DEBUG_MSG + "_OnConfigManagerReady has been called in an invalid state.")
+	DEBUG_MSG("_OnConfigManagerReady has been called in an invalid state.")
 endevent
 
 int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
@@ -448,9 +445,9 @@ int function UnregisterModule()
 		_page_name = ""
 		_z = 0
 	elseif error_code == ERROR_MODULE_INIT
-		Notification(DEBUG_MSG + "The hooked MCM is not initialized.")
+		DEBUG_MSG("The hooked MCM is not initialized.", DEBUG_FLAG_N)
 	elseif error_code == ERROR_MODULE_NONE
-		Notification(DEBUG_MSG + "The hooked MCM has no matching page name.")
+		DEBUG_MSG("The hooked MCM has no matching page name.", DEBUG_FLAG_N)
 	endif
 	
 	return error_code
@@ -459,6 +456,14 @@ endfunction
 ;--------\-----\
 ; MCM API \ NEW \
 ;--------------------------------------------------------
+
+; NONE POINTER TO STRING ARRAY
+; will stay undocumented because wtf
+string[] property NONE_STRING_PTR
+	string[] function Get()
+		return _none_string_ptr
+	endfunction
+endproperty
 
 ; ERROR CODES
 int property OK = 1 autoreadonly
@@ -763,8 +768,17 @@ function LoadMCMFromPreset(string preset_path)
 }
 	_MCM.LoadMCMFromPreset(preset_path)
 endfunction
+
+int function GetNumMCMSavedPresets(string dir_path = "")
+{
+	Get the number of saved presets.
+	@param dir_path - The directory path of the presets. Defaults to current mcm menu directory 
+	@return Number of saved presets at given path
+}
+return _MCM.GetNumMCMSavedPresets(dir_path)
+endfunction
 	
-string[] function GetMCMSavedPresets(string default, string dir_path = ".")
+string[] function GetMCMSavedPresets(string default, string dir_path = "")
 {
 	Get an array containing the name of all saved presets.
 	@param default - A default string to fill the list with. Used to create a "fake exit" button for mcm menus
@@ -947,6 +961,7 @@ int function GetVersion()
 endfunction
 
 int function SaveData()
+	return 0
 endfunction
 
 function LoadData(int jObj)
@@ -967,78 +982,40 @@ endevent
 event OnPageDraw()
 endevent
 
-; BASIC
+; OPTIONS
 
-event OnDefaultST()
+event OnDefaultST(string state_id)
 endevent
 
-event OnHighlightST()
+event OnHighlightST(string state_id)
 endevent
 
-event OnSelectST()
+event OnSelectST(string state_id)
 endevent
 
-event OnSliderOpenST()
+event OnSliderOpenST(string state_id)
 endevent
 
-event OnMenuOpenST()
+event OnMenuOpenST(string state_id)
 endevent
 
-event OnColorOpenST()
+event OnColorOpenST(string state_id)
 endevent
 
-event OnSliderAcceptST(float f)
+event OnSliderAcceptST(string state_id, float f)
 endevent
 
-event OnMenuAcceptST(int i)
+event OnMenuAcceptST(string state_id, int i)
 endevent
 
-event OnColorAcceptST(int col)
+event OnColorAcceptST(string state_id, int col)
 endevent
 
-event OnInputOpenST()
+event OnInputOpenST(string state_id)
 endevent
 
-event OnInputAcceptST(string str)
+event OnInputAcceptST(string state_id, string str)
 endevent
 
-event OnKeyMapChangeST(int keycode)
-endevent
-
-; ADVANCED
-
-event OnDefaultST_EX(string state_id)
-endevent
-
-event OnHighlightST_EX(string state_id)
-endevent
-
-event OnSelectST_EX(string state_id)
-endevent
-
-event OnSliderOpenST_EX(string state_id)
-endevent
-
-event OnMenuOpenST_EX(string state_id)
-endevent
-
-event OnColorOpenST_EX(string state_id)
-endevent
-
-event OnSliderAcceptST_EX(string state_id, float f)
-endevent
-
-event OnMenuAcceptST_EX(string state_id, int i)
-endevent
-
-event OnColorAcceptST_EX(string state_id, int col)
-endevent
-
-event OnInputOpenST_EX(string state_id)
-endevent
-
-event OnInputAcceptST_EX(string state_id, string str)
-endevent
-
-event OnKeyMapChangeST_EX(string state_id, int keycode)
+event OnKeyMapChangeST(string state_id, int keycode)
 endevent
