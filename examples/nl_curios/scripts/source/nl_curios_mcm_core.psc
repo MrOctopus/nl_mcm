@@ -46,13 +46,7 @@ endproperty
 
 ; - Before register
 event OnInit()
-	; It's good practice to check if we actually succeeded
-	; in registering the module.
-	if RegisterModule("Core") != OK
-		KeepTryingToRegister()
-	endif
-
-	; These will cache if the call above fails
+	RegisterModule("Core")
 	SetModName("NeverLost's Curios")
 	SetLandingPage("Core")
 endevent
@@ -60,6 +54,19 @@ endevent
 ; - After register
 event OnPageInit()
 	; Do nothing
+endevent
+
+;-----------\
+; MOD EVENTS \
+;--------------------------------------------------------
+
+event OnGameReload()
+	; No need to call parent.OnGameReload() anymore as was the case in the original SKYUI
+	DEBUG_MSG("Game loaded")
+endevent
+
+event OnConfigClose()
+	DEBUG_MSG("Config closed!")
 endevent
 
 ;---------------\

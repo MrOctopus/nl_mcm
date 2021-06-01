@@ -1,8 +1,8 @@
 Scriptname nl_mcm_module extends Quest
 {
 	This documents the new API functions in nl_mcm. \
-	For the original MCM Api, view [link](https://github.com/schlangster/skyui/wiki/MCM-API-Reference). \
-	Only the original STATE api functions are still supported as part of the new api.
+	For the original MCM Api, see [link](https://github.com/schlangster/skyui/wiki/MCM-API-Reference). \
+	Only STATE api functions are supported as part of the new api.
 	@author NeverLost
 	@version 1.0.0
 }
@@ -11,18 +11,21 @@ Scriptname nl_mcm_module extends Quest
 ; MODULE \ DEBUG \
 ;--------------------------------------------------------
 
+int property DEBUG_FLAG_E = 0x00 autoreadonly
+{ Empty debug flag }
 int property DEBUG_FLAG_T = 0x01 autoreadonly
 { Trace debug flag }
 int property DEBUG_FLAG_N = 0x02 autoreadonly
 { Notification debug flag}
 
-function DEBUG_MSG(string msg, int flag = 0x01)
+string function DEBUG_MSG(string msg = "", int flag = 0x01)
 {
 	Debug helper function for error messages. \
 	Prints to a given debug channel in the format "NL_MCM(ModName, ScriptName, PageName): msg".
 	@param msg - Error message
 	@param flag - Which debug channel to use. \
-	Use either [Trace](#DEBUG_FLAG_T) or [Notifications](#DEBUG_FLAG_N), or both (just add the flags together) FLAG_T + FLAG_N
+	Use either [Empty](#DEBUG_FLAG_E), [Trace](#DEBUG_FLAG_T), [Notifications](#DEBUG_FLAG_N), or combinations (just add the flags together) FLAG_T + FLAG_N
+	@return The concatted error message
 }
 	msg = "NL_MCM(" + nl_util.GetFormModName(self) + ", " + nl_util.GetFormScriptName(self) + ", " + _page_name + "): " + msg
 
@@ -30,22 +33,17 @@ function DEBUG_MSG(string msg, int flag = 0x01)
 		Debug.Trace(msg)
 	elseif flag == DEBUG_FLAG_N
 		Debug.Notification(msg)
-	else
+	elseif flag == DEBUG_FLAG_T + DEBUG_FLAG_N
 		Debug.Trace(msg)
 		Debug.Notification(msg)
 	endif
+
+	return msg
 endfunction
 
 ;-------\----------\
 ; MODULE \ INTERNAL \ - ALSO KNOWN AS, IGNORE THIS SECTION
 ;--------------------------------------------------------
-
-int property EVENT_DEFAULT = 0 autoreadonly
-int property EVENT_HIGHLIGHT = 1 autoreadonly
-int property EVENT_SELECT = 2 autoreadonly
-int property EVENT_OPEN = 3 autoreadonly
-int property EVENT_ACCEPT = 4 autoreadonly
-int property EVENT_CHANGE = 5 autoreadonly
 
 ; WTF
 string[] _none_string_ptr
@@ -63,23 +61,22 @@ int _z
 string _quest_editorid
 string _mod_name
 string _landing_page
-string _splash_path
+string _splash
 
-float _splash_x
-float _splash_y
-
-event _OnPageDraw(int font)
+event _OnGameReload(string eventName, string strArg, float numArg, Form sender)
 	int version = GetVersion()
 	
 	if _current_version < version
-		_MCM.ShowMessage("New module version: " + _current_version + " -> " + version + "\nUPDATING", false, "$OK", "")
 		OnVersionUpdateBase(version)
 		OnVersionUpdate(version)
 		_current_version = version
 	endIf
 
+	OnGameReload()
+endevent
+
+event _OnPageDraw(int font)
 	_font = font
-	
 	OnPageDraw()
 endevent
 
@@ -94,35 +91,58 @@ event _OnPageEvent(string state_name, int event_id, float f, string str)
 		GoToState(state_name)
 	endif
 
-	if event_id == EVENT_DEFAULT
+	if event_id == 0
 		OnDefaultST(state_id)
-	elseif event_id == EVENT_HIGHLIGHT
+	elseif event_id == 1
 		OnHighlightST(state_id)
-	elseif event_id == EVENT_SELECT
+	elseif event_id == 2
 		OnSelectST(state_id)
-	elseif event_id == EVENT_OPEN
+	elseif event_id == 3
 		OnSliderOpenST(state_id)
 		OnMenuOpenST(state_id)
 		OnColorOpenST(state_id)
 		OnInputOpenST(state_id)
-	elseif event_id == EVENT_ACCEPT
+	elseif event_id == 4
 		OnSliderAcceptST(state_id, f)
 		OnMenuAcceptST(state_id, f as int)
 		OnColorAcceptST(state_id, f as int)
 		OnInputAcceptST(state_id, str)
-	elseif event_id == EVENT_CHANGE
+	elseif event_id == 5
 		OnKeyMapChangeST(state_id, f as int)
 	endif
 endevent
 
 auto state _inactive
-	event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
-		int return_code = RegisterModule(_page_name, _z, _quest_editorid)
-		
-		if return_code == OK || return_code == ERROR_MCM_NONE
-			StopTryingToRegister()
+	event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)		
+		if RegisterModule(_page_name, _z, _quest_editorid) != OK
+			return
+		endif
+
+		; Clear cache		
+		if _mod_name
+			_MCM.SetModName(_mod_name)
+			_mod_name = ""
+		endif
+
+		if _landing_page
+			_MCM.SetLandingPage(_landing_page)
+			_landing_page = ""
+		endif
+
+		if _splash
+			string[] tmp = StringUtil.Split(_splash, ",")
+			_MCM.SetSplashScreen(tmp[0], tmp[1] as float, tmp[2] as float)
+			_splash = ""
+		endif
+
+		; Not cache
+		if _font
+			_MCM.SetFont(_font)
 		endif
 	endevent
+
+	event _OnGameReload(string eventName, string strArg, float numArg, Form sender)
+	endevent 
 
 	event _OnPageDraw(int font)
 		DEBUG_MSG("_OnPageDraw has been called in an invalid state.")
@@ -330,58 +350,53 @@ auto state _inactive
 	endfunction
 
 	function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
-		_splash_path = path
-		_splash_x = x
-		_splash_y = y
+		_splash = path + "," + (x as string) + "," + (y as string)
 	endfunction
 
 	function SetFont(int font = 0x00)
 		_font = font
 	endfunction
 
-	function KeepTryingToRegister()
-		if _page_name != ""
-			RegisterForModEvent("SKICP_configManagerReady", "_OnConfigManagerReady")
-		endif
-	endfunction
+	int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
+		; Internal
+		quest nl_quest_var = self as quest
+		nl_mcm nl_script_var = nl_quest_var as nl_mcm
 
-	int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")	
-		_quest_editorid = quest_editorid
-		_page_name = page_name
-		_z = z
-		
+		; External
 		if quest_editorid != ""
-			quest found_quest = Quest.GetQuest(quest_editorid)
-			
-			if !found_quest
-				DEBUG_MSG("Quest with EditorID " + quest_editorid + " could not be found.", DEBUG_FLAG_T + DEBUG_FLAG_N)
-				return ERROR_MCM_NONEQUEST
-			endif
-		
-			_MCM = found_quest as nl_mcm
-		else
-			_MCM = (self as quest) as nl_mcm
+			nl_quest_var = Quest.GetQuest(quest_editorid)
+			nl_script_var = nl_quest_var as nl_mcm
 		endif
-		
-		if !_MCM
+
+		if nl_quest_var == None || nl_script_var == None
+			; Cache data
+			_quest_editorid = quest_editorid
+			_page_name = page_name
+			_z = z
+			
 			if quest_editorid == ""
 				quest_editorid = nl_util.GetFormEditorID(self)
 			endif
 
-			DEBUG_MSG("Quest with EditorID " + quest_editorid + " has no nl_mcm attached.", DEBUG_FLAG_T + DEBUG_FLAG_N)
-			return ERROR_MCM_NONE
+			if nl_quest_var == None
+				DEBUG_MSG("Quest with EditorID [" + quest_editorid + "] could not be found.", DEBUG_FLAG_T + DEBUG_FLAG_N)
+				RegisterForModEvent("SKICP_configManagerReady", "_OnConfigManagerReady")
+				return ERROR_MCM_NONEQUEST
+			else
+				DEBUG_MSG("Quest with EditorID [" + quest_editorid + "] has no nl_mcm attached.", DEBUG_FLAG_T + DEBUG_FLAG_N)
+				error_code = ERROR_MCM_NONE
+				RegisterForModEvent("SKICP_configManagerReady", "_OnConfigManagerReady")
+				return ERROR_MCM_NONE
+			endif
 		endif
-		
-		int error_code = _MCM._RegisterModule(self, page_name, z)
+
+		int error_code = nl_script_var._RegisterModule(self, page_name, z)
 
 		if error_code == OK
 			_current_version = GetVersion()
+			_MCM = nl_script_var
 			OnPageInit()
 			GoToState("")
-		elseif error_code == ERROR_MODULE_FULL
-			DEBUG_MSG("The hooked MCM has already reached the page limit.", DEBUG_FLAG_T + DEBUG_FLAG_N)
-		elseif error_code == ERROR_MODULE_TAKEN
-			DEBUG_MSG("The hooked MCM already has a page with the same name.", DEBUG_FLAG_T + DEBUG_FLAG_N)
 		endif
 		
 		return error_code
@@ -392,44 +407,7 @@ auto state _inactive
 	endfunction
 endstate
 
-function KeepTryingToRegister()
-	DEBUG_MSG("KeepTryingToRegister has been called in an invalid state.")
-endfunction
-
-function StopTryingToRegister()
-	UnregisterForModEvent("SKICP_configManagerReady")
-
-	if _MCM
-		if _mod_name
-			_MCM.SetModName(_mod_name)
-		endif
-
-		if _landing_page
-			_MCM.SetLandingPage(_landing_page)
-		endif
-
-		if _splash_path
-			_MCM.SetSplashScreen(_splash_path, _splash_x, _splash_y)
-		endif
-
-		if _font
-			_MCM.SetFont(_font)
-		endif
-	else
-		_page_name = ""
-		_z = 0
-	endif
-
-	_quest_editorid = ""
-	_mod_name = ""
-	_landing_page = ""
-	_splash_path = ""
-	_splash_x = 0.0
-	_splash_y = 0.0
-endfunction
-
 event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
-	DEBUG_MSG("_OnConfigManagerReady has been called in an invalid state.")
 endevent
 
 int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
@@ -439,17 +417,12 @@ endfunction
 int function UnregisterModule()
 	int error_code = _MCM._UnregisterModule(_page_name)
 	
-	if error_code == OK
-		GoToState("_inactive")
-		_quest_editorid = ""
-		_page_name = ""
-		_z = 0
-	elseif error_code == ERROR_MODULE_INIT
-		DEBUG_MSG("The hooked MCM is not initialized.", DEBUG_FLAG_N)
-	elseif error_code == ERROR_MODULE_NONE
-		DEBUG_MSG("The hooked MCM has no matching page name.", DEBUG_FLAG_N)
-	endif
-	
+	GoToState("_inactive")
+	_MCM = None
+	_page_name = ""
+	_font = FONT_TYPE_DEFAULT
+	_z = 0
+
 	return error_code
 endfunction
 
@@ -956,9 +929,19 @@ endfunction
 ; OVERRIDE API \
 ;--------------------------------------------------------
 
+; VERSIONING
+
 int function GetVersion()
 	return 1
 endfunction
+
+event OnVersionUpdateBase(int a_version)
+endevent
+
+event OnVersionUpdate(int a_version)
+endevent
+
+; PRESETS
 
 int function SaveData()
 	return 0
@@ -967,10 +950,9 @@ endfunction
 function LoadData(int jObj)
 endfunction
 
-event OnVersionUpdateBase(int a_version)
-endevent
+; PAGE
 
-event OnVersionUpdate(int a_version)
+event OnGameReload()
 endevent
 
 event OnConfigClose()

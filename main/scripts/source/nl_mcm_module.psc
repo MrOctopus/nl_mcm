@@ -8,10 +8,11 @@ Scriptname nl_mcm_module extends Quest
 ; MODULE \ DEBUG \
 ;--------------------------------------------------------
 
+int property DEBUG_FLAG_E = 0x00 autoreadonly
 int property DEBUG_FLAG_T = 0x01 autoreadonly
 int property DEBUG_FLAG_N = 0x02 autoreadonly
 
-function DEBUG_MSG(string msg, int flag = 0x01)
+string function DEBUG_MSG(string msg = "", int flag = 0x01)
 	Guard()
 endfunction
 
@@ -19,12 +20,9 @@ endfunction
 ; MODULE \ INTERNAL \ - ALSO KNOWN AS, IGNORE THIS SECTION
 ;--------------------------------------------------------
 
-int property EVENT_DEFAULT = 0 autoreadonly
-int property EVENT_HIGHLIGHT = 1 autoreadonly
-int property EVENT_SELECT = 2 autoreadonly
-int property EVENT_OPEN = 3 autoreadonly
-int property EVENT_ACCEPT = 4 autoreadonly
-int property EVENT_CHANGE = 5 autoreadonly
+event _OnGameReload(string eventName, string strArg, float numArg, Form sender)
+	Guard()
+endevent
 
 event _OnPageDraw(int font)
 	Guard()
@@ -36,6 +34,10 @@ endevent
 
 auto state _inactive
 	event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
+		Guard()
+	endevent
+
+	event _OnGameReload(string eventName, string strArg, float numArg, Form sender)
 		Guard()
 	endevent
 
@@ -247,10 +249,6 @@ auto state _inactive
 		Guard()
 	endfunction
 
-	function KeepTryingToRegister()
-		Guard()
-	endfunction
-
 	int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")				
 		Guard()
 	endfunction
@@ -259,14 +257,6 @@ auto state _inactive
 		Guard()
 	endfunction
 endstate
-
-function KeepTryingToRegister()
-	Guard()
-endfunction
-
-function StopTryingToRegister()
-	Guard()
-endfunction
 
 event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
 	Guard()
@@ -605,15 +595,9 @@ endfunction
 ; OVERRIDE API \
 ;--------------------------------------------------------
 
+; VERSIONING
+
 int function GetVersion()
-	Guard()
-endfunction
-
-int function SaveData()
-	Guard()
-endfunction
-
-function LoadData(int jObj)
 	Guard()
 endfunction
 
@@ -623,6 +607,21 @@ endevent
 
 event OnVersionUpdate(int a_version)
 	Guard()
+endevent
+
+; PRESETS
+
+int function SaveData()
+	Guard()
+endfunction
+
+function LoadData(int jObj)
+	Guard()
+endfunction
+
+; PAGE
+
+event OnGameReload()
 endevent
 
 event OnConfigClose()

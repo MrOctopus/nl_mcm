@@ -8,6 +8,40 @@ int function GetVersion()
     return 100
 endfunction
 
+; ---\-------\
+; MCM \ DEBUG \
+;--------------------------------------------------------
+
+int property DEBUG_FLAG_E = 0x00 autoreadonly
+{ Empty debug flag }
+int property DEBUG_FLAG_T = 0x01 autoreadonly
+{ Trace debug flag }
+int property DEBUG_FLAG_N = 0x02 autoreadonly
+{ Notification debug flag}
+
+string function DEBUG_MSG(string msg = "", int flag = 0x01)
+{
+	Debug helper function for error messages. \
+	Prints to a given debug channel in the format "NL_MCM(ModName, ScriptName, ModName): msg".
+	@param msg - Error message
+	@param flag - Which debug channel to use. \
+	Use either [Empty](#DEBUG_FLAG_E), [Trace](#DEBUG_FLAG_T), [Notifications](#DEBUG_FLAG_N), or combinations (just add the flags together) FLAG_T + FLAG_N
+	@return The concatted error message
+}
+	msg = "NL_MCM(" + nl_util.GetFormModName(self) + ", " + nl_util.GetFormScriptName(self) + ", " + ModName + "): " + msg
+
+	if flag == DEBUG_FLAG_T
+		Debug.Trace(msg)
+	elseif flag == DEBUG_FLAG_N
+		Debug.Notification(msg)
+	elseif flag == DEBUG_FLAG_T + DEBUG_FLAG_N
+		Debug.Trace(msg)
+		Debug.Notification(msg)
+	endif
+
+	return msg
+endfunction
+
 ;----\------------\
 ; MCM \ PROPERTIES \
 ;--------------------------------------------------------
@@ -28,28 +62,20 @@ int property ERROR_MODULE_TAKEN = -2 autoreadonly
 int property ERROR_MODULE_INIT = -3 autoreadonly
 int property ERROR_MODULE_NONE = -4 autoreadonly
 
-; EVENT CODES
-int property EVENT_DEFAULT = 0 autoreadonly
-int property EVENT_HIGHLIGHT = 1 autoreadonly
-int property EVENT_SELECT = 2 autoreadonly
-int property EVENT_OPEN = 3 autoreadonly
-int property EVENT_ACCEPT = 4 autoreadonly
-int property EVENT_CHANGE = 5 autoreadonly
-
 ; FONTS
 int property FONT_TYPE_DEFAULT = 0x00 autoreadonly
 int property FONT_TYPE_PAPER = 0x01 autoreadonly
 
 ; ADVANCED
 string property MCM_PATH_SETTINGS
-	{
-		Concats the standard file path and mod name.
-		@get Path to local mod settings folder
-	}
-		string function Get()
-			return "Data/NL_MCM/" + ModName + "/"
-		endfunction
-	endproperty
+{
+	Concats the standard file path and mod name.
+	@get Path to local mod settings folder
+}
+	string function Get()
+		return "Data/NL_MCM/" + ModName + "/"
+	endfunction
+endproperty
 
 int property MCM_ID
 	int function Get()
@@ -97,11 +123,10 @@ nl_mcm_module[] _modules
 int[] _pages_z
 
 quest _owning_quest
-form _missing_form
 
-string _key_store = ""
-string _common_store = ""
-string _common_store_owner = ""
+string _key_store
+string _common_store
+string _common_store_owner
 string _landing_page
 string _splash_path
 
@@ -149,25 +174,16 @@ event OnGameReload()
 	
 	_mutex_modules = True
 	
-	; If _missing_form is not None, it means that we have cached the _missing form pointer.
-	; All unloaded forms use the same _missing_form pointer. Variable access is quicker than
-	; GetFormID()
-	if _missing_form
-		while i < active_modules && _modules[i] != _missing_form
-			i += 1
-		endwhile
-	else
-		; Cast is faster than GetFormID for local pages
-		while i < active_modules && (_modules[i] as quest == _owning_quest || _modules[i].GetFormID() != 0)
-			i += 1
-		endwhile
-	endif
+	; Cast is faster than GetFormID for local pages
+	while i < active_modules && (_modules[i] as quest == _owning_quest || _modules[i].GetFormID() != 0)
+		i += 1
+	endwhile
 	
 	; If i != active_modules, an invalid form exists
 	if i != active_modules
 		int j = i + 1
 		active_modules -= 1
-		_missing_form = _modules[i]
+		form _missing_form = _modules[i]
 		
 		while _mutex_store
 			Utility.WaitMenuMode(SPINLOCK_TIMER)
@@ -222,9 +238,6 @@ event OnGameReload()
 	endif
 	
 	_mutex_modules = False
-	
-	; Call parent to check for version updates
-	parent.OnGameReload()
 endevent
 
 event OnUpdate()
@@ -247,22 +260,32 @@ event OnUpdate()
 	_mutex_modules = False
 endevent
 
-; Possible thrown exception
-; Don't worry though, the mutex will still release
 event OnConfigClose()
 	while _mutex_modules
 		Utility.WaitMenuMode(SPINLOCK_TIMER)
 	endwhile
-	
-	_mutex_modules = True
-	
-	int i
-	while i < Pages.Length
-		_modules[i].OnConfigClose()
+
+	nl_mcm_module[] modules_tmp
+	int len = Pages.Length
+	int i = 0
+
+	if len < 12
+		modules_tmp = new nl_mcm_module[12]
+	else
+		modules_tmp = new nl_mcm_module[128]
+	endif
+
+	while i < len
+		modules_tmp[i] = _modules[i]
 		i += 1
 	endwhile
+
+	i = 0
 	
-	_mutex_modules = False
+	while i < len
+		modules_tmp[i].OnConfigClose()
+		i += 1
+	endwhile
 endevent
 
 event OnDefaultST()
@@ -288,7 +311,7 @@ event OnDefaultST()
 
 	; Possible thrown exception
 	int i = Pages.Find(current_page)
-	_modules[i]._OnPageEvent(current_state, EVENT_DEFAULT, -1.0, "")
+	_modules[i]._OnPageEvent(current_state, 0, -1.0, "")
 endEvent
 
 event OnKeyMapChangeST(int keycode, string conflict_control, string conflict_name)	
@@ -330,7 +353,7 @@ event OnKeyMapChangeST(int keycode, string conflict_control, string conflict_nam
 	
 	; Possible thrown exception
 	int i = Pages.Find(current_page)
-	_modules[i]._OnPageEvent(current_state, EVENT_CHANGE, keycode, "")
+	_modules[i]._OnPageEvent(current_state, 5, keycode, "")
 endEvent
 
 ;---------\-----------\
@@ -350,7 +373,7 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 		Utility.WaitMenuMode(SPINLOCK_TIMER)
 	endwhile
 	
-	int i
+	int i = 0
 	
 	; We buffer _modules at init to avoid multiple external resize calls
 	if !_initialized
@@ -362,10 +385,12 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 			
 		; Maximum _modules exceeded
 		elseif _buffered == 128
+			DEBUG_MSG("The MCM has already reached the page limit.", DEBUG_FLAG_T + DEBUG_FLAG_N)
 			return ERROR_MODULE_FULL
 			
 		; Page name must be unique
 		elseif Pages.Find(page_name) != -1
+			DEBUG_MSG("The MCM already has a page named [" + page_name +  "].", DEBUG_FLAG_T + DEBUG_FLAG_N)
 			return ERROR_MODULE_TAKEN
 			
 		endif
@@ -404,10 +429,12 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 	elseif Pages			
 		; Maximum _modules exceeded
 		if Pages.Length == 128
+			DEBUG_MSG("The MCM has already reached the page limit.", DEBUG_FLAG_T + DEBUG_FLAG_N)
 			return ERROR_MODULE_FULL
 			
 		; Page name must be unique
 		elseif Pages.Find(page_name) != -1
+			DEBUG_MSG("The MCM already has a page named [" + page_name +  "].", DEBUG_FLAG_T + DEBUG_FLAG_N)
 			return ERROR_MODULE_TAKEN
 			
 		endif
@@ -467,12 +494,14 @@ int function _UnregisterModule(string page_name)
 	endwhile
 	
 	if !_initialized
+		DEBUG_MSG("The MCM is not initialized.", DEBUG_FLAG_T + DEBUG_FLAG_N)
 		return ERROR_MODULE_INIT
 	endif
 	
 	int i = Pages.Find(page_name)
 	
 	if i == -1
+		DEBUG_MSG("The MCM has no page called [" + page_name + "].", DEBUG_FLAG_T + DEBUG_FLAG_N)
 		return ERROR_MODULE_NONE
 	endif
 	
@@ -701,61 +730,61 @@ endevent
 ; Possible thrown exception
 event OnHighlightST()
 	int i = Pages.Find(CurrentPage)
-	_modules[i]._OnPageEvent(GetState(), EVENT_HIGHLIGHT, -1.0, "")
+	_modules[i]._OnPageEvent(GetState(), 1, -1.0, "")
 endEvent
 
 ; Possible thrown exception
 event OnSelectST()
 	int i = Pages.Find(CurrentPage)
-	_modules[i]._OnPageEvent(GetState(), EVENT_SELECT, -1.0, "")
+	_modules[i]._OnPageEvent(GetState(), 2, -1.0, "")
 endEvent
 
 ; Possible thrown exception
 event OnSliderOpenST()
 	int i = Pages.Find(CurrentPage)
-	_modules[i]._OnPageEvent(GetState(), EVENT_OPEN, -1.0, "")
+	_modules[i]._OnPageEvent(GetState(), 3, -1.0, "")
 endEvent
 
 ; Possible thrown exception
 event OnMenuOpenST()
 	int i = Pages.Find(CurrentPage)
-	_modules[i]._OnPageEvent(GetState(), EVENT_OPEN, -1.0, "")
+	_modules[i]._OnPageEvent(GetState(), 3, -1.0, "")
 endEvent
 
 ; Possible thrown exception
 event OnColorOpenST()
 	int i = Pages.Find(CurrentPage)
-	_modules[i]._OnPageEvent(GetState(), EVENT_OPEN, -1.0, "")
+	_modules[i]._OnPageEvent(GetState(), 3, -1.0, "")
 endEvent
 
 ; Possible thrown exception
 event OnInputOpenST()
 	int i = Pages.Find(CurrentPage)
-	_modules[i]._OnPageEvent(GetState(), EVENT_OPEN, -1.0, "")
+	_modules[i]._OnPageEvent(GetState(), 3, -1.0, "")
 endEvent
 
 ; Possible thrown exception
 event OnSliderAcceptST(float f)
 	int i = Pages.Find(CurrentPage)
-	_modules[i]._OnPageEvent(GetState(), EVENT_ACCEPT, f, "")
+	_modules[i]._OnPageEvent(GetState(), 4, f, "")
 endEvent
     
 ; Possible thrown exception
 event OnMenuAcceptST(int index)
 	int i = Pages.Find(CurrentPage)
-	_modules[i]._OnPageEvent(GetState(), EVENT_ACCEPT, index, "")
+	_modules[i]._OnPageEvent(GetState(), 4, index, "")
 endEvent
 
 ; Possible thrown exception
 event OnColorAcceptST(int col)
 	int i = Pages.Find(CurrentPage)
-	_modules[i]._OnPageEvent(GetState(), EVENT_ACCEPT, col, "")
+	_modules[i]._OnPageEvent(GetState(), 4, col, "")
 endEvent
 
 ; Possible thrown exception
 event OnInputAcceptST(string str)
 	int i = Pages.Find(CurrentPage)
-	_modules[i]._OnPageEvent(GetState(), EVENT_ACCEPT, -1.0, str)
+	_modules[i]._OnPageEvent(GetState(), 4, -1.0, str)
 endEvent
 
 event OnMenuOpen(string menu_name)
@@ -900,7 +929,6 @@ function LoadMCMFromPreset(string preset_path)
 			if i != -1
 				remaining -= 1
 				page_names[failed] = page_names[remaining]
-				; Possible thrown exception, but we don't care
 				_modules[i].LoadData(jData)
 			else
 				failed += 1

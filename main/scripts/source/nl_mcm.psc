@@ -8,6 +8,18 @@ int function GetVersion()
     return 100
 endfunction
 
+; ---\-------\
+; MCM \ DEBUG \
+;--------------------------------------------------------
+
+int property DEBUG_FLAG_E = 0x00 autoreadonly
+int property DEBUG_FLAG_T = 0x01 autoreadonly
+int property DEBUG_FLAG_N = 0x02 autoreadonly
+
+string function DEBUG_MSG(string msg = "", int flag = 0x01)
+	Guard()
+endfunction
+
 ;----\------------\
 ; MCM \ PROPERTIES \
 ;--------------------------------------------------------
@@ -27,14 +39,6 @@ int property ERROR_MODULE_FULL = -1 autoreadonly
 int property ERROR_MODULE_TAKEN = -2 autoreadonly
 int property ERROR_MODULE_INIT = -3 autoreadonly
 int property ERROR_MODULE_NONE = -4 autoreadonly
-
-; EVENT CODES
-int property EVENT_DEFAULT = 0 autoreadonly
-int property EVENT_HIGHLIGHT = 1 autoreadonly
-int property EVENT_SELECT = 2 autoreadonly
-int property EVENT_OPEN = 3 autoreadonly
-int property EVENT_ACCEPT = 4 autoreadonly
-int property EVENT_CHANGE = 5 autoreadonly
 
 ; FONTS
 int property FONT_TYPE_DEFAULT = 0x00 autoreadonly
@@ -143,7 +147,6 @@ event OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, 
 	Guard()
  endEvent
 
-; Possible thrown exception
 event OnPageReset(string page)
 	Guard()
 endevent

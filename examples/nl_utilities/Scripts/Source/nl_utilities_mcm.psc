@@ -13,9 +13,7 @@ bool _refresh_keys
 
 ; - Before register
 event OnInit()
-	if RegisterModule("Utilities", 2, "nl_curios") != OK
-		KeepTryingToRegister()
-	endif
+	RegisterModule("Utilities", 2, "nl_curios")
 endevent
 
 ; - After register
