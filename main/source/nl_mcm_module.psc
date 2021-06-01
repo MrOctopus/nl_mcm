@@ -563,28 +563,6 @@ nl_mcm property UNSAFE_RAW_MCM
 	endfunction
 endproperty
 
-quest property MCM_QUEST
-{
-	Grab the owning quest of the main mcm script. \
-	This is identical to casting "UNSAFE_RAW_MCM as quest".
-	@get The nl_mcm quest
-}
-	quest function Get()
-		return _MCM as quest
-	endfunction
-endproperty
-
-quest property MY_QUEST
-{
-	Grab the owning quest of this script. \
-	This is identical to casting "self as quest".
-	@get This quest
-}
-	quest function Get()
-		return self as quest
-	endfunction
-endproperty
-
 int property MCM_ID
 {
 	Retrieve's the mcm's mod id. \

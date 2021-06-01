@@ -134,6 +134,7 @@ float _splash_x
 float _splash_y
 
 int _buffered
+int _advanced_modules
 int _id = -1
 int _font = -1
 int _mcm_hotkey = -1
@@ -142,7 +143,6 @@ bool _journal_open
 bool _quick_open
 
 bool _initialized
-bool _advanced_onload
 bool _busy_jcontainer
 bool _mutex_modules
 bool _mutex_store
@@ -162,7 +162,7 @@ event OnGameReload()
 	; compacting it in the process. After the array has been compacted
 	; the array will be resized to equal the remaining active_modules
 	
-	if !_initialized || !_advanced_onload
+	if !_initialized || _advanced_modules == 0
 		return
 	endif
 	
@@ -184,6 +184,7 @@ event OnGameReload()
 	if i != active_modules
 		int j = i + 1
 		active_modules -= 1
+		_advanced_modules -= 1
 		form _missing_form = _modules[i]
 		
 		while _mutex_store
@@ -212,6 +213,7 @@ event OnGameReload()
 				i += 1
 			else
 				active_modules -= 1
+				_advanced_modules -= 1
 
 				if _common_store_owner == Pages[j]
 					_common_store_owner = ""
@@ -481,7 +483,7 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 	endif
 
 	if module as quest != _owning_quest
-		_advanced_onload = true
+		_advanced_modules += 1
 	endif
 
 	_modules[i] = module
@@ -514,6 +516,10 @@ int function _UnregisterModule(string page_name)
 	
 	int j = Pages.Length - 1
 	_mutex_modules = True
+
+	if _modules[i] as quest != _owning_quest
+		_advanced_modules -= 1
+	endif
 
 	if _common_store_owner == page_name
 		_common_store_owner = ""

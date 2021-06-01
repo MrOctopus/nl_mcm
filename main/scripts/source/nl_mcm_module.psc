@@ -339,18 +339,6 @@ nl_mcm property UNSAFE_RAW_MCM
     endfunction
 endproperty
 
-quest property MCM_QUEST
-	quest function Get()
-		Guard()
-	endfunction
-endproperty
-
-quest property MY_QUEST
-	quest function Get()
-		Guard()
-	endfunction
-endproperty
-
 int property MCM_ID
 	int function Get()
 		Guard()

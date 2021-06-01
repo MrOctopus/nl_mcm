@@ -11,9 +11,9 @@ bool _show_credits
 bool property ShowAdvancedPage
 	function Set(bool show)
 		if show
-			(MY_QUEST as nl_curios_mcm_advanced).RegisterModule("Advanced", 100)
+			((self as quest) as nl_curios_mcm_advanced).RegisterModule("Advanced", 100)
 		else
-			(MY_QUEST as nl_curios_mcm_advanced).UnregisterModule()
+			((self as quest) as nl_curios_mcm_advanced).UnregisterModule()
 		endif
 
 		_show_advanced = show
@@ -27,9 +27,9 @@ endproperty
 bool property ShowCreditsPage
 	function Set(bool show)
 		if show
-			(MY_QUEST as nl_curios_mcm_credits).RegisterModule("Credits", 1000)
+			((self as quest) as nl_curios_mcm_credits).RegisterModule("Credits", 1000)
 		else
-			(MY_QUEST as nl_curios_mcm_credits).UnregisterModule()
+			((self as quest) as nl_curios_mcm_credits).UnregisterModule()
 		endif
 
 		_show_credits = show
