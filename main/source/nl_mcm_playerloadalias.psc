@@ -5,7 +5,7 @@ string _mod_event
 
 event OnInit()
 	_owner = GetOwningQuest()
-	_mod_event = "NL_R_" + nl_util.GetFormModName(_owner)
+	_mod_event = "NL_R_" + nl_util.GetFormEditorID(_owner)
 endevent
 
 event OnPlayerLoadGame()

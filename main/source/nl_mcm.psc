@@ -142,6 +142,7 @@ bool _journal_open
 bool _quick_open
 
 bool _initialized
+bool _advanced_onload
 bool _busy_jcontainer
 bool _mutex_modules
 bool _mutex_store
@@ -161,7 +162,7 @@ event OnGameReload()
 	; compacting it in the process. After the array has been compacted
 	; the array will be resized to equal the remaining active_modules
 	
-	if !_initialized
+	if !_initialized || !_advanced_onload
 		return
 	endif
 	
@@ -360,6 +361,7 @@ endEvent
 ; CRITICAL \ FUNCTIONS \
 ;--------------------------------------------------------
 
+; This is ugly and long, but additional splitting will slow it down
 int function _RegisterModule(nl_mcm_module module, string page_name, int z)		
 {
 	Internal register module function. \
@@ -478,7 +480,12 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 		i = 0
 	endif
 
+	if module as quest != _owning_quest
+		_advanced_onload = true
+	endif
+
 	_modules[i] = module
+
 	return OK
 endfunction
 
