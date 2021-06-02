@@ -10,15 +10,13 @@
     <Variable Name="Namespace" Value="nl_mcm"/>
     <Variable Name="ModName" Value="@Namespace - SSE"/>
     <Variable Name="MCM" Value="."/>
-    <Variable Name="SKYUI" Value="..\skyui"/>
     <Variable Name="Dist" Value="..\dist"/>
   </Variables>
   <Imports>
     <Import>@MCM\source</Import>
-    <Import>@SKYUI\source</Import>
     <Import>https://github.com/MrOctopus/nl_util/tree/main/dist/scripts/source</Import>
     <Import>https://github.com/MrOctopus/nl_online/tree/main/jcontainersse/source</Import>
-    <Import>https://github.com/schlangster/skyui/tree/master/dist/Data/Scripts/Source</Import>
+    <Import>https://github.com/MrOctopus/nl_online/tree/main/skyui/source</Import>
     <Import>https://github.com/MrOctopus/nl_online/tree/main/skse64/source</Import>
     <Import>https://github.com/MrOctopus/nl_online/tree/main/sse/source</Import>
   </Imports>
