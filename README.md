@@ -28,11 +28,13 @@ An object-oriented module based extension of SkyUI MCM scripts.
 	- Requires JContainers
 
 ## Info
-Latest release from main branch: [![](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml/badge.svg)](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml) \
-Latest release on the Nexus: [Nexus]() \
-
 The current status of this project is that it is ready for use in development.
 However, more feedback is required from other mod authors before the framework can be published on the nexus.
+
+**Latest release from main branch:** \
+[![](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml/badge.svg)](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml) \
+**Latest release on the Nexus:**  \
+[Nexus]()
 
 ## Documentation
 * The source documentation is available in the [Wiki](https://github.com/MrOctopus/nl_mcm/wiki).
@@ -44,10 +46,10 @@ However, more feedback is required from other mod authors before the framework c
 | Pyro                     | Import https://github.com/MrOctopus/nl_mcm/tree/main/main/scripts/source                                |
 | Manual                   | Install the latest [CI](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml) "nl_mcm - SSE" SDK|
 
-| Examples              | Description                                            | Link                                                                         |
+| Examples                                         | Description                                                                                                                                    | Link                                                                         |
 |-----------------------|--------------------------------------------------------|------------------------------------------------------------------------------|
-| NeverLost's Curios    | nl_mcm being used to build a standalone mcm menu       | [CLICK](https://github.com/MrOctopus/nl_mcm/tree/main/examples/nl_curios)    |
-| NeverLost's Utilities | nl_mcm being used to attach a page to another mcm menu | [CLICK](https://github.com/MrOctopus/nl_mcm/tree/main/examples/nl_utilities) |
+| *NeverLost's Curios*    | nl_mcm being used to build a standalone mcm menu       | [CLICK](https://github.com/MrOctopus/nl_mcm/tree/main/examples/nl_curios)    |
+| *NeverLost's Utilities* | nl_mcm being used to attach a page to another mcm menu | [CLICK](https://github.com/MrOctopus/nl_mcm/tree/main/examples/nl_utilities) |
 
 ### Users
 This is a framework for mod authors/developers, and as such is not intended to be used as a standalone mod.
