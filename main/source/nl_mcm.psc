@@ -715,11 +715,11 @@ event OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, 
 	endif
 endEvent
 
-; Possible thrown exception
 event OnPageReset(string page)
 	if page != ""
 		UnloadCustomContent()
 	
+		; Possible thrown exception
 		int i = Pages.Find(page)
 		_modules[i]._OnPageDraw(_font)
 	else
