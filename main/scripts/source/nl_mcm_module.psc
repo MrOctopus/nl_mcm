@@ -407,7 +407,7 @@ function LoadMCMFromPreset(string preset_path)
 	Guard()
 endfunction
 
-string function GetFullPresetPath(string preset_path)
+string function GetFullMCMPresetPath(string preset_path)
 	Guard()
 endfunction
 

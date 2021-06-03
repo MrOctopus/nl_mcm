@@ -700,7 +700,7 @@ function CloseMCM(bool close_journal = false)
 	_MCM.CloseMCM(close_journal)
 endfunction
 
-string function GetFullPresetPath(string preset_path)
+string function GetFullMCMPresetPath(string preset_path)
 {
 	Gets the full path for a given preset_path
 	@param preset_path - The local path to the stored preset
