@@ -20,6 +20,10 @@ endfunction
 ; MODULE \ INTERNAL \ - ALSO KNOWN AS, IGNORE THIS SECTION
 ;--------------------------------------------------------
 
+event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
+	Guard()
+endevent
+
 event _OnGameReload(string eventName, string strArg, float numArg, Form sender)
 	Guard()
 endevent
@@ -61,6 +65,22 @@ auto state _inactive
 		Guard()
 	endfunction
 
+	function SetModName(string name)
+		Guard()
+	endfunction
+
+	function SetLandingPage(string page_name)
+		Guard()
+	endfunction
+
+	function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
+		Guard()
+	endfunction
+
+	function SetFont(int font = 0x00)
+		Guard()
+	endfunction
+
 	function AddParagraph(string text, string format = "", int flags = 0x01)
 		Guard()
 	endfunction
@@ -73,7 +93,7 @@ auto state _inactive
 		Guard()
 	endFunction
 	
-	function RefreshPages(bool stay = true)
+	function ForcePageListReset(bool stay = true)
 		Guard()
 	endfunction
 
@@ -90,6 +110,18 @@ auto state _inactive
 	endfunction
 	
 	function LoadMCMFromPreset(string preset_path)
+		Guard()
+	endfunction
+
+	int function GetNumMCMSavedPresets(string dir_path = "")
+		Guard()
+	endfunction
+		
+	string[] function GetMCMSavedPresets(string default, string dir_path = "")
+		Guard()
+	endfunction 
+		
+	function DeleteMCMSavedPreset(string preset_path)
 		Guard()
 	endfunction
 
@@ -233,22 +265,6 @@ auto state _inactive
 ; MODULE \ API \
 ;--------------------------------------------------------
 
-	function SetModName(string name)
-		Guard()
-	endfunction
-
-	function SetLandingPage(string page_name)
-		Guard()
-	endfunction
-
-	function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
-		Guard()
-	endfunction
-
-	function SetFont(int font = 0x00)
-		Guard()
-	endfunction
-
 	int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")				
 		Guard()
 	endfunction
@@ -257,10 +273,6 @@ auto state _inactive
 		Guard()
 	endfunction
 endstate
-
-event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
-	Guard()
-endevent
 
 int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
 	Guard()
@@ -359,10 +371,6 @@ function SetCommonStore(string new_value)
 	Guard()
 endfunction
 
-function AddParagraph(string text, string format = "", int flags = 0x01)
-	Guard()
-endfunction
-
 function SetModName(string name)
 	Guard()
 endfunction
@@ -379,6 +387,10 @@ function SetFont(int font = 0x00)
 	Guard()
 endfunction
 
+function AddParagraph(string text, string format = "", int flags = 0x01)
+	Guard()
+endfunction
+
 function SetSliderDialog(float value, float range_start, float range_end, float interval, float default = 0.0)
 	Guard()
 endFunction 
@@ -387,7 +399,7 @@ function SetMenuDialog(string[] options, int start_i, int default_i = 0)
 	Guard()
 endFunction
 
-function RefreshPages(bool stay = true)
+function ForcePageListReset(bool stay = true)
 	Guard()
 endfunction
 

@@ -1061,7 +1061,7 @@ function SetMenuDialog(string[] options, int start_i, int default_i = 0)
     SetMenuDialogDefaultIndex(default_i)
 endFunction
 
-function RefreshPages(bool stay = true)	
+function ForcePageListReset(bool stay = true)	
 	if stay
 		Ui.InvokeStringA(JOURNAL_MENU, MENU_ROOT + ".setPageNames", Pages)
 		GoToPage(CurrentPage)

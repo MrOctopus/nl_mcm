@@ -249,7 +249,7 @@ function SetMenuDialog(string[] options, int start_i, int default_i = 0)
     Guard()
 endFunction
 
-function RefreshPages(bool stay = true)
+function ForcePageListReset(bool stay = true)
 	Guard()
 endFunction
 

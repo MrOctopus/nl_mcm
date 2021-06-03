@@ -50,13 +50,12 @@ endproperty
 ; - Before register
 event OnInit()
 	RegisterModule("Core")
-	SetModName("NeverLost's Curios")
-	SetLandingPage("Core")
 endevent
 
 ; - After register
 event OnPageInit()
-	; Do nothing
+	SetModName("NeverLost's Curios")
+	SetLandingPage("Core")
 endevent
 
 ;-----------\
@@ -183,9 +182,9 @@ state preset_load
 		if i != 0
 			LoadMCMFromPreset(_shown_presets[i])
 
-			; I'm only refreshing pages here, cause my loaded settings
+			; I'm only refreshing the page list here, cause my loaded settings
 			; affect the shown pages
-			RefreshPages()
+			ForcePageListReset()
 
 			; Alternatively just refresh the shown page's contents
 			;ForcePageReset()
@@ -233,7 +232,7 @@ state mod_show_advanced
 
 	event OnSelectST(string state_id)
 		ShowAdvancedPage = !ShowAdvancedPage
-		RefreshPages()
+		ForcePageListReset()
 	endevent
 endstate
 
@@ -244,7 +243,7 @@ state mod_show_credits
 
 	event OnSelectST(string state_id)
 		ShowCreditsPage = !ShowCreditsPage
-		RefreshPages()
+		ForcePageListReset()
 	endevent
 endstate
 

@@ -48,20 +48,17 @@ endfunction
 ; WTF
 string[] _none_string_ptr
 
-; PERMANENT
 nl_mcm _MCM
 
 string _page_name
+string _quest_editorid
 
 int _current_version
 int _font
 int _z
 
-; CACHE
-string _quest_editorid
-string _mod_name
-string _landing_page
-string _splash
+event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
+endevent
 
 event _OnGameReload(string eventName, string strArg, float numArg, Form sender)
 	int version = GetVersion()
@@ -114,31 +111,7 @@ endevent
 
 auto state _inactive
 	event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)		
-		if RegisterModule(_page_name, _z, _quest_editorid) != OK
-			return
-		endif
-
-		; Clear cache		
-		if _mod_name
-			_MCM.SetModName(_mod_name)
-			_mod_name = ""
-		endif
-
-		if _landing_page
-			_MCM.SetLandingPage(_landing_page)
-			_landing_page = ""
-		endif
-
-		if _splash
-			string[] tmp = StringUtil.Split(_splash, ",")
-			_MCM.SetSplashScreen(tmp[0], tmp[1] as float, tmp[2] as float)
-			_splash = ""
-		endif
-
-		; Not cache
-		if _font
-			_MCM.SetFont(_font)
-		endif
+		RegisterModule(_page_name, _z, _quest_editorid)
 	endevent
 
 	event _OnGameReload(string eventName, string strArg, float numArg, Form sender)
@@ -166,6 +139,22 @@ auto state _inactive
 		DEBUG_MSG("SetCommonStore has been called in an invalid state.")
 	endfunction
 
+	function SetModName(string name)
+		DEBUG_MSG("SetModName has been called in an invalid state.")
+	endfunction
+
+	function SetLandingPage(string page_name)
+		DEBUG_MSG("SetLandingPage has been called in an invalid state.")
+	endfunction
+
+	function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
+		DEBUG_MSG("SetSplashScreen has been called in an invalid state.")
+	endfunction
+
+	function SetFont(int font = 0x00)
+		DEBUG_MSG("SetFont has been called in an invalid state.")
+	endfunction
+
 	function AddParagraph(string text, string format = "", int flags = 0x01)
 		DEBUG_MSG("AddParagraph has been called in an invalid state.")
 	endfunction
@@ -178,8 +167,8 @@ auto state _inactive
 		DEBUG_MSG("SetMenuDialog has been called in an invalid state.")
 	endFunction
 	
-	function RefreshPages(bool stay = true)
-		DEBUG_MSG("RefreshPages has been called in an invalid state.")
+	function ForcePageListReset(bool stay = true)
+		DEBUG_MSG("ForcePageListReset has been called in an invalid state.")
 	endfunction
 
 	function GoToPage(string page_name)
@@ -196,6 +185,20 @@ auto state _inactive
 	
 	function LoadMCMFromPreset(string preset_path)
 		DEBUG_MSG("LoadMCMFromPreset has been called in an invalid state.")
+	endfunction
+
+	int function GetNumMCMSavedPresets(string dir_path = "")
+		DEBUG_MSG("GetNumMCMSavedPresets has been called in an invalid state.")
+		return ERROR
+	endfunction
+		
+	string[] function GetMCMSavedPresets(string default, string dir_path = "")
+		DEBUG_MSG("GetMCMSavedPresets has been called in an invalid state.")
+		return _none_string_ptr
+	endfunction 
+		
+	function DeleteMCMSavedPreset(string preset_path)
+		DEBUG_MSG("DeleteMCMSavedPreset has been called in an invalid state.")
 	endfunction
 
 	function SetCursorFillMode(int a_fillMode)
@@ -341,22 +344,6 @@ auto state _inactive
 ; MODULE \ API \
 ;--------------------------------------------------------
 
-	function SetModName(string name)
-		_mod_name = name
-	endfunction
-
-	function SetLandingPage(string page_name)
-		_landing_page = page_name
-	endfunction
-
-	function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
-		_splash = path + "," + (x as string) + "," + (y as string)
-	endfunction
-
-	function SetFont(int font = 0x00)
-		_font = font
-	endfunction
-
 	int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
 		; Internal
 		quest nl_quest_var = self as quest
@@ -406,9 +393,6 @@ auto state _inactive
 		return ERROR
 	endfunction
 endstate
-
-event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
-endevent
 
 int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
 	return ERROR
@@ -605,24 +589,12 @@ function SetCommonStore(string new_value)
 	_MCM.SetCommonStore(_page_name, new_value)
 endfunction
 
-function AddParagraph(string text, string format = "", int flags = 0x01)
-{
-	A convenience function to add a paragraph of text to the mcm page. \
-	Text splitting occurs when the max line length is reached,or when a newline character (\n) is encountered. \
-	NOTE: You need to use the format parameter for fonts
-	@param text - The text to add as a paragraph to the page
-	@param format - The format/font to wrap the text in.
-	@param flags - The default flag of the added text options 
-}
-	_MCM.AddParagraph(text, format, flags)
-endfunction
-
 function SetModName(string name)
-{
-	Set the mod page name. Can only be used before the MCM has been initialized.
-	@param name - The mod's name
-}
-	_MCM.SetModName(name)
+	{
+		Set the mod page name. Can only be used before the MCM has been initialized.
+		@param name - The mod's name
+	}
+		_MCM.SetModName(name)
 endfunction
 
 function SetLandingPage(string page_name)
@@ -652,6 +624,18 @@ function SetFont(int font = 0x00)
 	_MCM.SetFont(font)
 endfunction
 
+function AddParagraph(string text, string format = "", int flags = 0x01)
+{
+	A convenience function to add a paragraph of text to the mcm page. \
+	Text splitting occurs when the max line length is reached,or when a newline character (\n) is encountered. \
+	NOTE: You need to use the format parameter for fonts
+	@param text - The text to add as a paragraph to the page
+	@param format - The format/font to wrap the text in.
+	@param flags - The default flag of the added text options 
+}
+	_MCM.AddParagraph(text, format, flags)
+endfunction
+
 function SetSliderDialog(float value, float range_start, float range_end, float interval, float default = 0.0)
 {
 	A convenience function to set all of the slider data using only 1 function.
@@ -674,14 +658,14 @@ function SetMenuDialog(string[] options, int start_i, int default_i = 0)
 	_MCM.SetMenuDialog(options, start_i, default_i)
 endFunction
 
-function RefreshPages(bool stay = true)
+function ForcePageListReset(bool stay = true)
 {
-	Refreshes the mod's mcm pages. \
+	Refreshes the mod's mcm page list. \
 	Useful for situations where new pages/modules have been registered whilst the player is still in the mod's mcm menu, \
 	which will require the page list to be refreshed.
 	@param stay - Should the user stay on the page
 }
-	_MCM.RefreshPages(stay)
+	_MCM.ForcePageListReset(stay)
 endfunction
 
 function GoToPage(string page_name)
