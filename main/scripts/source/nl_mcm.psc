@@ -45,19 +45,13 @@ int property FONT_TYPE_DEFAULT = 0x00 autoreadonly
 int property FONT_TYPE_PAPER = 0x01 autoreadonly
 
 ; ADVANCED
-string property MCM_PATH_SETTINGS
+string property MCM_PATH_SETTINGS hidden
 	string function Get()
 		Guard()
 	endfunction
 endproperty
 
-int property MCM_ID
-	int function Get()
-		Guard()
-	endfunction
-endproperty
-
-int property MCM_QuickHotkey
+int property QuickHotkey hidden
 	int function Get()
 		Guard()
 	endfunction
@@ -224,6 +218,10 @@ function DeleteMCMSavedPreset(string preset_path)
 endfunction
 
 function AddParagraph(string text, string format = "", int flags = 0x01)
+	Guard()
+endfunction
+
+int function GetMCMID()
 	Guard()
 endfunction
 

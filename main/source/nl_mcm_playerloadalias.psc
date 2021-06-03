@@ -9,7 +9,14 @@ event OnInit()
 endevent
 
 event OnPlayerLoadGame()
+	nl_mcm mcm = (_owner as nl_mcm)
+
 	_owner.RegisterForModEvent(_mod_event, "_OnGameReload")
-	(_owner as nl_mcm).OnGameReload()
+	
+	; Will be none if script is attached to external module
+	if mcm
+		mcm.OnGameReload()
+	endif
+	
 	SendModEvent(_mod_event)
 endevent

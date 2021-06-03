@@ -67,7 +67,7 @@ int property FONT_TYPE_DEFAULT = 0x00 autoreadonly
 int property FONT_TYPE_PAPER = 0x01 autoreadonly
 
 ; ADVANCED
-string property MCM_PATH_SETTINGS
+string property MCM_PATH_SETTINGS hidden
 {
 	Concats the standard file path and mod name.
 	@get Path to local mod settings folder
@@ -77,13 +77,7 @@ string property MCM_PATH_SETTINGS
 	endfunction
 endproperty
 
-int property MCM_ID
-	int function Get()
-		return _id
-	endfunction
-endproperty
-
-int property MCM_QuickHotkey
+int property QuickHotkey hidden
 	int function Get()
 		return _mcm_hotkey
 	endfunction
@@ -1024,6 +1018,10 @@ function AddParagraph(string text, string format = "", int flags = 0x01)
 		
 		AddTextOption(begin_format + line + end_format, "", flags)
 	endwhile
+endfunction
+
+int function GetMCMID()
+	return _id
 endfunction
 
 function SetModName(string name)

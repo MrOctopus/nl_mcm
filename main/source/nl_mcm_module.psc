@@ -432,7 +432,7 @@ endfunction
 
 ; NONE POINTER TO STRING ARRAY
 ; will stay undocumented because wtf
-string[] property NONE_STRING_PTR
+string[] property NONE_STRING_PTR hidden
 	string[] function Get()
 		return _none_string_ptr
 	endfunction
@@ -455,19 +455,6 @@ int property FONT_TYPE_DEFAULT = 0x00 autoreadonly
 { Default type font }
 int property FONT_TYPE_PAPER = 0x01 autoreadonly
 { Paper type font }
-
-int property CURRENT_FONT
-{
-	Get the current font.
-	@get Current font
-}
-    int function Get()
-		if _font > FONT_TYPE_PAPER
-			return FONT_TYPE_DEFAULT
-		endif
-		return _font
-	endfunction
-endproperty
 
 string function FONT_PRIMARY(string text = "")
 {
@@ -551,8 +538,19 @@ string function FONT_CUSTOM(string text = "", string color)
 	return "<font color='" + color + "'>" + text + "</font>"
 endfunction
 
+int function GetCurrentFont()
+	{
+		Getter for the current font.
+		@return Current font
+	}
+		if _font > FONT_TYPE_PAPER
+			return FONT_TYPE_DEFAULT
+		endif
+		return _font
+	endfunction
+
 ; PROPERTIES
-nl_mcm property UNSAFE_RAW_MCM
+nl_mcm property UNSAFE_RAW_MCM hidden
 {
 	Grab the pointer to the main mcm script. \
 	Note: You can speed up your script by using this, but you better know what you are doing.
@@ -563,18 +561,7 @@ nl_mcm property UNSAFE_RAW_MCM
 	endfunction
 endproperty
 
-int property MCM_ID
-{
-	Retrieve's the mcm's mod id. \
-	Note: Don't cache this, as it might change on gamereloads.
-	@get Mcm id
-}
-	int function Get()
-		return _MCM.MCM_ID
-	endfunction
-endproperty
-
-int property MCM_QuickHotkey
+int property QuickHotkey hidden
 {
 	If this hotkey is set, it allows the user to immediately open or close the mcm menu \
 	by pressing the defined hotkey.
@@ -582,13 +569,22 @@ int property MCM_QuickHotkey
 	@set Set the new quickhotkey for the mcm
 }
 	int function Get()
-		return _MCM.MCM_QuickHotkey
+		return _MCM.QuickHotkey
 	endfunction
 
 	function Set(int keycode)
-		_MCM.MCM_QuickHotkey = keycode
+		_MCM.QuickHotkey = keycode
 	endfunction
 endproperty
+
+int function GetMCMID()
+{
+	Getter for the MCM's mod id. \
+	Note: Don't cache this, as it might change on gamereloads.
+	@return MCM id
+}
+	return _MCM.GetMCMID()
+endfunction
 
 string function GetCommonStore(bool lock)
 {

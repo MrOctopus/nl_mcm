@@ -18,7 +18,7 @@ int function SaveData()
 	; you should save the version along with the jContainers file
 	JMap.setInt(jObj, "version", GetVersion())
 
-	JMap.setInt(jObj, "mcmhotkey", MCM_QuickHotkey)
+	JMap.setInt(jObj, "mcmhotkey", QuickHotkey)
 
 	return jObj
 endfunction
@@ -31,7 +31,7 @@ function LoadData(int jObj)
 		return
 	endif
 
-	MCM_QuickHotkey = JMap.getInt(jObj, "mcmhotkey")
+	QuickHotkey = JMap.getInt(jObj, "mcmhotkey")
 endfunction
 
 ;----------\
@@ -59,8 +59,8 @@ event OnPageDraw()
 	; Right side
 	SetCursorPosition(1)
 	AddHeaderOption(FONT_PRIMARY("Misc"))
-	AddToggleOptionST("misc_toggle_font", "Toggle font color", CURRENT_FONT)
-	AddKeyMapOptionST("misc_key_mcm", "Set MCM hotkey", MCM_QuickHotkey)
+	AddToggleOptionST("misc_toggle_font", "Toggle font color", GetCurrentFont())
+	AddKeyMapOptionST("misc_key_mcm", "Set MCM hotkey", QuickHotkey)
 	
 	AddEmptyOption()
 	AddInputOptionST("misc_input_landingpage", "Set the MCM landing page", "")
@@ -93,7 +93,7 @@ state misc_toggle_font
 	endevent
 
 	event OnSelectST(string state_id)
-		if CURRENT_FONT == FONT_TYPE_DEFAULT
+		if GetCurrentFont() == FONT_TYPE_DEFAULT
 			SetFont(FONT_TYPE_PAPER)
 		else
 			SetFont(FONT_TYPE_DEFAULT)
@@ -105,7 +105,7 @@ endstate
 
 state misc_key_mcm
 	event OnDefaultST(string state_id)
-		MCM_QuickHotkey = -1
+		QuickHotkey = -1
 		SetKeyMapOptionValueST(-1)
 	endevent
 
@@ -114,7 +114,7 @@ state misc_key_mcm
 	endevent
 
 	event OnKeyMapChangeST(string state_id, int keycode)
-		MCM_QuickHotkey = keycode
+		QuickHotkey = keycode
 		SetKeyMapOptionValueST(keycode)
 	endevent
 endstate

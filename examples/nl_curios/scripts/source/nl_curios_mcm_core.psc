@@ -4,16 +4,19 @@ Scriptname nl_curios_mcm_core extends nl_mcm_module
 	@version 1.0
 }
 
+nl_curios_mcm_advanced property AdvancedPage auto
+nl_curios_mcm_credits property CreditsPage auto
+
 string[] _shown_presets
 bool _show_advanced
 bool _show_credits
 
-bool property ShowAdvancedPage
+bool property ShowAdvancedPage hidden
 	function Set(bool show)
 		if show
-			((self as quest) as nl_curios_mcm_advanced).RegisterModule("Advanced", 100)
+			AdvancedPage.RegisterModule("Advanced", 100)
 		else
-			((self as quest) as nl_curios_mcm_advanced).UnregisterModule()
+			AdvancedPage.UnregisterModule()
 		endif
 
 		_show_advanced = show
@@ -24,12 +27,12 @@ bool property ShowAdvancedPage
 	endfunction
 endproperty
 
-bool property ShowCreditsPage
+bool property ShowCreditsPage hidden
 	function Set(bool show)
 		if show
-			((self as quest) as nl_curios_mcm_credits).RegisterModule("Credits", 1000)
+			CreditsPage.RegisterModule("Credits", 1000)
 		else
-			((self as quest) as nl_curios_mcm_credits).UnregisterModule()
+			CreditsPage.UnregisterModule()
 		endif
 
 		_show_credits = show
