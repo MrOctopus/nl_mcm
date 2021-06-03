@@ -65,3 +65,6 @@ However, more feedback is required from other mod authors before the framework c
 | Dependency     | Make nl_mcm a download requirement, and link users to the [Nexus]() page |
 | Redistribution | Redistribute the nl_mcm .pex files along with your mod                   |
 
+## Licenses
+All files in this repository are released under the [MIT License](LICENSE.md) with the following exceptions:
+* If you are planning on releasing a nl_mcm mod through redistributing the .pex files, I only require you to include my name as well as link to this repository in your credits.
