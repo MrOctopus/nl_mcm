@@ -40,16 +40,28 @@ However, more feedback is required from other mod authors before the framework c
 * The source documentation is available in the [Wiki](https://github.com/MrOctopus/nl_mcm/wiki).
 * The SDK source files are available in the following [Folder](https://github.com/MrOctopus/nl_mcm/tree/main/main/scripts/source).
 
-### Developers
-| Compiling nl_mcm plugins | Description                                                                                             |
-|--------------------------|---------------------------------------------------------------------------------------------------------|
-| Pyro                     | Import https://github.com/MrOctopus/nl_mcm/tree/main/main/scripts/source                                |
-| Manual                   | Install the latest [CI](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml) "nl_mcm - SSE" SDK|
-
-| Examples                                         | Description                                                                                                                                    | Link                                                                         |
-|-----------------------|--------------------------------------------------------|------------------------------------------------------------------------------|
+### Examples
+| Examples                | Description                                            | Link                                                                         |
+|-------------------------|--------------------------------------------------------|------------------------------------------------------------------------------|
 | *NeverLost's Curios*    | nl_mcm being used to build a standalone mcm menu       | [CLICK](https://github.com/MrOctopus/nl_mcm/tree/main/examples/nl_curios)    |
 | *NeverLost's Utilities* | nl_mcm being used to attach a page to another mcm menu | [CLICK](https://github.com/MrOctopus/nl_mcm/tree/main/examples/nl_utilities) |
 
-### Users
-This is a framework for mod authors/developers, and as such is not intended to be used as a standalone mod.
+### Compiling
+**Pyro**
+| Steps | Description                                                                                                                                                                               |
+|-------|--------------------------------------------------------------------------|
+| 1.    | Import https://github.com/MrOctopus/nl_online/tree/main/skyui/source     |
+| 2.    | Import https://github.com/MrOctopus/nl_mcm/tree/main/main/scripts/source |
+
+**Manual**
+| Steps | Description                                                                                                                                                                                                                        |
+|-------|-------------------------------------------------------------------------------------------------------------------|
+| 1.    | Install the latest "SkyUI" SDK from the SkyUI [Wiki](https://github.com/schlangster/skyui/wiki)                   |
+| 2.    | Install the latest "nl_mcm - SSE" SDK from the [CI](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml) |
+
+### Distribution
+| Method         | Description                                                              |
+|----------------|--------------------------------------------------------------------------|
+| Dependency     | Make nl_mcm a download requirement, and link users to the [Nexus]() page |
+| Redistribution | Redistribute the nl_mcm .pex files along with your mod                   |
+
