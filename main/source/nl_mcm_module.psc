@@ -152,6 +152,20 @@ auto state _inactive
 		DEBUG_MSG("_OnPageEvent has been called in an invalid state.")
 	endevent
 
+	int function GetMCMID()
+		DEBUG_MSG("GetMCMID has been called in an invalid state.")
+		return ERROR
+	endfunction
+		
+	string function GetCommonStore(bool lock)
+		DEBUG_MSG("GetCommonStore has been called in an invalid state.")
+		return ""
+	endfunction
+		
+	function SetCommonStore(string new_value)
+		DEBUG_MSG("SetCommonStore has been called in an invalid state.")
+	endfunction
+
 	function AddParagraph(string text, string format = "", int flags = 0x01)
 		DEBUG_MSG("AddParagraph has been called in an invalid state.")
 	endfunction
@@ -182,20 +196,6 @@ auto state _inactive
 	
 	function LoadMCMFromPreset(string preset_path)
 		DEBUG_MSG("LoadMCMFromPreset has been called in an invalid state.")
-	endfunction
-
-	int function GetNumMCMSavedPresets(string dir_path = "")
-		DEBUG_MSG("GetNumMCMSavedPresets has been called in an invalid state.")
-		return 0
-	endfunction
-	
-	string[] function GetMCMSavedPresets(string default, string dir_path = "")
-		DEBUG_MSG("GetMCMSavedPresets has been called in an invalid state.")
-		return _none_string_ptr
-	endfunction 
-	
-	function DeleteMCMSavedPreset(string preset_path)
-		DEBUG_MSG("DeleteMCMSavedPreset has been called in an invalid state.")
 	endfunction
 
 	function SetCursorFillMode(int a_fillMode)
@@ -698,6 +698,15 @@ function CloseMCM(bool close_journal = false)
 	@param close_journal - If set to true, it will close the quest journal too
 }
 	_MCM.CloseMCM(close_journal)
+endfunction
+
+string function GetFullPresetPath(string preset_path)
+{
+	Gets the full path for a given preset_path
+	@param preset_path - The local path to the stored preset
+	@return The full preset path
+}
+	return _MCM.MCM_PATH_SETTINGS + preset_path + _MCM.MCM_EXT
 endfunction
 
 function SaveMCMToPreset(string preset_path)

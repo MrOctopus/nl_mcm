@@ -49,6 +49,18 @@ auto state _inactive
 		Guard()
 	endevent
 
+	int function GetMCMID()
+		Guard()
+	endfunction
+	
+	string function GetCommonStore(bool lock)
+		Guard()
+	endfunction
+	
+	function SetCommonStore(string new_value)
+		Guard()
+	endfunction
+
 	function AddParagraph(string text, string format = "", int flags = 0x01)
 		Guard()
 	endfunction
@@ -78,18 +90,6 @@ auto state _inactive
 	endfunction
 	
 	function LoadMCMFromPreset(string preset_path)
-		Guard()
-	endfunction
-
-	int function GetNumMCMSavedPresets(string dir_path = "")
-		Guard()
-	endfunction
-	
-	string[] function GetMCMSavedPresets(string default, string dir_path = "")
-		Guard()
-	endfunction 
-	
-	function DeleteMCMSavedPreset(string preset_path)
 		Guard()
 	endfunction
 
@@ -404,6 +404,10 @@ function SaveMCMToPreset(string preset_path)
 endfunction
 
 function LoadMCMFromPreset(string preset_path)
+	Guard()
+endfunction
+
+string function GetFullPresetPath(string preset_path)
 	Guard()
 endfunction
 
