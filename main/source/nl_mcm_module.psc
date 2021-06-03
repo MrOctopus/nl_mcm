@@ -382,8 +382,8 @@ auto state _inactive
 		if error_code == OK
 			_current_version = GetVersion()
 			_MCM = nl_script_var
-			OnPageInit()
 			GoToState("")
+			OnPageInit()
 		endif
 		
 		return error_code
