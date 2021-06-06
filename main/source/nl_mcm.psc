@@ -4,6 +4,7 @@ Scriptname nl_mcm extends SKI_ConfigBase
 	@version 1.0.0	
 }
 
+; This will probably never change
 int function GetVersion()
     return 100
 endfunction
@@ -47,6 +48,7 @@ endfunction
 ;--------------------------------------------------------
 
 string property MCM_EXT = ".nlset" autoreadonly
+{ Preset file extension }
 
 ; MISC CONSTANTS
 float property SPINLOCK_TIMER = 0.3 autoreadonly
@@ -107,7 +109,8 @@ endproperty
 ; MCM \ INTERNAL \
 ;--------------------------------------------------------
 
-; NONE POINTERS, DONT ASK ME WHY
+; None array pointers
+; workaround for weird Papyrus design choice
 string[] _none_string_ptr
 int[] _none_int_ptr
 
