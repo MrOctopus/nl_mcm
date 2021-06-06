@@ -3,8 +3,10 @@ name: CI
 on:
   workflow_dispatch:
   push:
+    # Set the push branches
     branches:
     - main
+    # Set the push folders
     paths:
     - 'main/**'
     - 'examples/**'
@@ -14,12 +16,18 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        project-path: 
+      # Set the project file paths relative to the current repo
+        project-path:
         - 'main\sse.ppj'
         - 'examples\sse.ppj'
         - 'examples\nl_curios\sse.ppj'
         - 'examples\nl_utilities\sse.ppj'
     env:
+      # Set these
+      dist-path: dist                               # Folder containing the output from the project files
+      compiler-repo: MrOctopus/papyrus-compiler     # Github repository containing the papyrus compiler
+      compiler-token: ${{ secrets.PRIVATE_TOKEN }}  # Just use ${{ github.token }} if the repo is not private
+      # Ignore these
       python-version: 3.x
       python-arch: x64
 
@@ -37,8 +45,8 @@ jobs:
     - name: Pull papyrus compiler
       uses: actions/checkout@v2
       with:
-        repository: MrOctopus/papyrus-compiler
-        token: ${{ secrets.PRIVATE_TOKEN }}
+        repository: ${{ env.compiler-repo }}
+        token: ${{ env.compiler-token }}
         path: ./compiler
 
     - name: Get latest Pyro release
@@ -60,19 +68,19 @@ jobs:
       env: 
         ppj_c: compiler\PapyrusCompiler.exe
         ppj_f: compiler\TESV_Papyrus_Flags.flg
-        ppj_t: ${{ secrets.PRIVATE_TOKEN }}
+        ppj_t: ${{ github.token }}
         ppj_p: ${{ matrix.project-path }}
 
     - name: Prepare upload
       if: success()
       run: |
-        cd repo\dist
+        cd repo\${Env:dist-path}
         7z x *zip -o*
-        echo "build_name=$(Get-ChildItem -Filter *. -Name)" >> ${Env:GITHUB_ENV}
+        echo "build_paths=$($(Get-ChildItem -Filter *. | % { $_.FullName }) -join ",")" >> ${Env:GITHUB_ENV}
 
     - name: Upload release
       if: success()
-      uses: actions/upload-artifact@v2
+      uses: MrOctopus/upload-artifact@main
       with:
-        name: ${{ env.build_name }}
-        path: ./repo/dist/${{ env.build_name }}
+        individual: true
+        path: ${{ env.build_paths }}

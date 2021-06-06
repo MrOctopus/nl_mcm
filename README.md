@@ -57,7 +57,7 @@ However, more feedback is required from other mod authors before the framework c
 | Steps | Description                                                                                                                                                                                                                        |
 |-------|-------------------------------------------------------------------------------------------------------------------|
 | 1.    | Install the latest "SkyUI" SDK from the SkyUI [Wiki](https://github.com/schlangster/skyui/wiki)                   |
-| 2.    | Install the latest "nl_mcm - SSE" SDK from the [CI](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml) |
+| 2.    | Install the latest "nl_mcm_SSE - SDK" from the [CI](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml?query=branch%3Amain) |
 
 ### Distribution
 | Method         | Description                                                              |

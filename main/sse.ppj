@@ -8,7 +8,7 @@
   Zip="true">
   <Variables>
     <Variable Name="Namespace" Value="nl_mcm"/>
-    <Variable Name="ModName" Value="@Namespace - SSE"/>
+    <Variable Name="ModName" Value="@Namespace_SSE"/>
     <Variable Name="MCM" Value="."/>
     <Variable Name="Dist" Value="..\dist"/>
   </Variables>
@@ -27,7 +27,10 @@
     <Folder NoRecurse="true">@MCM\source</Folder>
   </Folders>
   <ZipFiles Output="@Dist">
-    <ZipFile Name="@ModName" RootDir="@MCM" Compression="deflate">
+    <ZipFile Name="@ModName - REDIST" RootDir="@MCM" Compression="deflate">
+      <Include NoRecurse="true">scripts</Include>
+    </ZipFile>
+    <ZipFile Name="@ModName - SDK" RootDir="@MCM" Compression="deflate">
       <Include>scripts</Include>
     </ZipFile>
   </ZipFiles>
