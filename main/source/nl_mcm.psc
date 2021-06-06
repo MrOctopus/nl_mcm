@@ -131,7 +131,7 @@ float _splash_x
 float _splash_y
 
 int _buffered
-int _advanced_modules
+int _advanced_modules ; External module
 int _id = -1
 int _font = -1
 int _mcm_hotkey = -1
