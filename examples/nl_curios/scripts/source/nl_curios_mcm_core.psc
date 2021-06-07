@@ -141,6 +141,7 @@ event OnPageDraw()
 
 	AddEmptyOption()
 	AddHeaderOption(FONT_PRIMARY("Exit MCM?"))
+	AddTextOptionST("refresh_mcm", "", FONT_DANGER("Refresh pages"))
 	AddTextOptionST("exit_mcm", "", FONT_DANGER("Exit Now!"))
 endevent
 
@@ -177,7 +178,7 @@ state preset_load
 
 	event OnMenuAcceptST(string state_id, int i)
 		; i = 0 means that the user
-		; has either select the default option
+		; has either selected the default option
 		; or has exited the list by a button press
 		if i != 0
 			LoadMCMFromPreset(_shown_presets[i])
@@ -199,7 +200,6 @@ endstate
 state preset_delete
 	event OnHighlightST(string state_id)
 		SetInfoText("Delete an existing preset")
-		SetInfoText("Load a saved preset")
 	endevent
 
 	event OnMenuOpenST(string state_id)
@@ -209,7 +209,7 @@ state preset_delete
 
 	event OnMenuAcceptST(string state_id, int i)
 		; i = 0 means that the user
-		; has either select the default option
+		; has either selected the default option
 		; or has exited the list by a button press
 		if i != 0
 			DeleteMCMSavedPreset(_shown_presets[i])
@@ -243,6 +243,12 @@ state mod_show_credits
 
 	event OnSelectST(string state_id)
 		ShowCreditsPage = !ShowCreditsPage
+		ForcePageListReset()
+	endevent
+endstate
+
+state refresh_mcm
+	event OnSelectST(string state_id)
 		ForcePageListReset()
 	endevent
 endstate

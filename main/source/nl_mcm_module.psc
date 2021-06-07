@@ -355,12 +355,12 @@ auto state _inactive
 			nl_script_var = nl_quest_var as nl_mcm
 		endif
 
-		if nl_quest_var == None || nl_script_var == None
-			; Cache data
-			_quest_editorid = quest_editorid
-			_page_name = page_name
-			_z = z
-			
+		; Cache data
+		_quest_editorid = quest_editorid
+		_page_name = page_name
+		_z = z
+
+		if nl_quest_var == None || nl_script_var == None			
 			if quest_editorid == ""
 				quest_editorid = nl_util.GetFormEditorID(self)
 			endif

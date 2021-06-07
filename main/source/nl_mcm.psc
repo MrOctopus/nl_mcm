@@ -377,21 +377,15 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 	int i = 0
 	
 	; We buffer _modules at init to avoid multiple external resize calls
-	if !_initialized
-		; First module 
-		if !_modules
-			_modules = new nl_mcm_module[128]
-			Pages = new string[128]
-			_pages_z = new int[128]
-			
+	if !_initialized			
 		; Maximum _modules exceeded
-		elseif _buffered == 128
-			DEBUG_MSG("The MCM has already reached the page limit.", DEBUG_FLAG_T + DEBUG_FLAG_N)
+		if _buffered == 128
+			DEBUG_MSG("The MCM has already reached the page limit.")
 			return ERROR_MODULE_FULL
 			
 		; Page name must be unique
 		elseif Pages.Find(page_name) != -1
-			DEBUG_MSG("The MCM already has a page named [" + page_name +  "].", DEBUG_FLAG_T + DEBUG_FLAG_N)
+			DEBUG_MSG("The MCM already has a page named [" + page_name +  "].")
 			return ERROR_MODULE_TAKEN
 			
 		endif
@@ -430,12 +424,12 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 	elseif Pages			
 		; Maximum _modules exceeded
 		if Pages.Length == 128
-			DEBUG_MSG("The MCM has already reached the page limit.", DEBUG_FLAG_T + DEBUG_FLAG_N)
+			DEBUG_MSG("The MCM has already reached the page limit.")
 			return ERROR_MODULE_FULL
 			
 		; Page name must be unique
 		elseif Pages.Find(page_name) != -1
-			DEBUG_MSG("The MCM already has a page named [" + page_name +  "].", DEBUG_FLAG_T + DEBUG_FLAG_N)
+			DEBUG_MSG("The MCM already has a page named [" + page_name +  "].")
 			return ERROR_MODULE_TAKEN
 			
 		endif
@@ -558,16 +552,16 @@ int function _UnregisterModule(string page_name)
 endfunction
 
 function SaveMCMToPreset(string preset_path)
-	if !JContainers.isInstalled()
+	if !JContainers.isInstalled() || preset_path == ""
 		return
 	endif
-	
-	if preset_path == "" || _busy_jcontainer
+
+	if _busy_jcontainer
+		ShowMessage("Already busy with saving/loading a preset\nTry again later", false, "$OK")
 		return
 	endif
 	
 	_busy_jcontainer = true
-	
 	int jPreset = JMap.object()
 	
 	while _mutex_modules
@@ -605,9 +599,13 @@ function SaveMCMToPreset(string preset_path)
 endfunction
 
 string function GetCommonStore(string page_name, bool lock)
-	if _common_store_owner != ""
+	int i = 10
+
+	; Not a true spinlock because users might muck this up
+	while _common_store_owner != "" && _common_store_owner != page_name && i > 0
 		Utility.WaitMenuMode(SPINLOCK_TIMER)
-	endif
+		i -= 1
+	endwhile
 
 	if lock
 		_common_store_owner = page_name
@@ -617,9 +615,13 @@ string function GetCommonStore(string page_name, bool lock)
 endfunction
 
 function SetCommonStore(string page_name, string new_value)
-	if _common_store_owner != "" && _common_store_owner != page_name
+	int i = 10
+
+	; Not a true spinlock because users might muck this up
+	while _common_store_owner != "" && _common_store_owner != page_name && i > 0
 		Utility.WaitMenuMode(SPINLOCK_TIMER)
-	endif
+		i -= 1
+	endwhile
 
 	_common_store_owner = ""
 	_common_store = new_value
@@ -688,7 +690,12 @@ endfunction
 ;--------------------------------------------------------
 
 event OnInit()
+	; Cache since this is used often
 	_owning_quest = self as quest
+	; These will be resized
+	_modules = new nl_mcm_module[128]
+	Pages = new string[128]
+	_pages_z = new int[128]
 endevent
 
 event OnConfigManagerReset(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
@@ -909,16 +916,16 @@ string[] function GetMCMSavedPresets(string default, string dir_path = "")
 endfunction
 
 function LoadMCMFromPreset(string preset_path)
-	if !JContainers.isInstalled()
+	if !JContainers.isInstalled() || preset_path == ""
 		return
 	endif
-	
-	if preset_path == "" || _busy_jcontainer
+
+	if _busy_jcontainer
+		ShowMessage("Already busy with saving/loading a preset\nTry again later", false, "$OK")
 		return
 	endif
 
 	_busy_jcontainer = True
-	
 	int jPreset = JValue.readFromFile(MCM_PATH_SETTINGS + preset_path + MCM_EXT)
 	
 	if jPreset == 0
@@ -956,11 +963,7 @@ function LoadMCMFromPreset(string preset_path)
 endfunction
 
 function DeleteMCMSavedPreset(string preset_path)
-	if !JContainers.isInstalled()
-		return
-	endif
-	
-	if preset_path == "" || _busy_jcontainer
+	if !JContainers.isInstalled() || preset_path == ""
 		return
 	endif
 	
