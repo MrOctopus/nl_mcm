@@ -27,6 +27,7 @@ jobs:
       dist-path: dist                               # Folder containing the output from the project files
       compiler-repo: MrOctopus/papyrus-compiler     # Github repository containing the papyrus compiler
       compiler-token: ${{ secrets.PRIVATE_TOKEN }}  # Just use ${{ github.token }} if the repo is not private
+      pyro-token: ${{ secrets.PRIVATE_TOKEN }}      # Just use ${{ github.token }} if the ppj file does not use private imports
       # Ignore these
       python-version: 3.x
       python-arch: x64
@@ -64,11 +65,10 @@ jobs:
 
     - name: Build releases
       run: |
-        .\pyro\pyro --game-path . --compiler-path ${Env:ppj_c} --flags-path ${Env:ppj_f} --access-token ${Env:ppj_t} .\repo\${Env:ppj_p}
+        .\pyro\pyro --game-path . --compiler-path ${Env:ppj_c} --flags-path ${Env:ppj_f} --access-token ${Env:pyro-token} .\repo\${Env:ppj_p}
       env: 
         ppj_c: compiler\PapyrusCompiler.exe
         ppj_f: compiler\TESV_Papyrus_Flags.flg
-        ppj_t: ${{ github.token }}
         ppj_p: ${{ matrix.project-path }}
 
     - name: Prepare upload
@@ -76,7 +76,7 @@ jobs:
       run: |
         cd repo\${Env:dist-path}
         7z x *zip -o*
-        echo "build_paths=$($(Get-ChildItem -Filter *. | % { $_.FullName }) -join ",")" >> ${Env:GITHUB_ENV}
+        echo "build_paths=$($(Get-ChildItem -Filter *.zip | % { $_.FullName }) -join ",")" >> ${Env:GITHUB_ENV}
 
     - name: Upload release
       if: success()
