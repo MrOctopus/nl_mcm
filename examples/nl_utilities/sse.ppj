@@ -32,8 +32,7 @@
   </Packages>
   <ZipFiles Output="@Dist">
     <ZipFile Name="@ModName" RootDir="@Example" Compression="deflate">
-      <Include>*.esp</Include>
-      <Include>*.bsa</Include>
+      <Match>*.esl|*.bsa</Match>
     </ZipFile>
   </ZipFiles>
 </PapyrusProject>

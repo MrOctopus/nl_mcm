@@ -38,8 +38,7 @@
       <Include Path="scripts\source">@CuriosExample\scripts\source</Include>
       <Include Path="scripts\source">@UtilitiesExample\scripts\source</Include>
       <Include>scripts</Include>
-      <Include Path=".">**\*.esp</Include>
-	    <Include Path=".">**\*.esl</Include>
+      <Match Path=".">*.esp|*.esl</Match>
     </ZipFile>
   </ZipFiles>
 </PapyrusProject>
