@@ -4,6 +4,15 @@ Scriptname nl_curios_mcm_credits extends nl_mcm_module
 	@version 1.0
 }
 
+;------------------\
+; REGISTER MOD PAGE \
+;--------------------------------------------------------
+
+; - Before register
+event OnInit()
+	RegisterModule("Credits", 1000)
+endevent
+
 ;----------\
 ; DRAW PAGE \
 ;--------------------------------------------------------

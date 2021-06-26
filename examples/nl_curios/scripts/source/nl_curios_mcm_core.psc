@@ -9,7 +9,7 @@ nl_curios_mcm_credits property CreditsPage auto
 
 string[] _shown_presets
 bool _show_advanced
-bool _show_credits
+bool _show_credits = true
 
 bool property ShowAdvancedPage hidden
 	function Set(bool show)

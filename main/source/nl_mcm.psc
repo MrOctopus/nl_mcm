@@ -1,12 +1,12 @@
 Scriptname nl_mcm extends SKI_ConfigBase
 {
 	@author NeverLost
-	@version 1.0.0	
+	@version 1.0.1	
 }
 
 ; This will probably never change
 int function GetVersion()
-    return 100
+    return 101
 endfunction
 
 ; ---\-------\
@@ -141,7 +141,7 @@ bool _quick_open
 
 bool _initialized
 bool _busy_jcontainer
-bool _mutex_modules
+bool _mutex_modules = true
 bool _mutex_store
 bool _mutex_page
 bool _ctd_lock
@@ -265,6 +265,8 @@ event OnConfigClose()
 		Utility.WaitMenuMode(SPINLOCK_TIMER)
 	endwhile
 
+	_mutex_modules = true
+
 	nl_mcm_module[] modules_tmp
 	int len = Pages.Length
 	int i = 0
@@ -279,6 +281,8 @@ event OnConfigClose()
 		modules_tmp[i] = _modules[i]
 		i += 1
 	endwhile
+
+	_mutex_modules = false
 
 	i = 0
 	
@@ -568,6 +572,8 @@ function SaveMCMToPreset(string preset_path)
 		Utility.WaitMenuMode(SPINLOCK_TIMER)
 	endwhile
 
+	_mutex_modules = true
+
 	nl_mcm_module[] modules_tmp = new nl_mcm_module[128]
 	int len = Pages.Length
 	int i = 0
@@ -576,6 +582,8 @@ function SaveMCMToPreset(string preset_path)
 		modules_tmp[i] = _modules[i]
 		i += 1
 	endwhile
+
+	_mutex_modules = false
 
 	i = 0
 	
@@ -696,6 +704,8 @@ event OnInit()
 	_modules = new nl_mcm_module[128]
 	Pages = new string[128]
 	_pages_z = new int[128]
+	; Disable mutex
+	_mutex_modules = false
 endevent
 
 event OnConfigManagerReset(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
