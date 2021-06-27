@@ -371,7 +371,6 @@ auto state _inactive
 				return ERROR_MCM_NONEQUEST
 			else
 				DEBUG_MSG("Quest with EditorID [" + quest_editorid + "] has no nl_mcm attached.", DEBUG_FLAG_T + DEBUG_FLAG_N)
-				error_code = ERROR_MCM_NONE
 				RegisterForModEvent("SKICP_configManagerReady", "_OnConfigManagerReady")
 				return ERROR_MCM_NONE
 			endif
