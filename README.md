@@ -43,7 +43,7 @@ However, more feedback is required from other mod authors before the framework c
 
 ## Documentation
 
-* The source documentation is available in the [Wiki](https://github.com/MrOctopus/nl_mcm/wiki).
+* The source documentation is available in the [Wiki](https://github.com/MrOctopus/nl_mcm/wiki/1.-Home).
 * The SDK source files are available in the following [Folder](https://github.com/MrOctopus/nl_mcm/tree/main/main/scripts/source).
 
 ### Examples
