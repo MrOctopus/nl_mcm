@@ -1,7 +1,7 @@
 The MIT License (MIT)
 =====================
 
-Copyright © `2021` `MrOctopus/NeverLost <shock.game@hotmail.com>`
+Copyright © `2021` `MrOctopus/NeverLost <https://github.com/MrOctopus>`
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation

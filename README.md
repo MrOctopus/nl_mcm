@@ -11,7 +11,7 @@ An object-oriented module based extension of SkyUI MCM scripts.
 * Automatic key conflict handling 
 	- You no longer need to override `string GetCustomControl(int keyCode)` to define custom buttons
 * Unregister and register pages on the fly 
-	- You could make a quest dynamicaly add or remove pages from the MCM menu
+	- You could make a quest dynamically add or remove pages from the MCM menu
 * Automatic paragraph handling 
 	- Supports html formatting
 * Built-in font formats for different purposes
@@ -29,15 +29,13 @@ An object-oriented module based extension of SkyUI MCM scripts.
 * Built-in preset saving functionality
 	- Requires JContainers
 
-## Info
+## Releases
 
-The current status of this project is that it is ready for use in development.
-However, more feedback is required from other mod authors before the framework can be published on the nexus.
+**Latest release from main branch:**
 
-**Latest release from main branch:** \
+[![](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml/badge.svg)](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml)
 
-[![](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml/badge.svg)](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml) \
-**Latest release on the Nexus:**  \
+**Latest release on the Nexus:**
 
 [Nexus](https://www.nexusmods.com/skyrimspecialedition/mods/49127)
 
@@ -71,10 +69,10 @@ However, more feedback is required from other mod authors before the framework c
 
 | Method         | Description                                                              |
 |----------------|--------------------------------------------------------------------------|
-| Dependency     | Make nl_mcm a download requirement, and link users to the [Nexus]() page |
+| Dependency     | Make nl_mcm a download requirement, and link users to the [Nexus](https://www.nexusmods.com/skyrimspecialedition/mods/49127) page |
 | Redistribution | Redistribute the nl_mcm .pex files along with your mod                   |
 
 ## Licenses
 
 All files in this repository are released under the [MIT License](LICENSE.md) with the following exceptions:
-* If you are planning on releasing a nl_mcm mod through redistributing the .pex files, I only require you to include my name as well as link to this repository in your credits.
+* If you are planning on releasing a nl_mcm mod through redistributing the .pex files, I only require you to include my name as well as a link to the github repository or nexus page in your credits.
