@@ -1,11 +1,14 @@
 # Info
+
 Is the wiki up to date?: \
-![](https://github.com/MrOctopus/nl_mcm/actions/workflows/wiki.yml/badge.svg)
+![Build Status Badge](https://github.com/MrOctopus/nl_mcm/actions/workflows/wiki.yml/badge.svg)
 
-# API
-Read the corresponding wiki page to a .psc script for a closer explanation of nl_mcm's API.
+## API
 
-# Special Thanks
+Read the corresponding wiki page to a ``.psc`` script for a closer explanation of NL_MCM's API.
+
+## Special Thanks
+
 A special thanks goes out to:
 
 * The SKSE team
