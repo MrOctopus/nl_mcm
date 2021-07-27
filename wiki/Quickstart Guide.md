@@ -179,7 +179,7 @@ Now you need to link this to a Quest to get it to appear in game. This can be do
 11. Click ``Add``, and then click ``[New Script]``.
 12. Name the script ``myModMCM`` and press ``OK``.
 13. There should now be a script named myModMCM listed on the left of the page.
-14. Click ``Add`` again and in the ``filter`` type in ``nl_mcm_module``. Select that script and add it to the list. (If you don't see it, check [Common Issues](##CommonIssues) below)
+14. Click ``Add`` again and in the ``filter`` type in ``nl_mcm_module``. Select that script and add it to the list. (If you don't see it, check [Common Issues](https://github.com/Osmosis-Wrench/nl_mcm/blob/faq/wiki/Quickstart%20Guide.md#common-issues) below)
 15. Press ``OK`` to save your changes to the quest.
 16. Right click the quest and select ``Edit`` again.
 17. Move back to the Scripts tab, and right click ``myModMCM`` and select ``Edit Source``.
