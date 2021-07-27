@@ -14,7 +14,7 @@ NL_MCM also facilitates easier maintenance by allowing each page of your MCM to 
 
 ## Should I include resources from NL_MCM in with my mod?
 
-This is entirely up to you. If you wish to include the NL_MCM redistributable with your mod you are entitled to do so, alternatively you can tell your users to install NL_MCM from its' [Nexus](http://nexuspagegoeshere) page as a requirement.
+This is entirely up to you. If you wish to include the NL_MCM redistributable with your mod you are entitled to do so, alternatively you can tell your users to install NL_MCM from its' [Nexus](https://www.nexusmods.com/skyrimspecialedition/mods/49127) page as a requirement.
 
 ## How hard is it to convert my existing MCM to NL_MCM?
 

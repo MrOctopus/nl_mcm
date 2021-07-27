@@ -39,7 +39,7 @@ However, more feedback is required from other mod authors before the framework c
 [![](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml/badge.svg)](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml) \
 **Latest release on the Nexus:**  \
 
-[Nexus]()
+[Nexus](https://www.nexusmods.com/skyrimspecialedition/mods/49127)
 
 ## Documentation
 

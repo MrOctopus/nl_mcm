@@ -4,7 +4,7 @@ Is the wiki up to date?: \
 ![Build Status Badge](https://github.com/MrOctopus/nl_mcm/actions/workflows/wiki.yml/badge.svg)
 
 ## Quickstart
-For a quickstart guid
+For a quickstart guide check out [this](https://github.com/MrOctopus/nl_mcm/wiki/2-Quickstart) link.
 
 ## API
 

@@ -176,7 +176,7 @@ Now you need to link the compiled script to a Quest to get it to appear in game.
 6. Click ``Add`` again, and add your script pages that extend ``nl_mcm_module`` (``myModMCM`` in this case), but not the ``nl_mcm_module`` script itself.
 7. Move to the ``Quest Aliases`` tab.
 8. Right click and create a new reference alias called ``PlayerAlias``.
-9. Select the player reference (Specific Reference, Cell any, Ref PlayerRef) as the ``Fill Type``.`
+9. Select the player reference (Specific Reference, Cell any, Ref PlayerRef) as the ``Fill Type``.
 10. In the Scripts list, click ``Add`` and add the ```nl_mcm_playerloadalias``` script.
 11. Press ``Ok`` twice to save the alias and quest data.
 12. Finally, ``Save`` your progress to a .esp file using the CK ``File`` tab. 
@@ -185,7 +185,7 @@ If you now load into the game with the newly created mod enabled, your MCM page 
 If not, double check that you've followed all steps correctly and look over the Common Issues below.
 
 Note:
-Step 5. can, and should, be omitted if you are planning on making an external module such as [nl_utilities](https://github.com/MrOctopus/nl_mcm/tree/main/examples/nl_utilities). See the [Advanced Features](https://github.com/MrOctopus/nl_mcm/wiki/Advanced-Features) page for more information.
+Step 5. can, and should, be omitted if you are planning on making an external module such as [nl_utilities](https://github.com/MrOctopus/nl_mcm/tree/main/examples/nl_utilities). See the [Advanced Features](https://github.com/MrOctopus/nl_mcm/wiki/4-Advanced-Features) page for more information.
 
 ## Common Issues
 
