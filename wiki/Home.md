@@ -3,9 +3,12 @@
 Is the wiki up to date?: \
 ![Build Status Badge](https://github.com/MrOctopus/nl_mcm/actions/workflows/wiki.yml/badge.svg)
 
+## Quickstart
+For a quickstart guid
+
 ## API
 
-Read the corresponding wiki page to a ``.psc`` script for a closer explanation of NL_MCM's API.
+Read the corresponding wiki page to a ``.psc`` script for a closer explanation of NL_MCM's new API functionality.
 
 ## Special Thanks
 
@@ -16,5 +19,4 @@ A special thanks goes out to:
 * [Dunc001](https://github.com/dunc001)
 * [Fireundubh](https://github.com/fireundubh)
 * [Kojak747](https://www.nexusmods.com/users/13953925)
-
-Their contributions have been invaluable.
+* [Nem](https://github.com/Osmosis-Wrench)

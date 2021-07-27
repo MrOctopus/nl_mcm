@@ -1,7 +1,9 @@
 # nl_mcm
+
 An object-oriented module based extension of SkyUI MCM scripts.
 
 ## Main Features
+
 * Modularity
 	- You can have 1 Core MCM menu, and release other mods that can attach as pages to that menu
 * Advanced state options
@@ -28,43 +30,51 @@ An object-oriented module based extension of SkyUI MCM scripts.
 	- Requires JContainers
 
 ## Info
+
 The current status of this project is that it is ready for use in development.
 However, more feedback is required from other mod authors before the framework can be published on the nexus.
 
 **Latest release from main branch:** \
+
 [![](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml/badge.svg)](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml) \
 **Latest release on the Nexus:**  \
+
 [Nexus]()
 
 ## Documentation
+
 * The source documentation is available in the [Wiki](https://github.com/MrOctopus/nl_mcm/wiki).
 * The SDK source files are available in the following [Folder](https://github.com/MrOctopus/nl_mcm/tree/main/main/scripts/source).
 
 ### Examples
-| Examples                | Description                                            | Link                                                                         |
+
+| Examples | Description | Link |
 |-------------------------|--------------------------------------------------------|------------------------------------------------------------------------------|
 | *NeverLost's Curios*    | nl_mcm being used to build a standalone mcm menu       | [CLICK](https://github.com/MrOctopus/nl_mcm/tree/main/examples/nl_curios)    |
 | *NeverLost's Utilities* | nl_mcm being used to attach a page to another mcm menu | [CLICK](https://github.com/MrOctopus/nl_mcm/tree/main/examples/nl_utilities) |
 
 ### Compiling
+
 **Pyro**
-| Steps | Description                                                                                                                                                                               |
+| Steps | Description                                                              |
 |-------|--------------------------------------------------------------------------|
 | 1.    | Import https://github.com/MrOctopus/nl_online/tree/main/skyui/source     |
 | 2.    | Import https://github.com/MrOctopus/nl_mcm/tree/main/main/scripts/source |
 
 **Manual**
-| Steps | Description                                                                                                                                                                                                                        |
+| Steps | Description                                                                                                       |
 |-------|-------------------------------------------------------------------------------------------------------------------|
 | 1.    | Install the latest "SkyUI" SDK from the SkyUI [Wiki](https://github.com/schlangster/skyui/wiki)                   |
 | 2.    | Install the latest "nl_mcm_SSE - SDK" from the [CI](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml?query=branch%3Amain) |
 
 ### Distribution
+
 | Method         | Description                                                              |
 |----------------|--------------------------------------------------------------------------|
 | Dependency     | Make nl_mcm a download requirement, and link users to the [Nexus]() page |
 | Redistribution | Redistribute the nl_mcm .pex files along with your mod                   |
 
 ## Licenses
+
 All files in this repository are released under the [MIT License](LICENSE.md) with the following exceptions:
 * If you are planning on releasing a nl_mcm mod through redistributing the .pex files, I only require you to include my name as well as link to this repository in your credits.

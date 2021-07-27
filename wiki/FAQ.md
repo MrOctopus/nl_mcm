@@ -1,6 +1,6 @@
 # NL_MCM FAQ
 
-For the main MCM FAQ, check out [this](https://github.com/schlangster/skyui/wiki/MCM-FAQ) page.
+For the original SkyUI MCM FAQ, check out [this](https://github.com/schlangster/skyui/wiki/MCM-FAQ) page.
 
 ## Is NL_MCM compatible with "Regular" MCMs?
 
@@ -8,9 +8,9 @@ In short, **Yes**. NL_MCM menus will appear alongside regular MCM menus without 
 
 ## Why should I use NL_MCM as apposed to a "Regular" mcm?
 
-The two main reasons to use NL_MCM as apposed to regular MCM's are that NL_MCM is more simple to implement and easier to maintain.  
+The two main reasons to use NL_MCM over regular MCMs, is that the former is more simple to implement and maintain.
 NL_MCM speeds up implementation of MCM's with a variety of QOL functions such as [QuickHotKey](https://github.com/MrOctopus/nl_mcm/wiki/nl_mcm_module#QuickHotkey), [AddParagraph](https://github.com/MrOctopus/nl_mcm/wiki/nl_mcm_module#AddParagraph), [SetSliderDialogue](https://github.com/MrOctopus/nl_mcm/wiki/nl_mcm_module#SetSliderDialog), and state_id based [Advanced States](https://github.com/MrOctopus/nl_mcm/wiki/nl_mcm_module#Advanced_States).  
-NL_MCM also facilitates easier maintenance by allows each page of your MCM to be its' own script, simplifying updates and ongoing development.
+NL_MCM also facilitates easier maintenance by allowing each page of your MCM to be separated into its own script, simplifying updates and ongoing development.
 
 ## Should I include resources from NL_MCM in with my mod?
 

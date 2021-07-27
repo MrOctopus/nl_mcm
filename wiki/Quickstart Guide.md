@@ -4,7 +4,7 @@ This will walk you through setting up a NL_MCM menu from scratch. Alternatively,
 
 ## Requirements
 
-* [SkyUI SDJ 5.1](https://github.com/schlangster/skyui/wiki)
+* [SkyUI SDK 5.1](https://github.com/schlangster/skyui/wiki)
 * Latest build of [NL_MCM](https://github.com/MrOctopus/nl_mcm/actions/workflows/ci.yml?query=branch%3Amain) from the CI pipeline. (Must be logged in to github to access)
 * The Creation Kit.
 * Some way to compile scripts. ([Pyro](https://github.com/fireundubh/pyro), Creation Kit, VS Code Papyrus Compiler, PCA SE, etc.)
@@ -17,7 +17,7 @@ Start by creating your script, but instead of extending SKI_ConfigBase like is n
 Scriptname myModMCM extends nl_mcm_module
 ```
 
-Then register the name of the current page in OnInit, and define the mod name and Default page in OnPageInit.
+Then register the name of the current page in OnInit, and set the mod name and default/landing page (*OPTIONAL*), in OnPageInit.
 
 ```papyrus
 Scriptname myModMCM extends nl_mcm_module
@@ -164,31 +164,28 @@ state coolFeatureState
 endstate
 ```
 
-Now you need to link this to a Quest to get it to appear in game. This can be done in either XEdit or the CK, and we'll be covering how to do it via the CK in this example.
+You can now compile this script in the Creation Kit [Papyrus Script Manager](https://www.creationkit.com/index.php?title=Papyrus_Script_Manager) window.
+
+Now you need to link the compiled script to a Quest to get it to appear in game. This can be done in either XEdit or the CK, and we'll be covering how to do it via the CK in this example.
 
 1. Open the CK.
-2. In the Object Window in the treeview on the left find the ``Character`` section.
-3. Find the option labelled ``Quest`` and click it.
-4. In the section to the right of the treeview, right click and select ``New``.
-5. This should open up a window called ``Quest``, by default you should be seeing the ``Quest Data`` tab.
-6. Enter ``myModName_MCM`` as both the ID and the Quest Name. 
-7. Ensure ``Start Game Enabled`` and ``Run Once`` are __Enabled__. It should look something like [this](https://i.imgur.com/sNyRfZe.png).
-8. Press ``OK`` to create the Quest.
-9. Right click on the created quest and select ``Edit``.
-10. Move to the ``Scripts`` tab.
-11. Click ``Add``, and then click ``[New Script]``.
-12. Name the script ``myModMCM`` and press ``OK``.
-13. There should now be a script named myModMCM listed on the left of the page.
-14. Click ``Add`` again and in the ``filter`` type in ``nl_mcm_module``. Select that script and add it to the list. (If you don't see it, check [Common Issues](https://github.com/Osmosis-Wrench/nl_mcm/blob/faq/wiki/Quickstart%20Guide.md#common-issues) below)
-15. Press ``OK`` to save your changes to the quest.
-16. Right click the quest and select ``Edit`` again.
-17. Move back to the Scripts tab, and right click ``myModMCM`` and select ``Edit Source``.
-18. Copy the script we have created above, and paste it into this window.
-19. Save the script ``[File>Save]``, and it should save and compile without any errors.
-20. In the top right hand corner of the CK, select ``File``, then ``Save`` and then name the file ``myModName.esp``
+2. Create a new quest with a unique id, e.g. ``myModName_MCM``. 
+3. Ensure ``Start Game Enabled`` and ``Run Once`` are __Enabled__, and press ``OK`` to create the Quest.
+4. Edit the newly created quest and move to the ``Scripts`` tab.
+5. Click ``Add``, and then add the ``nl_mcm`` script.
+6. Click ``Add`` again, and add your script pages that extend ``nl_mcm_module`` (``myModMCM`` in this case), but not the ``nl_mcm_module`` script itself.
+7. Move to the ``Quest Aliases`` tab.
+8. Right click and create a new reference alias called ``PlayerAlias``.
+9. Select the player reference (Specific Reference, Cell any, Ref PlayerRef) as the ``Fill Type``.`
+10. In the Scripts list, click ``Add`` and add the ```nl_mcm_playerloadalias``` script.
+11. Press ``Ok`` twice to save the alias and quest data.
+12. Finally, ``Save`` your progress to a .esp file using the CK ``File`` tab. 
 
-If you now load into the game with this created mod enabled, your MCM page should appear.  
+If you now load into the game with the newly created mod enabled, your MCM page should appear.  
 If not, double check that you've followed all steps correctly and look over the Common Issues below.
+
+Note:
+Step 5. can, and should, be omitted if you are planning on making an external module such as [nl_utilities](https://github.com/MrOctopus/nl_mcm/tree/main/examples/nl_utilities). See the [Advanced Features](https://github.com/MrOctopus/nl_mcm/wiki/Advanced-Features) page for more information.
 
 ## Common Issues
 
@@ -202,6 +199,6 @@ __If you've found an issue that isn't covered here, raise a Github issue outlini
 ## Useful Links
 
 * The [Creation Kit Tutorials](https://www.creationkit.com/index.php?title=Category:Tutorials). Most basic modding issues are covered there, so if you need to learn how something works it's generally a great resource.
-* The [SkyUI MCM Wiki](https://github.com/schlangster/skyui/wiki). Not everything covered there is true of NL_MCM as well, but a good portion of it is.
+* The [SkyUI MCM Wiki](https://github.com/schlangster/skyui/wiki). Not everything covered there is true of NL_MCM as well, but a good portion of it is. A key difference in NL_MCM is the addition of the ``string state_id`` parameter in all ST events.
 
 __If you feel this article could be improved, or found anything in it confusing please feel free to raise an Github issue or suggest changes in a pull request.__
