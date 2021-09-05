@@ -882,6 +882,10 @@ event OnMenuClose(string menu_name)
 endevent
 
 event OnKeyDown(int keycode)
+	if keycode != _mcm_hotkey
+		return
+	endif
+
 	if _journal_open
 		CloseMCM(close_journal = true)
 	else
