@@ -1,7 +1,7 @@
 Scriptname nl_mcm extends SKI_ConfigBase
 {
 	@author NeverLost
-	@version 1.0.1	
+	@version 1.0.1
 }
 
 ; This will probably never change
