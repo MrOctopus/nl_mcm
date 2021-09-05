@@ -815,6 +815,10 @@ event OnInputAcceptST(string str)
 endEvent
 
 event OnMenuOpen(string menu_name)
+	if menu_name != JOURNAL_MENU
+		return
+	endif
+
 	_journal_open = true
 
 	if !_quick_open
@@ -877,8 +881,10 @@ event OnMenuOpen(string menu_name)
 endevent
 
 event OnMenuClose(string menu_name)
-	_journal_open = false
-	_quick_open = false
+	if menu_name == JOURNAL_MENU
+		_journal_open = false
+		_quick_open = false
+	endif
 endevent
 
 event OnKeyDown(int keycode)
