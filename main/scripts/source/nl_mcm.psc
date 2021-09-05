@@ -1,7 +1,7 @@
 Scriptname nl_mcm extends SKI_ConfigBase
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.0.1
+	@version 1.0.2
 }
 
 int function GetVersion()

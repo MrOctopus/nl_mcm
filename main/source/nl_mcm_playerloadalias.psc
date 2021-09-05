@@ -1,7 +1,7 @@
 Scriptname nl_mcm_playerloadalias extends ReferenceAlias
 {
 	@author NeverLost
-	@version 1.0.1
+	@version 1.0.2
 }
 
 quest _owner

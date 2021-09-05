@@ -4,7 +4,7 @@ Scriptname nl_mcm_module extends Quest
 	For the original MCM Api, see [link](https://github.com/schlangster/skyui/wiki/MCM-API-Reference). \
 	Only STATE api functions are supported as part of the new api.
 	@author NeverLost
-	@version 1.0.1
+	@version 1.0.2
 }
 
 ; ------\-------\
