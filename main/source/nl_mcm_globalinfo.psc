@@ -6,9 +6,17 @@ Scriptname nl_mcm_globalinfo
 }
 
 bool function IsInstalled() global
+{
+	Check if nl_mcm is installed.
+	@return The install state of nl_mcm
+}
 	return true
 endfunction
 
 int function CurrentVersion() global
+{
+	Get the current version of nl_mcm
+	@return The current nl_mcm version
+}
 	return 103
 endfunction
