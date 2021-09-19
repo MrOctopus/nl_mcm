@@ -1,7 +1,7 @@
 Scriptname nl_mcm extends SKI_ConfigBase
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.0.2
+	@version 1.0.3
 }
 
 int function GetVersion()
@@ -266,5 +266,5 @@ endfunction
 ;--------------------------------------------------------
 
 function Guard()
-	Debug.MessageBox("SKI_ConfigBase: Don't recompile this script!")
+	Debug.MessageBox("nl_mcm: Don't recompile this script!")
 endFunction

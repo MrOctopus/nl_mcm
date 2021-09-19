@@ -1,12 +1,14 @@
 Scriptname nl_mcm extends SKI_ConfigBase
 {
+	This documents the important functions in the backbone nl_mcm script. \
 	@author NeverLost
-	@version 1.0.2
+	@version 1.0.3
 }
 
-; This will probably never change
 int function GetVersion()
-    return 101
+	int version = nl_mcm_globalinfo.CurrentVersion()
+	CurrentVersion = version
+    return version
 endfunction
 
 ; ---\-------\

@@ -1,7 +1,7 @@
 Scriptname nl_mcm_playerloadalias extends ReferenceAlias
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.0.2
+	@version 1.0.3
 }
 
 event OnInit()
@@ -17,5 +17,5 @@ endEvent
 ;--------------------------------------------------------
 
 function Guard()
-	Debug.MessageBox("nl_mcmplayerloadalias: Don't recompile this script!")
+	Debug.MessageBox("nl_mcm_playerloadalias: Don't recompile this script!")
 endfunction
