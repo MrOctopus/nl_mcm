@@ -1,7 +1,7 @@
 Scriptname nl_mcm_globalinfo
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.0.4
+	@version 1.0.5
 }
 
 bool function IsInstalled() global

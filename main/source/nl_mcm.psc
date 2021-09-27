@@ -2,7 +2,7 @@ Scriptname nl_mcm extends SKI_ConfigBase
 {
 	This documents the important functions in the backbone nl_mcm script.
 	@author NeverLost
-	@version 1.0.4
+	@version 1.0.5
 }
 
 int function GetVersion()
@@ -1131,6 +1131,8 @@ function OpenMCM(string landing_page_name = "")
 		return
 	endif
 
+	RegisterForMenu(JOURNAL_MENU)
+
 	string old_landing_page = _landing_page
 	_landing_page = landing_page_name
 
@@ -1141,12 +1143,16 @@ function OpenMCM(string landing_page_name = "")
 	int i = 0
 
 	; Not a true spinlock because users might muck this up
-	while i < 10 || Ui.GetString(JOURNAL_MENU, flash_path) != ModName
+	while i < 5 || Ui.GetString(JOURNAL_MENU, flash_path) != ModName
 		Utility.WaitMenuMode(SPINLOCK_TIMER)
 		i += 1
 	endwhile
 
 	_landing_page = old_landing_page
+
+	if _mcm_hotkey == -1
+		UnregisterForMenu(JOURNAL_MENU)
+	endif
 endfunction
 
 function CloseMCM(bool close_journal = false)
