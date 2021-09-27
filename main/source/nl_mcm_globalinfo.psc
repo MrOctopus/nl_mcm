@@ -18,5 +18,5 @@ int function CurrentVersion() global
 	Get the current version of nl_mcm
 	@return The current nl_mcm version
 }
-	return 103
+	return 104
 endfunction
