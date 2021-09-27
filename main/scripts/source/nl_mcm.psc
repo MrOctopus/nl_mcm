@@ -1,7 +1,7 @@
 Scriptname nl_mcm extends SKI_ConfigBase
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.0.3
+	@version 1.0.4
 }
 
 int function GetVersion()
@@ -254,6 +254,10 @@ function ForcePageListReset(bool stay = true)
 endFunction
 
 function GoToPage(string page_name)
+	Guard()
+endfunction
+
+function OpenMCM(string landing_page_name = "")
 	Guard()
 endfunction
 

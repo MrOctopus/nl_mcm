@@ -1,7 +1,7 @@
 Scriptname nl_mcm_playerloadalias extends ReferenceAlias
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.0.3
+	@version 1.0.4
 }
 
 event OnInit()

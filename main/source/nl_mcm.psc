@@ -1,8 +1,8 @@
 Scriptname nl_mcm extends SKI_ConfigBase
 {
-	This documents the important functions in the backbone nl_mcm script. \
+	This documents the important functions in the backbone nl_mcm script.
 	@author NeverLost
-	@version 1.0.3
+	@version 1.0.4
 }
 
 int function GetVersion()
@@ -749,7 +749,14 @@ event OnPageReset(string page)
 		endif
 
 		if _landing_page != ""
-			parent.SetPage(_landing_page, Pages.Find(_landing_page))
+			; MIGHT return -1 because of a in-progress OpenMCM call
+			int i = Pages.Find(_landing_page)
+
+			if i == -1
+				_landing_page = ""
+			endif
+
+			parent.SetPage(_landing_page, i)
 		elseif _splash_path != ""
 			LoadCustomContent(_splash_path, _splash_x, _splash_y)
 		endif
@@ -1117,6 +1124,29 @@ function GoToPage(string page_name)
 	Ui.InvokeBool(JOURNAL_MENU, MENU_ROOT + ".unlock", true)
 	Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.subListFader.list.doSetSelectedIndex", select_type)
 	Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.subListFader.list.onItemPress", select_type)
+endfunction
+
+function OpenMCM(string landing_page_name = "")
+	if _journal_open || (landing_page_name != "" && Pages.Find(landing_page_name) == -1)
+		return
+	endif
+
+	string old_landing_page = _landing_page
+	_landing_page = landing_page_name
+
+	_quick_open = true
+	Input.TapKey(Input.GetMappedKey("Journal"))
+
+	string flash_path = MENU_ROOT + ".contentHolder.modListPanel.decorTitle.textHolder.textField.text"
+	int i = 0
+
+	; Not a true spinlock because users might muck this up
+	while i < 10 || Ui.GetString(JOURNAL_MENU, flash_path) != ModName
+		Utility.WaitMenuMode(SPINLOCK_TIMER)
+		i += 1
+	endwhile
+
+	_landing_page = old_landing_page
 endfunction
 
 function CloseMCM(bool close_journal = false)

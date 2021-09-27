@@ -1,7 +1,7 @@
 Scriptname nl_mcm_module extends Quest
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.0.3
+	@version 1.0.4
 }
 
 ; ------\-------\
@@ -98,6 +98,10 @@ auto state _inactive
 	endfunction
 
 	function GoToPage(string page_name)
+		Guard()
+	endfunction
+
+	function OpenMCM(string landing_page_name = "")
 		Guard()
 	endfunction
 	
@@ -404,6 +408,10 @@ function ForcePageListReset(bool stay = true)
 endfunction
 
 function GoToPage(string page_name)
+	Guard()
+endfunction
+
+function OpenMCM(string landing_page_name = "")
 	Guard()
 endfunction
 

@@ -19,7 +19,7 @@ An object-oriented module based extension of SkyUI MCM scripts.
 	- Fonts will automatically switch depending on the installed UI skin
 * Open and Exit MCM functionality
 	- Create direct quick hotkeys to your mcm menu
-	- Close your mcm menu on command
+	- Open and Close your mcm menu on command
 * Individual page version support
 	- You can now update pages individually instead of the whole MCM using a new version tracking system
 * Extended control over pages

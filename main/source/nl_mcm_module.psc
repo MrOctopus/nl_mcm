@@ -4,7 +4,7 @@ Scriptname nl_mcm_module extends Quest
 	For the original MCM Api, see [link](https://github.com/schlangster/skyui/wiki/MCM-API-Reference). \
 	Only STATE api functions are supported as part of the new api.
 	@author NeverLost
-	@version 1.0.3
+	@version 1.0.4
 }
 
 ; ------\-------\
@@ -173,6 +173,10 @@ auto state _inactive
 
 	function GoToPage(string page_name)
 		DEBUG_MSG("GoToPage has been called in an invalid state.")
+	endfunction
+
+	function OpenMCM(string landing_page_name = "")
+		DEBUG_MSG("OpenMCM has been called in an invalid state.")
 	endfunction
 	
 	function CloseMCM(bool close_journal = false)
@@ -673,6 +677,14 @@ function GoToPage(string page_name)
 	@param page_name - The page to go to
 }
 	_MCM.GoToPage(page_name)
+endfunction
+
+function OpenMCM(string landing_page_name = "")
+{
+	Open the current MCM.
+	@param landing_page_name - If set to a valid page name, it will open the MCM at this page
+}
+	_MCM.OpenMCM(landing_page_name)
 endfunction
 
 function CloseMCM(bool close_journal = false)
