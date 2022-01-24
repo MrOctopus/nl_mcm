@@ -1,6 +1,7 @@
 name: Wiki updated
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
