@@ -39,7 +39,7 @@ jobs:
       uses: Andrew-Chen-Wang/github-wiki-action@v2
       env:
         WIKI_DIR: ./nl_mcm/wiki/
-        GH_TOKEN: ${{ github.token }}
+        GH_TOKEN: ${{ secrets.PRIVATE_TOKEN }}
         GH_MAIL: ${{ secrets.NL_EMAIL }}
         GH_NAME: ${{ github.repository_owner }}
         WIKI_PUSH_MESSAGE: "Updated wiki"
