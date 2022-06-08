@@ -1,7 +1,7 @@
 Scriptname nl_mcm_module extends Quest
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.0.5
+	@version 1.0.6
 }
 
 ; ------\-------\

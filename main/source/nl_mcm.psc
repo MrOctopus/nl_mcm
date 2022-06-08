@@ -2,7 +2,7 @@ Scriptname nl_mcm extends SKI_ConfigBase
 {
 	This documents the important functions in the backbone nl_mcm script.
 	@author NeverLost
-	@version 1.0.5
+	@version 1.0.6
 }
 
 int function GetVersion()
@@ -111,16 +111,16 @@ endproperty
 ; MCM \ INTERNAL \
 ;--------------------------------------------------------
 
-; None array pointers
+; None array pointer
 ; workaround for weird Papyrus design choice
 string[] _none_string_ptr
-int[] _none_int_ptr
 
 ; GO ON
 
 nl_mcm_module[] _modules
 int[] _pages_z
 
+SKI_ConfigManager _manager
 quest _owning_quest
 
 string _key_store
@@ -231,8 +231,15 @@ event OnGameReload()
 		_mutex_store = False
 
 		if active_modules == 0
-			Pages = _none_string_ptr
-			_pages_z = _none_int_ptr
+			while _manager && _manager.UnregisterMod(self) == -2
+			endwhile
+
+			_initialized = False
+			_id = 0
+
+			Pages = new string[128]
+			_pages_z = new int[128]
+			_modules[0] = None
 		else
 			Pages = Utility.ResizeStringArray(Pages, active_modules)
 			_pages_z = Utility.ResizeIntArray(_pages_z, active_modules)
@@ -268,6 +275,12 @@ event OnConfigClose()
 	endwhile
 
 	_mutex_modules = true
+
+	; Check for empty pages
+	if _modules[0] == None
+		_mutex_modules = False
+		return
+	endif
 
 	nl_mcm_module[] modules_tmp
 	int len = Pages.Length
@@ -527,8 +540,15 @@ int function _UnregisterModule(string page_name)
 	endif
 	
 	if j == 0
-		Pages = _none_string_ptr
-		_pages_z = _none_int_ptr
+		while _manager && _manager.UnregisterMod(self) == -2
+		endwhile
+
+		_initialized = False
+		_id = -1
+
+		Pages = new string[128]
+		_pages_z = new int[128]
+		_modules[0] = None
 	else
 		while i < j
 			int k = i + 1
@@ -716,13 +736,13 @@ event OnConfigManagerReset(string a_eventName, string a_strArg, float a_numArg, 
 endEvent
 
 event OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
-	SKI_ConfigManager newManager = a_sender as SKI_ConfigManager
+	_manager = a_sender as SKI_ConfigManager
 
-	if newManager == none || _id >= 0
+	if _manager == none || _id >= 0
 		return
 	endif
 
-	_id = newManager.RegisterMod(self, ModName)
+	_id = _manager.RegisterMod(self, ModName)
 
 	if _id >= 0
 		; Unregister to avoid polling events
