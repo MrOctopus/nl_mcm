@@ -2,7 +2,7 @@ Scriptname nl_mcm_globalinfo
 {
 	This documents useful global functions to check the nl_mcm api version/state.
 	@author NeverLost
-	@version 1.0.6
+	@version 1.0.7
 }
 
 bool function IsInstalled() global
@@ -18,5 +18,5 @@ int function CurrentVersion() global
 	Get the current version of nl_mcm
 	@return The current nl_mcm version
 }
-	return 106
+	return 107
 endfunction

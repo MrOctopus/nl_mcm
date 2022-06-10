@@ -5,7 +5,6 @@ Scriptname nl_utilities_mcm extends nl_mcm_module
 }
 
 nl_utilities_checkpoint nl_checkpoint
-bool _refresh_keys
 
 ;------------------\
 ; REGISTER MOD PAGE \
@@ -30,8 +29,7 @@ endevent
 ;--------------------------------------------------------
 
 event OnConfigClose()
-	if _refresh_keys
-		_refresh_keys = false
+	if PlayerUpdatedOptions
 		nl_checkpoint.RefreshKeys()
 	endif
 endevent
@@ -63,8 +61,6 @@ function LoadData(int jObj)
 	nl_checkpoint.KeyPlace = JMap.getInt(jObj, "place")
 	nl_checkpoint.KeyMove = JMap.getInt(jObj, "move")
 	nl_checkpoint.KeyDelete = JMap.getInt(jObj, "delete")
-
-	_refresh_keys = true
 endfunction
 
 ;----------\
@@ -119,7 +115,6 @@ endstate
 state checkp_key_up
 	event OnDefaultST(string state_id)
 		nl_checkpoint.KeyUp = 0x4E
-		_refresh_keys = true
 		SetKeyMapOptionValueST(0x4E)
 	endevent
 
@@ -129,7 +124,6 @@ state checkp_key_up
 
 	event OnKeyMapChangeST(string state_id, int keycode)
 		nl_checkpoint.KeyUp = keycode
-		_refresh_keys = true
 		SetKeyMapOptionValueST(keycode)
 	endevent
 endstate
@@ -137,7 +131,6 @@ endstate
 state checkp_key_dowm
 	event OnDefaultST(string state_id)
 		nl_checkpoint.KeyDown = 0x4A
-		_refresh_keys = true
 		SetKeyMapOptionValueST(0x4A)
 	endevent
 
@@ -147,7 +140,6 @@ state checkp_key_dowm
 
 	event OnKeyMapChangeST(string state_id, int keycode)
 		nl_checkpoint.KeyDown = keycode
-		_refresh_keys = true
 		SetKeyMapOptionValueST(keycode)
 	endevent
 endstate
@@ -155,7 +147,6 @@ endstate
 state checkp_key_place
 	event OnDefaultST(string state_id)
 		nl_checkpoint.KeyPlace = 0x9C
-		_refresh_keys = true
 		SetKeyMapOptionValueST(0x9C)
 	endevent
 
@@ -165,7 +156,6 @@ state checkp_key_place
 
 	event OnKeyMapChangeST(string state_id, int keycode)
 		nl_checkpoint.KeyPlace = keycode
-		_refresh_keys = true
 		SetKeyMapOptionValueST(keycode)
 	endevent
 endstate
@@ -173,7 +163,6 @@ endstate
 state checkp_key_move
 	event OnDefaultST(string state_id)
 		nl_checkpoint.KeyMove = 0x37
-		_refresh_keys = true
 		SetKeyMapOptionValueST(0x37)
 	endevent
 
@@ -183,7 +172,6 @@ state checkp_key_move
 
 	event OnKeyMapChangeST(string state_id, int keycode)
 		nl_checkpoint.KeyMove = keycode
-		_refresh_keys = true
 		SetKeyMapOptionValueST(keycode)
 	endevent
 endstate
@@ -191,7 +179,6 @@ endstate
 state checkp_key_delete
 	event OnDefaultST(string state_id)
 		nl_checkpoint.KeyDelete = 0xB5
-		_refresh_keys = true
 		SetKeyMapOptionValueST(0xB5)
 	endevent
 
@@ -201,7 +188,6 @@ state checkp_key_delete
 
 	event OnKeyMapChangeST(string state_id, int keycode)
 		nl_checkpoint.KeyDelete = keycode
-		_refresh_keys = true
 		SetKeyMapOptionValueST(keycode)
 	endevent
 endstate

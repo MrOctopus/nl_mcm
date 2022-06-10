@@ -2,7 +2,7 @@ Scriptname nl_mcm extends SKI_ConfigBase
 {
 	This documents the important functions in the backbone nl_mcm script.
 	@author NeverLost
-	@version 1.0.6
+	@version 1.0.7
 }
 
 int function GetVersion()
@@ -81,6 +81,8 @@ string property MCM_PATH_SETTINGS hidden
 	endfunction
 endproperty
 
+bool property PlayerUpdatedOptions auto hidden
+
 int property QuickHotkey hidden
 	int function Get()
 		return _mcm_hotkey
@@ -128,6 +130,7 @@ string _common_store
 string _common_store_owner
 string _landing_page
 string _splash_path
+string _persistent_preset
 
 float _splash_x
 float _splash_y
@@ -232,6 +235,7 @@ event OnGameReload()
 
 		if active_modules == 0
 			while _manager && _manager.UnregisterMod(self) == -2
+				Utility.WaitMenuMode(SPINLOCK_TIMER)
 			endwhile
 
 			_initialized = False
@@ -267,6 +271,10 @@ event OnUpdate()
 	_initialized = True
 	
 	_mutex_modules = False
+
+	if _splash_path != ""
+		LoadMCMFromPreset(_splash_path)
+	endif
 endevent
 
 event OnConfigClose()
@@ -305,6 +313,12 @@ event OnConfigClose()
 		modules_tmp[i].OnConfigClose()
 		i += 1
 	endwhile
+
+	if PlayerUpdatedOptions &&  _persistent_preset != ""
+		SaveMCMToPreset(_persistent_preset)
+	endif
+
+	PlayerUpdatedOptions = false
 endevent
 
 event OnDefaultST()
@@ -440,7 +454,7 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 	
 	; - REGULAR -
 	; No need to buffer, as overlapping registers are unlikey to occur	
-	elseif Pages			
+	else			
 		; Maximum _modules exceeded
 		if Pages.Length == 128
 			DEBUG_MSG("The MCM has already reached the page limit.")
@@ -482,14 +496,6 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 			Pages[i] = page_name
 			_pages_z[i] = z
 		endif
-	; First module
-	else
-		Pages = new string[1]
-		_pages_z = new int[1]
-		
-		Pages[0] = page_name
-		_pages_z[0] = z
-		i = 0
 	endif
 
 	if module as quest != _owning_quest
@@ -541,6 +547,7 @@ int function _UnregisterModule(string page_name)
 	
 	if j == 0
 		while _manager && _manager.UnregisterMod(self) == -2
+			Utility.WaitMenuMode(SPINLOCK_TIMER)
 		endwhile
 
 		_initialized = False
@@ -1101,6 +1108,10 @@ function SetFont(int font = 0x00)
 	if _font >= 0
 		_font = font
 	endif
+endfunction
+
+function SetPersistentMCMPreset(string preset_path)
+	_persistent_preset = preset_path
 endfunction
 
 function SetSliderDialog(float value, float range_start, float range_end, float interval, float default = 0.0)

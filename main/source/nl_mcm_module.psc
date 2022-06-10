@@ -4,7 +4,7 @@ Scriptname nl_mcm_module extends Quest
 	For the original MCM Api, see [link](https://github.com/schlangster/skyui/wiki/MCM-API-Reference). \
 	Only STATE api functions are supported as part of the new api.
 	@author NeverLost
-	@version 1.0.6
+	@version 1.0.7
 }
 
 ; ------\-------\
@@ -94,6 +94,7 @@ event _OnPageEvent(string state_name, int event_id, float f, string str)
 		OnHighlightST(state_id)
 	elseif event_id == 2
 		OnSelectST(state_id)
+		_MCM.PlayerUpdatedOptions = true
 	elseif event_id == 3
 		OnSliderOpenST(state_id)
 		OnMenuOpenST(state_id)
@@ -104,8 +105,10 @@ event _OnPageEvent(string state_name, int event_id, float f, string str)
 		OnMenuAcceptST(state_id, f as int)
 		OnColorAcceptST(state_id, f as int)
 		OnInputAcceptST(state_id, str)
+		_MCM.PlayerUpdatedOptions = true
 	elseif event_id == 5
 		OnKeyMapChangeST(state_id, f as int)
+		_MCM.PlayerUpdatedOptions = true
 	endif
 endevent
 
@@ -153,6 +156,10 @@ auto state _inactive
 
 	function SetFont(int font = 0x00)
 		DEBUG_MSG("SetFont has been called in an invalid state.")
+	endfunction
+
+	function SetPersistentMCMPreset(string preset_path)
+		DEBUG_MSG("SetPersistentMCMPreset has been called in an invalid state.")
 	endfunction
 
 	function AddParagraph(string text, string format = "", int flags = 0x01)
@@ -548,6 +555,16 @@ nl_mcm property UNSAFE_RAW_MCM hidden
 	endfunction
 endproperty
 
+bool property PlayerUpdatedOptions hidden
+{
+	Check if the user has changed any of the mcm options.
+	@get Get the update state for the current session
+}
+	bool function Get()
+		return _MCM.PlayerUpdatedOptions
+	endfunction
+endproperty
+
 int property QuickHotkey hidden
 {
 	If this hotkey is set, it allows the user to immediately open or close the mcm menu \
@@ -625,6 +642,14 @@ function SetFont(int font = 0x00)
 	@param font - The new font type
 }
 	_MCM.SetFont(font)
+endfunction
+
+function SetPersistentMCMPreset(string preset_path)
+{
+	Set the preset file path that will be used to persist user settings across save games.
+	@param preset_path - The path to the preset to save and load settings to/from
+}
+	_MCM.SetPersistentMCMPreset(preset_path)
 endfunction
 
 function AddParagraph(string text, string format = "", int flags = 0x01)

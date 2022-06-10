@@ -1,7 +1,7 @@
 Scriptname nl_mcm_module extends Quest
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.0.6
+	@version 1.0.7
 }
 
 ; ------\-------\
@@ -78,6 +78,10 @@ auto state _inactive
 	endfunction
 
 	function SetFont(int font = 0x00)
+		Guard()
+	endfunction
+
+	function SetPersistentMCMPreset(string preset_path)
 		Guard()
 	endfunction
 
@@ -353,6 +357,12 @@ nl_mcm property UNSAFE_RAW_MCM hidden
     endfunction
 endproperty
 
+bool property PlayerUpdatedOptions hidden
+	bool function Get()
+		Guard()
+	endfunction
+endproperty
+
 int property QuickHotkey hidden
 	int function Get()
 		Guard()
@@ -388,6 +398,10 @@ function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
 endfunction
 
 function SetFont(int font = 0x00)
+	Guard()
+endfunction
+
+function SetPersistentMCMPreset(string preset_path)
 	Guard()
 endfunction
 

@@ -1,7 +1,7 @@
 Scriptname nl_mcm extends SKI_ConfigBase
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.0.6
+	@version 1.0.7
 }
 
 int function GetVersion()
@@ -50,6 +50,8 @@ string property MCM_PATH_SETTINGS hidden
 		Guard()
 	endfunction
 endproperty
+
+bool property PlayerUpdatedOptions auto hidden
 
 int property QuickHotkey hidden
 	int function Get()
@@ -238,6 +240,10 @@ function SetSplashScreen(string path, float x = 0.0, float y = 0.0)
 endfunction
 
 function SetFont(int font = 0x00)
+	Guard()
+endfunction
+
+function SetPersistentMCMPreset(string preset_path)
 	Guard()
 endfunction
 
