@@ -90,6 +90,7 @@ event _OnPageEvent(string state_name, int event_id, float f, string str)
 
 	if event_id == 0
 		OnDefaultST(state_id)
+		_MCM.PlayerUpdatedOptions = true
 	elseif event_id == 1
 		OnHighlightST(state_id)
 	elseif event_id == 2
