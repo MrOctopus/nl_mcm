@@ -2,7 +2,7 @@ Scriptname nl_mcm extends SKI_ConfigBase
 {
 	This documents the important functions in the backbone nl_mcm script.
 	@author NeverLost
-	@version 1.0.7
+	@version 1.0.8
 }
 
 int function GetVersion()
@@ -272,8 +272,8 @@ event OnUpdate()
 	
 	_mutex_modules = False
 
-	if _splash_path != ""
-		LoadMCMFromPreset(_splash_path)
+	if _persistent_preset != ""
+		LoadMCMFromPreset(_persistent_preset)
 	endif
 endevent
 
