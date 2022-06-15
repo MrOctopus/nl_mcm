@@ -56,6 +56,11 @@ endevent
 event OnPageInit()
 	SetModName("NeverLost's Curios")
 	SetLandingPage("Core")
+	; You don't have to set a persistent mcm preset path
+	; but if you want settings to carry over across savegames, you should.
+	; NOTE: For the persistent settings to work, the user must have JContainers installed.
+	; Also, the SaveData and LoadData functions need to be properly defined
+	SetPersistentMCMPreset("persistence/settings")
 endevent
 
 ;-----------\
