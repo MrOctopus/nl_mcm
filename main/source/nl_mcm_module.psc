@@ -418,7 +418,7 @@ endfunction
 
 int function UnregisterModule()
 {
-	Unregister the module/page from the MCM.
+	Unregister the module/page from the current attached MCM.
 	@return The error code
 }
 	int error_code = _MCM._UnregisterModule(_page_name)
