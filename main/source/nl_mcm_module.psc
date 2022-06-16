@@ -446,23 +446,23 @@ endproperty
 
 ; ERROR CODES
 int property OK = 1 autoreadonly
-{ Return code for general success }
+{ Error return code for general success }
 int property ERROR = 0 autoreadonly
-{ Return code for general errors }
+{ Error return code for general errors }
 
 int property ERROR_MODULE_FULL = -1 autoreadonly
-{ Return code for max module/page limit being reached }
+{ Error return code for max module/page limit being reached }
 int property ERROR_MODULE_TAKEN = -2 autoreadonly
-{ Return code for module/page name being taken }
+{ Error return code for module/page name being taken }
 int property ERROR_MODULE_INIT = -3 autoreadonly
-{ Return code for the MCM not being initialized }
+{ Error return code for the MCM not being initialized }
 int property ERROR_MODULE_NONE = -4 autoreadonly
-{ Return code for the MCM not containing the given module/page name }
+{ Error return code for the MCM not containing the given module/page name }
 
 int property ERROR_MCM_NONEQUEST = -10 autoreadonly
-{ Return code for the MCM quest editorid not being found }
+{ Error return code for the MCM quest editorid not being found }
 int property ERROR_MCM_NONE = -20 autoreadonly
-{ Return code for the MCM quest not having a nl_mcm script attached }
+{ Error return code for the MCM quest not having a nl_mcm script attached }
 
 ; FONTS
 int property FONT_TYPE_DEFAULT = 0x00 autoreadonly
