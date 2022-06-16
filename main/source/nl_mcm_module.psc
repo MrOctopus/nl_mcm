@@ -357,6 +357,13 @@ auto state _inactive
 ;--------------------------------------------------------
 
 	int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
+	{
+		Register the module/page to a MCM.
+		@param page_name - The page name to display in the MCM
+		@param z - The z index of the module/page in the MCM page list. Lower values will appear first
+		@param quest_editorid - The editor id of the quest containing the nl_mcm script. Defaults to the same quest as the module is attached to
+		@return The error code
+	}
 		; Internal
 		quest nl_quest_var = self as quest
 		nl_mcm nl_script_var = nl_quest_var as nl_mcm
@@ -410,6 +417,10 @@ int function RegisterModule(string page_name, int z = 0, string quest_editorid =
 endfunction
 
 int function UnregisterModule()
+{
+	Unregister the module/page from the MCM.
+	@return The error code
+}
 	int error_code = _MCM._UnregisterModule(_page_name)
 	
 	GoToState("_inactive")
@@ -435,15 +446,23 @@ endproperty
 
 ; ERROR CODES
 int property OK = 1 autoreadonly
+{ Return code for general success }
 int property ERROR = 0 autoreadonly
+{ Return code for general errors }
 
 int property ERROR_MODULE_FULL = -1 autoreadonly
+{ Return code for max module/page limit being reached }
 int property ERROR_MODULE_TAKEN = -2 autoreadonly
+{ Return code for module/page name being taken }
 int property ERROR_MODULE_INIT = -3 autoreadonly
+{ Return code for the MCM not being initialized }
 int property ERROR_MODULE_NONE = -4 autoreadonly
+{ Return code for the MCM not containing the given module/page name }
 
 int property ERROR_MCM_NONEQUEST = -10 autoreadonly
+{ Return code for the MCM quest editorid not being found }
 int property ERROR_MCM_NONE = -20 autoreadonly
+{ Return code for the MCM quest not having a nl_mcm script attached }
 
 ; FONTS
 int property FONT_TYPE_DEFAULT = 0x00 autoreadonly
