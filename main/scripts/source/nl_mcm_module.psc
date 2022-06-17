@@ -290,6 +290,10 @@ auto state _inactive
 	endfunction
 endstate
 
+function _ResetModuleState()
+	Guard()
+endfunction
+
 nl_mcm_module function GetModule(string page_name)
 	Guard()
 endfunction
