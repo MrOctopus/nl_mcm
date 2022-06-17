@@ -2,7 +2,7 @@ Scriptname nl_mcm extends SKI_ConfigBase
 {
 	This documents the important functions in the backbone nl_mcm script.
 	@author NeverLost
-	@version 1.0.8
+	@version 1.0.9
 }
 
 int function GetVersion()
@@ -393,6 +393,25 @@ endEvent
 ; CRITICAL \ FUNCTIONS \
 ;--------------------------------------------------------
 
+nl_mcm_module _GetModule(string page_name)
+	while _mutex_modules
+		Utility.WaitMenuMode(SPINLOCK_TIMER)
+	endwhile
+
+	if !_initialized
+		DEBUG_MSG("The MCM is not initialized.", DEBUG_FLAG_T + DEBUG_FLAG_N)
+		return None
+	endif
+
+	int i = Pages.Find(page_name)
+
+	if i == -1
+		return None
+	endif
+
+	return _modules[i]
+endfunction
+
 ; This is ugly and long, but additional splitting will slow it down
 int function _RegisterModule(nl_mcm_module module, string page_name, int z)		
 {
@@ -522,7 +541,7 @@ int function _UnregisterModule(string page_name)
 		DEBUG_MSG("The MCM is not initialized.", DEBUG_FLAG_T + DEBUG_FLAG_N)
 		return ERROR_MODULE_INIT
 	endif
-	
+
 	int i = Pages.Find(page_name)
 	
 	if i == -1
@@ -581,6 +600,48 @@ int function _UnregisterModule(string page_name)
 	_key_store = nl_util.DelGroup(_key_store, page_name)
 	_mutex_store = False
 	
+	return OK
+endfunction
+
+int function _UnregisterAllModules()
+	while _mutex_modules || _mutex_store
+		Utility.WaitMenuMode(SPINLOCK_TIMER)
+	endwhile
+
+	if !_initialized
+		DEBUG_MSG("The MCM is not initialized.", DEBUG_FLAG_T + DEBUG_FLAG_N)
+		return ERROR_MODULE_INIT
+	endif
+
+	_mutex_modules = true
+	_mutex_store = true
+
+	int num_modules = Pages.length - 1
+
+	while num_modules >= 0
+		_modules[num_modules]._ResetModuleState()
+		_modules[num_modules] = None
+		num_modules -= 1
+	endwhile
+
+	while _manager && _manager.UnregisterMod(self) == -2
+		Utility.WaitMenuMode(SPINLOCK_TIMER)
+	endwhile
+
+	_initialized = False
+	_id = -1
+
+	Pages = new string[128]
+	_pages_z = new int[128]
+
+	_advanced_modules = 0
+	_common_store_owner = ""
+	_landing_page = ""
+	_key_store = ""
+
+	_mutex_modules = false
+	_mutex_store = false
+
 	return OK
 endfunction
 

@@ -1,7 +1,7 @@
 Scriptname nl_mcm_module extends Quest
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.0.8
+	@version 1.0.9
 }
 
 ; ------\-------\
@@ -273,6 +273,10 @@ auto state _inactive
 ; MODULE \ API \
 ;--------------------------------------------------------
 
+	nl_mcm_module function GetModule(string page_name)
+		Guard()
+	endfunction
+
 	int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")				
 		Guard()
 	endfunction
@@ -280,13 +284,25 @@ auto state _inactive
 	int function UnregisterModule()
 		Guard()
 	endfunction
+
+	int function UnregisterAllModules()
+		Guard()
+	endfunction
 endstate
+
+nl_mcm_module function GetModule(string page_name)
+	Guard()
+endfunction
 
 int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
 	Guard()
 endfunction
 
 int function UnregisterModule()
+	Guard()
+endfunction
+
+int function UnregisterAllModules()
 	Guard()
 endfunction
 

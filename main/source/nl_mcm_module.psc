@@ -4,7 +4,7 @@ Scriptname nl_mcm_module extends Quest
 	For the original MCM Api, see [link](https://github.com/schlangster/skyui/wiki/MCM-API-Reference). \
 	Only STATE api functions are supported as part of the new api.
 	@author NeverLost
-	@version 1.0.8
+	@version 1.0.9
 }
 
 ; ------\-------\
@@ -356,6 +356,11 @@ auto state _inactive
 ; MODULE \ API \
 ;--------------------------------------------------------
 
+	nl_mcm_module function GetModule(string page_name)
+		DEBUG_MSG("GetModule has been called in an invalid state.")
+		return None
+	endfunction
+
 	int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
 	{
 		Register the module/page to a MCM.
@@ -408,9 +413,31 @@ auto state _inactive
 	endfunction
 		
 	int function UnregisterModule()
+		DEBUG_MSG("UnregisterModule has been called in an invalid state.")
+		return ERROR
+	endfunction
+
+	int function UnregisterAllModules()
+		DEBUG_MSG("UnregisterAllModules has been called in an invalid state.")
 		return ERROR
 	endfunction
 endstate
+
+function _ResetModuleState()
+	GoToState("_inactive")
+	_MCM = None
+	_page_name = ""
+	_font = FONT_TYPE_DEFAULT
+	_z = 0
+endfunction
+
+nl_mcm_module function GetModule(string page_name)
+{
+	Get a module/page from the attached MCM.
+	@return The nl_mcm_module script. Remember to cast this value to your own extending script type
+}
+	_MCM._GetModule(page_name)
+endfunction
 
 int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
 	return ERROR
@@ -418,18 +445,21 @@ endfunction
 
 int function UnregisterModule()
 {
-	Unregister the module/page from the current attached MCM.
+	Unregister the module/page from the attached MCM.
 	@return The error code
 }
 	int error_code = _MCM._UnregisterModule(_page_name)
-	
-	GoToState("_inactive")
-	_MCM = None
-	_page_name = ""
-	_font = FONT_TYPE_DEFAULT
-	_z = 0
+	_ResetModuleState()
 
 	return error_code
+endfunction
+
+int function UnregisterAllModules()
+{
+	Unregister all modules/pages from the attached MCM.
+	@return The error code
+}
+	return _MCM._UnregisterAllModules()
 endfunction
 
 ;--------\-----\
