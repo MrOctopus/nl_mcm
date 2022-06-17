@@ -91,7 +91,7 @@ endEvent
 ; CRITICAL \ FUNCTIONS \
 ;--------------------------------------------------------
 
-nl_mcm_module _GetModule(string page_name)
+nl_mcm_module function _GetModule(string page_name)
 	Guard()
 endfunction
 
