@@ -1,7 +1,7 @@
 Scriptname nl_mcm_module extends Quest
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.0.9
+	@version 1.1.0
 }
 
 ; ------\-------\
@@ -38,10 +38,6 @@ endevent
 
 auto state _inactive
 	event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
-		Guard()
-	endevent
-
-	event _OnGameReload(string eventName, string strArg, float numArg, Form sender)
 		Guard()
 	endevent
 
@@ -273,6 +269,10 @@ auto state _inactive
 ; MODULE \ API \
 ;--------------------------------------------------------
 
+	int function RenameModule(string page_name)
+		Guard()
+	endfunction
+
 	nl_mcm_module function GetModule(string page_name)
 		Guard()
 	endfunction
@@ -291,6 +291,10 @@ auto state _inactive
 endstate
 
 function _ResetModuleState()
+	Guard()
+endfunction
+
+int function RenameModule(string page_name)
 	Guard()
 endfunction
 
@@ -375,6 +379,12 @@ nl_mcm property UNSAFE_RAW_MCM hidden
     nl_mcm function Get()
 		Guard()
     endfunction
+endproperty
+
+bool property IsModuleRegistered hidden
+	bool function Get()
+		Guard()
+	endfunction
 endproperty
 
 bool property PlayerUpdatedOptions hidden

@@ -2,7 +2,7 @@ Scriptname nl_mcm extends SKI_ConfigBase
 {
 	This documents the important functions in the backbone nl_mcm script.
 	@author NeverLost
-	@version 1.0.9
+	@version 1.1.0
 }
 
 int function GetVersion()
@@ -102,6 +102,7 @@ int property QuickHotkey hidden
 				RegisterForMenu(JOURNAL_MENU)
 			endif
 
+			_journal_open = Ui.IsMenuOpen("Journal Menu")
 			RegisterForKey(keycode)
 		endif
 
@@ -393,6 +394,59 @@ endEvent
 ; CRITICAL \ FUNCTIONS \
 ;--------------------------------------------------------
 
+int function _RenameModule(string old_page_name, string page_name)
+	while _mutex_modules
+		Utility.WaitMenuMode(SPINLOCK_TIMER)
+	endwhile
+
+	if !_initialized
+		DEBUG_MSG("The MCM is not initialized.", DEBUG_FLAG_T + DEBUG_FLAG_N)
+		return ERROR_MODULE_INIT
+	endif
+
+	int i = Pages.Find(old_page_name)
+
+	if i == -1
+		return ERROR
+	endif
+
+	if old_page_name == page_name
+		DEBUG_MSG("The MCM already has a page named [" + page_name +  "].", DEBUG_FLAG_T + DEBUG_FLAG_N)
+		return ERROR_MODULE_TAKEN
+	endif
+
+	_mutex_modules = true
+	_mutex_store= true
+
+	if nl_util.HasGroup(_key_store, old_page_name)
+		string[] group_values = nl_util.GetGroupVals(_key_store, old_page_name)
+		int group_len = group_values.length - 1
+		
+		_key_store = nl_util.DelGroup(_key_store, old_page_name)
+
+		while group_len >= 0
+			_key_store = nl_util.InsertGroupVal(_key_store, page_name, group_values[group_len])
+			group_len -= 1
+		endwhile
+	endif
+
+	_mutex_store = false
+	
+	if _common_store_owner == old_page_name
+		_common_store_owner = page_name
+	endif
+
+	if _landing_page == old_page_name
+		_landing_page = page_name
+	endif
+
+	Pages[i] = page_name
+	
+	_mutex_modules = false
+
+	return OK
+endfunction
+
 nl_mcm_module function _GetModule(string page_name)
 	while _mutex_modules
 		Utility.WaitMenuMode(SPINLOCK_TIMER)
@@ -432,12 +486,12 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 	if !_initialized			
 		; Maximum _modules exceeded
 		if _buffered == 128
-			DEBUG_MSG("The MCM has already reached the page limit.")
+			DEBUG_MSG("The MCM has already reached the page limit.", DEBUG_FLAG_T + DEBUG_FLAG_N)
 			return ERROR_MODULE_FULL
 			
 		; Page name must be unique
 		elseif Pages.Find(page_name) != -1
-			DEBUG_MSG("The MCM already has a page named [" + page_name +  "].")
+			DEBUG_MSG("The MCM already has a page named [" + page_name +  "].", DEBUG_FLAG_T + DEBUG_FLAG_N)
 			return ERROR_MODULE_TAKEN
 			
 		endif
@@ -476,12 +530,12 @@ int function _RegisterModule(nl_mcm_module module, string page_name, int z)
 	else			
 		; Maximum _modules exceeded
 		if Pages.Length == 128
-			DEBUG_MSG("The MCM has already reached the page limit.")
+			DEBUG_MSG("The MCM has already reached the page limit.", DEBUG_FLAG_T + DEBUG_FLAG_N)
 			return ERROR_MODULE_FULL
 			
 		; Page name must be unique
 		elseif Pages.Find(page_name) != -1
-			DEBUG_MSG("The MCM already has a page named [" + page_name +  "].")
+			DEBUG_MSG("The MCM already has a page named [" + page_name +  "].", DEBUG_FLAG_T + DEBUG_FLAG_N)
 			return ERROR_MODULE_TAKEN
 			
 		endif
@@ -990,7 +1044,10 @@ event OnKeyDown(int keycode)
 	endif
 
 	if _journal_open
-		CloseMCM(close_journal = true)
+		; Only close in the READY state
+		if Ui.GetInt(JOURNAL_MENU, MENU_ROOT + "._state") == 0
+			CloseMCM(close_journal = true)
+		endif
 	else
 		_quick_open = true
 		Input.TapKey(Input.GetMappedKey("Journal"))

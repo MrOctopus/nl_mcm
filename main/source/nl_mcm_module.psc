@@ -1,10 +1,10 @@
 Scriptname nl_mcm_module extends Quest
 {
 	This documents the new API functions in nl_mcm. \
-	For the original MCM Api, see [link](https://github.com/schlangster/skyui/wiki/MCM-API-Reference). \
+	For the original mcm Api, see [link](https://github.com/schlangster/skyui/wiki/MCM-API-Reference). \
 	Only STATE api functions are supported as part of the new api.
 	@author NeverLost
-	@version 1.0.9
+	@version 1.1.0
 }
 
 ; ------\-------\
@@ -56,6 +56,8 @@ string _quest_editorid
 int _current_version
 int _font
 int _z
+
+bool _recursive_failsafe
 
 event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
 endevent
@@ -117,9 +119,6 @@ auto state _inactive
 	event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)		
 		RegisterModule(_page_name, _z, _quest_editorid)
 	endevent
-
-	event _OnGameReload(string eventName, string strArg, float numArg, Form sender)
-	endevent 
 
 	event _OnPageDraw(int font)
 		DEBUG_MSG("_OnPageDraw has been called in an invalid state.")
@@ -356,6 +355,11 @@ auto state _inactive
 ; MODULE \ API \
 ;--------------------------------------------------------
 
+	int function RenameModule(string page_name)
+		DEBUG_MSG("RenameModule has been called in an invalid state.")
+		return ERROR
+	endfunction
+
 	nl_mcm_module function GetModule(string page_name)
 		DEBUG_MSG("GetModule has been called in an invalid state.")
 		return None
@@ -363,12 +367,17 @@ auto state _inactive
 
 	int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
 	{
-		Register the module/page to a MCM.
-		@param page_name - The page name to display in the MCM
-		@param z - The z index of the module/page in the MCM page list. Lower values will appear first
+		Register the module/page to a mcm.
+		@param page_name - The page name to display in the mcm
+		@param z - The z index of the module/page in the mcm page list. Lower values will appear first
 		@param quest_editorid - The editor id of the quest containing the nl_mcm script. Defaults to the same quest as the module is attached to
 		@return The error code
 	}
+		if _recursive_failsafe
+			DEBUG_MSG("Recursive call to RegisterModule detected, aborting call.", DEBUG_FLAG_T + DEBUG_FLAG_N)
+			return ERROR
+		endif
+
 		; Internal
 		quest nl_quest_var = self as quest
 		nl_mcm nl_script_var = nl_quest_var as nl_mcm
@@ -406,7 +415,9 @@ auto state _inactive
 			_current_version = GetVersion()
 			_MCM = nl_script_var
 			GoToState("")
+			_recursive_failsafe = true
 			OnPageInit()
+			_recursive_failsafe = false
 		endif
 		
 		return error_code
@@ -431,9 +442,27 @@ function _ResetModuleState()
 	_z = 0
 endfunction
 
+int function RenameModule(string page_name)
+{
+	Rename the module's page name in the attached mcm.
+	@return The error code
+}
+	if _page_name == page_name
+		return OK
+	endif
+
+	int error_code = _MCM._RenameModule(_page_name, page_name)
+
+	if error_code == OK
+		_page_name = page_name
+	endif
+
+	return error_code
+endfunction
+
 nl_mcm_module function GetModule(string page_name)
 {
-	Get a module/page from the attached MCM.
+	Get another module/page from the attached mcm.
 	@return The nl_mcm_module script. Remember to cast this value to your own extending script type
 }
 	_MCM._GetModule(page_name)
@@ -445,7 +474,7 @@ endfunction
 
 int function UnregisterModule()
 {
-	Unregister the module/page from the attached MCM.
+	Unregister the module/page from the attached mcm.
 	@return The error code
 }
 	int error_code = _MCM._UnregisterModule(_page_name)
@@ -456,7 +485,7 @@ endfunction
 
 int function UnregisterAllModules()
 {
-	Unregister all modules/pages from the attached MCM.
+	Unregister all modules/pages from the attached mcm.
 	@return The error code
 }
 	return _MCM._UnregisterAllModules()
@@ -485,14 +514,14 @@ int property ERROR_MODULE_FULL = -1 autoreadonly
 int property ERROR_MODULE_TAKEN = -2 autoreadonly
 { Error return code for module/page name being taken }
 int property ERROR_MODULE_INIT = -3 autoreadonly
-{ Error return code for the MCM not being initialized }
+{ Error return code for the mcm not being initialized }
 int property ERROR_MODULE_NONE = -4 autoreadonly
-{ Error return code for the MCM not containing the given module/page name }
+{ Error return code for the mcm not containing the given module/page name }
 
 int property ERROR_MCM_NONEQUEST = -10 autoreadonly
-{ Error return code for the MCM quest editorid not being found }
+{ Error return code for the mcm quest editorid not being found }
 int property ERROR_MCM_NONE = -20 autoreadonly
-{ Error return code for the MCM quest not having a nl_mcm script attached }
+{ Error return code for the mcm quest not having a nl_mcm script attached }
 
 ; FONTS
 int property FONT_TYPE_DEFAULT = 0x00 autoreadonly
@@ -605,6 +634,16 @@ nl_mcm property UNSAFE_RAW_MCM hidden
 	endfunction
 endproperty
 
+bool property IsModuleRegistered hidden
+{
+	Check if the module is registered to a mcm.
+	@get Get the module's state
+}
+	bool function Get()
+		return GetState() != "_inactive"
+	endfunction
+endproperty
+
 bool property PlayerUpdatedOptions hidden
 {
 	Check if the user has changed any of the mcm options.
@@ -633,9 +672,9 @@ endproperty
 
 int function GetMCMID()
 {
-	Getter for the MCM's mod id. \
+	Getter for the mcm's mod id. \
 	Note: Don't cache this, as it might change on gamereloads.
-	@return MCM id
+	@return Mcm id
 }
 	return _MCM.GetMCMID()
 endfunction
@@ -661,7 +700,7 @@ endfunction
 
 function SetModName(string name)
 	{
-		Set the mod page name. Can only be used before the MCM has been initialized.
+		Set the mod page name. Can only be used before the mcm has been initialized.
 		@param name - The mod's name
 	}
 		_MCM.SetModName(name)
@@ -669,7 +708,7 @@ endfunction
 
 function SetLandingPage(string page_name)
 {
-	Set the MCM landing page.
+	Set the mcm landing page.
 	@param page_name - The landing page's name
 }
 	_MCM.SetLandingPage(page_name)
@@ -756,15 +795,15 @@ endfunction
 
 function OpenMCM(string landing_page_name = "")
 {
-	Open the current MCM.
-	@param landing_page_name - If set to a valid page name, it will open the MCM at this page
+	Open the attached mcm.
+	@param landing_page_name - If set to a valid page name, it will open the mcm at this page
 }
 	_MCM.OpenMCM(landing_page_name)
 endfunction
 
 function CloseMCM(bool close_journal = false)
 {
-	Close the current MCM.
+	Close the attached mcm.
 	@param close_journal - If set to true, it will close the quest journal too
 }
 	_MCM.CloseMCM(close_journal)

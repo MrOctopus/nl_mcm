@@ -4,6 +4,14 @@ Scriptname nl_curios_mcm_advanced extends nl_mcm_module
 	@version 1.0
 }
 
+;-----------\
+; MOD EVENTS \
+;--------------------------------------------------------
+
+event OnGameReload()
+	DEBUG_MSG("The module is registered: " + IsModuleRegistered)
+endevent
+
 ;---------------\
 ; PRESET HANDLER \
 ;--------------------------------------------------------
@@ -64,6 +72,7 @@ event OnPageDraw()
 	
 	AddEmptyOption()
 	AddInputOptionST("misc_input_landingpage", "Set the MCM landing page", "")
+	AddInputOptionST("misc_input_renamepage", "Rename this page", "")
 	AddInputOptionST("misc_input_setsplash", "Set splash settings", "")
 	AddInputOptionST("misc_input_goto", "Go to page", "")
 endevent
@@ -130,6 +139,22 @@ state misc_input_landingpage
 	
 	event OnInputAcceptST(string state_id, string str)
 		SetLandingPage(str)
+	endevent
+endstate
+
+state misc_input_renamepage
+	event OnHighlightST(string state_id)
+		SetInfoText("Rename this page")
+	endevent
+
+	event OnInputOpenST(string state_id)
+		SetInputDialogStartText("Page name")
+	endevent
+	
+	event OnInputAcceptST(string state_id, string str)
+		RenameModule(str)
+		ForcePageListReset()
+		GoToPage(str)
 	endevent
 endstate
 

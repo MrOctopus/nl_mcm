@@ -1,7 +1,7 @@
 Scriptname nl_mcm extends SKI_ConfigBase
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.0.9
+	@version 1.1.0
 }
 
 int function GetVersion()
@@ -90,6 +90,10 @@ endEvent
 ;---------\-----------\
 ; CRITICAL \ FUNCTIONS \
 ;--------------------------------------------------------
+
+int function _RenameModule(nl_mcm_module module, string page_name)
+	Guard()
+endfunction
 
 nl_mcm_module function _GetModule(string page_name)
 	Guard()
