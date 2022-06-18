@@ -445,6 +445,7 @@ endfunction
 int function RenameModule(string page_name)
 {
 	Rename the module's page name in the attached mcm.
+	@param page_name - The new page name
 	@return The error code
 }
 	if _page_name == page_name
