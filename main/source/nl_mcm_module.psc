@@ -930,11 +930,11 @@ int property OPTION_FLAG_DISABLED = 0x01 autoReadonly
 { 
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
 }
-int property OPTION_FLAG_HIDDEN	 = 0x02 autoReadonly
+int property OPTION_FLAG_HIDDEN = 0x02 autoReadonly
 { 
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
 }
-int property OPTION_FLAG_WITH_UNMAP	= 0x04 autoReadonly
+int property OPTION_FLAG_WITH_UNMAP = 0x04 autoReadonly
 { 
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
 }
