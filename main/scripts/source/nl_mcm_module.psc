@@ -1,7 +1,7 @@
 Scriptname nl_mcm_module extends Quest
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.1.0
+	@version 1.1.1
 }
 
 ; ------\-------\
@@ -19,6 +19,10 @@ endfunction
 ;-------\----------\
 ; MODULE \ INTERNAL \ - ALSO KNOWN AS, IGNORE THIS SECTION
 ;--------------------------------------------------------
+
+event OnInit()
+	Guard()
+endevent
 
 event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
 	Guard()
@@ -273,7 +277,7 @@ auto state _inactive
 		Guard()
 	endfunction
 
-	nl_mcm_module function GetModule(string page_name)
+	nl_mcm_module function GetOtherModule(string page_name)
 		Guard()
 	endfunction
 
@@ -298,7 +302,7 @@ int function RenameModule(string page_name)
 	Guard()
 endfunction
 
-nl_mcm_module function GetModule(string page_name)
+nl_mcm_module function GetOtherModule(string page_name)
 	Guard()
 endfunction
 
@@ -399,6 +403,26 @@ int property QuickHotkey hidden
 	endfunction
 
 	function Set(int keycode)
+		Guard()
+	endfunction
+endproperty
+
+string property PageName 
+	string function Get()
+		Guard()
+	endfunction
+
+	function Set(string page_name)
+		Guard()
+	endfunction
+endproperty
+
+int property PageOrder 
+	int function Get()
+		Guard()
+	endfunction
+
+	function Set(int z)
 		Guard()
 	endfunction
 endproperty
@@ -653,11 +677,7 @@ int function GetVersion()
 	Guard()
 endfunction
 
-event OnVersionUpdateBase(int a_version)
-	Guard()
-endevent
-
-event OnVersionUpdate(int a_version)
+event OnVersionUpdate(int new_version)
 	Guard()
 endevent
 
@@ -734,7 +754,7 @@ event OnInputAcceptST(string state_id, string str)
 	Guard()
 endevent
 
-event OnKeyMapChangeST(string state_id, int keycode)
+event OnKeyMapChangeST(string state_id, int keyCode)
 	Guard()
 endevent
 

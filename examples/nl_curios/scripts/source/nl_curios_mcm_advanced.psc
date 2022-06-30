@@ -153,15 +153,6 @@ state misc_input_renamepage
 	
 	event OnInputAcceptST(string state_id, string str)
 		RenameModule(str)
-		; I call the following functions afterwards because
-		; the module/page name has changed whilst the user 
-		; is still inside the MCM menu
-		
-		; This means that we A) have to redraw the pagelist
-		ForcePageListReset()
-		; And B) we have to redraw the page title 
-		; (Which can be accomplished by going to the same page)
-		GoToPage(str)
 	endevent
 endstate
 

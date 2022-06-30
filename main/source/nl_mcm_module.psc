@@ -4,7 +4,7 @@ Scriptname nl_mcm_module extends Quest
 	For the original mcm Api, see [link](https://github.com/schlangster/skyui/wiki/MCM-API-Reference). \
 	Only STATE api functions are supported as part of the new api.
 	@author NeverLost
-	@version 1.1.0
+	@version 1.1.1
 }
 
 ; ------\-------\
@@ -59,6 +59,32 @@ int _z
 
 bool _recursive_failsafe
 
+event OnInit()
+	if _page_name == ""
+		return
+	endif
+
+	quest nl_quest_var = self as quest
+	nl_mcm nl_script_var = nl_quest_var as nl_mcm
+
+	if nl_script_var == None			
+		DEBUG_MSG("Quest with EditorID [" + nl_util.GetFormEditorID(self) + "] has no nl_mcm attached.", DEBUG_FLAG_T + DEBUG_FLAG_N)
+		RegisterForModEvent("SKICP_configManagerReady", "_OnConfigManagerReady")
+		return
+	endif
+
+	int error_code = nl_script_var._RegisterModule(self, _page_name, _z)
+
+	if error_code == OK
+		_current_version = GetVersion()
+		_MCM = nl_script_var
+		GoToState("")
+		_recursive_failsafe = true
+		OnPageInit()
+		_recursive_failsafe = false
+	endif
+endevent
+
 event _OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
 endevent
 
@@ -66,7 +92,6 @@ event _OnGameReload(string eventName, string strArg, float numArg, Form sender)
 	int version = GetVersion()
 	
 	if _current_version < version
-		OnVersionUpdateBase(version)
 		OnVersionUpdate(version)
 		_current_version = version
 	endIf
@@ -360,8 +385,8 @@ auto state _inactive
 		return ERROR
 	endfunction
 
-	nl_mcm_module function GetModule(string page_name)
-		DEBUG_MSG("GetModule has been called in an invalid state.")
+	nl_mcm_module function GetOtherModule(string page_name)
+		DEBUG_MSG("GetOtherModule has been called in an invalid state.")
 		return None
 	endfunction
 
@@ -461,12 +486,12 @@ int function RenameModule(string page_name)
 	return error_code
 endfunction
 
-nl_mcm_module function GetModule(string page_name)
+nl_mcm_module function GetOtherModule(string page_name)
 {
 	Get another module/page from the attached mcm.
 	@return The nl_mcm_module script. Remember to cast this value to your own extending script type
 }
-	_MCM._GetModule(page_name)
+	_MCM._GetOtherModule(page_name)
 endfunction
 
 int function RegisterModule(string page_name, int z = 0, string quest_editorid = "")
@@ -613,15 +638,15 @@ string function FONT_CUSTOM(string text = "", string color)
 endfunction
 
 int function GetCurrentFont()
-	{
-		Getter for the current font.
-		@return Current font
-	}
-		if _font > FONT_TYPE_PAPER
-			return FONT_TYPE_DEFAULT
-		endif
-		return _font
-	endfunction
+{
+	Getter for the current font.
+	@return Current font
+}
+	if _font > FONT_TYPE_PAPER
+		return FONT_TYPE_DEFAULT
+	endif
+	return _font
+endfunction
 
 ; PROPERTIES
 nl_mcm property UNSAFE_RAW_MCM hidden
@@ -668,6 +693,36 @@ int property QuickHotkey hidden
 
 	function Set(int keycode)
 		_MCM.QuickHotkey = keycode
+	endfunction
+endproperty
+
+string property PageName 
+{
+	Get the current page name assigned to the module.
+	@get Get the current page name assigned to the module
+	@set !!!!DO NOT SET THIS PROPERTY OUTSIDE OF THE CREATION KIT!!!!
+}
+	string function Get()
+		return _page_name
+	endfunction
+
+	function Set(string page_name)
+		_page_name = page_name
+	endfunction
+endproperty
+
+int property PageOrder
+{
+	Get the current display order of the module's page name.
+	@get Get the current display order of the module's page name
+	@set !!!!DO NOT SET THIS PROPERTY OUTSIDE OF THE CREATION KIT!!!!
+}
+	int function Get()
+		return _z
+	endfunction
+
+	function Set(int z)
+		_z = z
 	endfunction
 endproperty
 
@@ -868,153 +923,358 @@ endfunction
 
 ; PAGE FLAGS
 int property OPTION_FLAG_NONE = 0x00 autoReadonly
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+}
 int property OPTION_FLAG_DISABLED = 0x01 autoReadonly
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+}
 int property OPTION_FLAG_HIDDEN	 = 0x02 autoReadonly
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+}
 int property OPTION_FLAG_WITH_UNMAP	= 0x04 autoReadonly
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+}
 
 int property LEFT_TO_RIGHT = 1 autoReadonly
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+}
 int property TOP_TO_BOTTOM = 2 autoReadonly
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+}
 
 ; VERSION
 int property CurrentVersion hidden
+{ 
+	NL_MCM's page based version of CurrentVersion. \
+	See the original [SkyUI Advanced Features](https://github.com/schlangster/skyui/wiki/MCM-Advanced-Features).
+	@get Refer to the SkyUI API
+}
     int function Get()
         return _current_version
     endFunction
 endproperty
 
 function SetCursorFillMode(int a_fillMode)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_fillMode - Refer to the SkyUI API
+}
 	_MCM.SetCursorFillMode(a_fillMode)
 endfunction
 
 int function AddHeaderOption(string a_text, int a_flags = 0)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_text - Refer to the SkyUI API
+	@param a_flags - Refer to the SkyUI API
+	@return Refer to the SkyUI API
+}
 	return _MCM.AddHeaderOption(a_text, a_flags)
 endfunction
 
 int function AddEmptyOption()
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@return Refer to the SkyUI API
+}
 	return _MCM.AddEmptyOption()
 endfunction
 
 function AddTextOptionST(string a_stateName, string a_text, string a_value, int a_flags = 0)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_stateName - Refer to the SkyUI API
+	@param a_text - Refer to the SkyUI API
+	@param a_value - Refer to the SkyUI API
+	@param a_flags - Refer to the SkyUI API
+}
 	_MCM.AddTextOptionST(a_stateName, a_text, a_value, a_flags)
 endfunction
 
 function AddToggleOptionST(string a_stateName, string a_text, bool a_checked, int a_flags = 0)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_stateName - Refer to the SkyUI API
+	@param a_text - Refer to the SkyUI API
+	@param a_checked - Refer to the SkyUI API
+	@param a_flags - Refer to the SkyUI API
+}
 	_MCM.AddToggleOptionST(a_stateName, a_text, a_checked, a_flags)
 endfunction
 
 function AddSliderOptionST(string a_stateName, string a_text, float a_value, string a_formatString = "{0}", int a_flags = 0)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_stateName - Refer to the SkyUI API
+	@param a_text - Refer to the SkyUI API
+	@param a_value - Refer to the SkyUI API
+	@param a_formatString - Refer to the SkyUI API
+	@param a_flags - Refer to the SkyUI API
+}
 	_MCM.AddSliderOptionST(a_stateName, a_text, a_value, a_formatString, a_flags)
 endfunction
 
 function AddMenuOptionST(string a_stateName, string a_text, string a_value, int a_flags = 0)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_stateName - Refer to the SkyUI API
+	@param a_text - Refer to the SkyUI API
+	@param a_value - Refer to the SkyUI API
+	@param a_flags - Refer to the SkyUI API
+}
 	_MCM.AddMenuOptionST(a_stateName, a_text, a_value, a_flags)
 endfunction
 
 function AddColorOptionST(string a_stateName, string a_text, int a_color, int a_flags = 0)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_stateName - Refer to the SkyUI API
+	@param a_text - Refer to the SkyUI API
+	@param a_color - Refer to the SkyUI API
+	@param a_flags - Refer to the SkyUI API
+}
 	_MCM.AddColorOptionST(a_stateName, a_text, a_color, a_flags)
 endfunction
 
-function AddKeyMapOptionST(string a_stateName, string a_text, int a_keyCode, int a_flags = 0)	
+function AddKeyMapOptionST(string a_stateName, string a_text, int a_keyCode, int a_flags = 0)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_stateName - Refer to the SkyUI API
+	@param a_text - Refer to the SkyUI API
+	@param a_keyCode - Refer to the SkyUI API
+	@param a_flags - Refer to the SkyUI API
+}
 	_MCM.AddKeyMapOptionST(a_stateName, a_text, a_keyCode, a_flags)
 endfunction
 
 function AddInputOptionST(string a_stateName, string a_text, string a_value, int a_flags = 0)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_stateName - Refer to the SkyUI API
+	@param a_text - Refer to the SkyUI API
+	@param a_value - Refer to the SkyUI API
+	@param a_flags - Refer to the SkyUI API
+}
 	_MCM.AddInputOptionST(a_stateName, a_text, a_value, a_flags)
 endfunction
 
 function SetOptionFlagsST(int a_flags, bool a_noUpdate = false, string a_stateName = "")
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_flags - Refer to the SkyUI API
+	@param a_noUpdate - Refer to the SkyUI API
+	@param a_stateName - Refer to the SkyUI API
+}
 	_MCM.SetOptionFlagsST(a_flags, a_noUpdate, a_stateName)
 endfunction
 
 function SetTextOptionValueST(string a_value, bool a_noUpdate = false, string a_stateName = "")
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_value - Refer to the SkyUI API
+	@param a_noUpdate - Refer to the SkyUI API
+	@param a_stateName - Refer to the SkyUI API
+}
 	_MCM.SetTextOptionValueST(a_value, a_noUpdate, a_stateName)
 endfunction
 
 function SetToggleOptionValueST(bool a_checked, bool a_noUpdate = false, string a_stateName = "")
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_checked - Refer to the SkyUI API
+	@param a_noUpdate - Refer to the SkyUI API
+	@param a_stateName - Refer to the SkyUI API
+}
 	_MCM.SetToggleOptionValueST(a_checked, a_noUpdate, a_stateName)
 endfunction
 
 function SetSliderOptionValueST(float a_value, string a_formatString = "{0}", bool a_noUpdate = false, string a_stateName = "")	
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_value - Refer to the SkyUI API
+	@param a_formatString - Refer to the SkyUI API
+	@param a_noUpdate - Refer to the SkyUI API
+	@param a_stateName - Refer to the SkyUI API
+}
 	_MCM.SetSliderOptionValueST(a_value, a_formatString, a_noUpdate, a_stateName)
 endfunction
 
 function SetMenuOptionValueST(string a_value, bool a_noUpdate = false, string a_stateName = "")
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_value - Refer to the SkyUI API
+	@param a_noUpdate - Refer to the SkyUI API
+	@param a_stateName - Refer to the SkyUI API
+}
 	_MCM.SetMenuOptionValueST(a_value, a_noUpdate, a_stateName)
 endfunction
 
 function SetColorOptionValueST(int a_color, bool a_noUpdate = false, string a_stateName = "")
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_color - Refer to the SkyUI API
+	@param a_noUpdate - Refer to the SkyUI API
+	@param a_stateName - Refer to the SkyUI API
+}
 	_MCM.SetColorOptionValueST(a_color, a_noUpdate, a_stateName)
 endfunction
 
 function SetKeyMapOptionValueST(int a_keyCode, bool a_noUpdate = false, string a_stateName = "")
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_keyCode - Refer to the SkyUI API
+	@param a_noUpdate - Refer to the SkyUI API
+	@param a_stateName - Refer to the SkyUI API
+}
 	_MCM.SetKeyMapOptionValueST(a_keyCode, a_noUpdate, a_stateName)
 endfunction
 
 function SetInputOptionValueST(string a_value, bool a_noUpdate = false, string a_stateName = "")
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_value - Refer to the SkyUI API
+	@param a_noUpdate - Refer to the SkyUI API
+	@param a_stateName - Refer to the SkyUI API
+}
 	_MCM.SetInputOptionValueST(a_value, a_noUpdate, a_stateName)
 endfunction
 
 function SetSliderDialogStartValue(float a_value)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_value - Refer to the SkyUI API
+}
 	_MCM.SetSliderDialogStartValue(a_value)
 endfunction
 
 function SetSliderDialogDefaultValue(float a_value)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_value - Refer to the SkyUI API
+}
 	_MCM.SetSliderDialogDefaultValue(a_value)
 endfunction
 
 function SetSliderDialogRange(float a_minValue, float a_maxValue)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_minValue - Refer to the SkyUI API
+	@param a_maxValue - Refer to the SkyUI API
+}
 	_MCM.SetSliderDialogRange(a_minValue, a_maxValue)
 endfunction
 
 function SetSliderDialogInterval(float a_value)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_value - Refer to the SkyUI API
+}
 	_MCM.SetSliderDialogInterval(a_value)
 endfunction
 
 function SetMenuDialogStartIndex(int a_value)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_value - Refer to the SkyUI API
+}
 	_MCM.SetMenuDialogStartIndex(a_value)
 endfunction
 
 function SetMenuDialogDefaultIndex(int a_value)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_value - Refer to the SkyUI API
+}
     _MCM.SetMenuDialogDefaultIndex(a_value)
 endfunction
 
 function SetMenuDialogOptions(string[] a_options)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_options - Refer to the SkyUI API
+}
 	_MCM.SetMenuDialogOptions(a_options)
 endfunction
 
 function SetColorDialogStartColor(int a_color)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_color - Refer to the SkyUI API
+}
 	_MCM.SetColorDialogStartColor(a_color)
 endfunction
 
 function SetColorDialogDefaultColor(int a_color)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_color - Refer to the SkyUI API
+}
 	_MCM.SetColorDialogDefaultColor(a_color)
 endfunction
 
 function SetInputDialogStartText(string a_value)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_value - Refer to the SkyUI API
+}
 	_MCM.SetInputDialogStartText(a_value)
 endfunction
 
 function SetCursorPosition(int a_position)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_position - Refer to the SkyUI API
+}
 	_MCM.SetCursorPosition(a_position)
 endfunction
 
 function SetInfoText(string a_text)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_text - Refer to the SkyUI API
+}
 	_MCM.SetInfoText(a_text)
 endfunction
 
 function ForcePageReset()
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+}
 	_MCM.ForcePageReset()
 endfunction
 
 function LoadCustomContent(string a_source, float a_x = 0.0, float a_y = 0.0)
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_source - Refer to the SkyUI API
+	@param a_x - Refer to the SkyUI API
+	@param a_y - Refer to the SkyUI API
+}
 	_MCM.LoadCustomContent(a_source, a_x, a_y)
 endfunction
 
 function UnloadCustomContent()
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+}
 	_MCM.UnloadCustomContent()
 endfunction
 
 bool function ShowMessage(string a_message, bool a_withCancel = true, string a_acceptLabel = "$Accept", string a_cancelLabel = "$Cancel")
+{ 
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param a_message - Refer to the SkyUI API
+	@param a_withCancel - Refer to the SkyUI API
+	@param a_acceptLabel - Refer to the SkyUI API
+	@param a_cancelLabel - Refer to the SkyUI API
+	@return Refer to the SkyUI API
+}
 	return _MCM.ShowMessage(a_message, a_withCancel, a_acceptLabel, a_cancelLabel)
 endfunction
 
@@ -1025,72 +1285,178 @@ endfunction
 ; VERSIONING
 
 int function GetVersion()
+{ 
+	- OVERRIDE - \
+	NL_MCM's page based version of GetVersion(). \
+	See the original [SkyUI Advanced Features](https://github.com/schlangster/skyui/wiki/MCM-Advanced-Features).
+	@return Refer to the SkyUI API
+}
 	return 1
 endfunction
 
-event OnVersionUpdateBase(int a_version)
-endevent
-
-event OnVersionUpdate(int a_version)
+event OnVersionUpdate(int new_version)
+{ 
+	- OVERRIDE - \
+	NL_MCM's page based version of OnVersionUpdate(). \
+	See the original [SkyUI Advanced Features](https://github.com/schlangster/skyui/wiki/MCM-Advanced-Features).
+	@param new_version - Refer to the SkyUI API
+}
 endevent
 
 ; PRESETS
 
 int function SaveData()
+{
+	- OVERRIDE - \
+	Requires JContainers to function. \
+	Function to save the page's/module's data to a MCM preset. Use jContainers to create a object type of your choice and store the data in it.
+	@return Your jContainer object id
+}
 	return 0
 endfunction
 
 function LoadData(int jObj)
+{
+	- OVERRIDE - \
+	Requires JContainers to function. \
+	Function to load the page's/module's data from a MCM preset. Use jContainers to load the object data you previously stored in SaveData().
+	@param jObj - The jContainer object id returned from loading the preset data
+}
 endfunction
 
 ; PAGE
 
 event OnGameReload()
+{ 
+	- OVERRIDE - \
+	NL_MCM's page based version of OnGameReload. \
+	Does not require you to call parent.OnGameReload() as with SkyUI. \
+	See the original [SkyUI Advanced Features](https://github.com/schlangster/skyui/wiki/MCM-Advanced-Features).
+}
 endevent
 
 event OnConfigClose()
+{ 
+	- OVERRIDE - \
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+}
 endevent
 
 event OnPageInit()
+{ 
+	- OVERRIDE - \
+	NL_MCM's page based version of OnConfigInit. \
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+}
 endevent
 
 event OnPageDraw()
+{ 
+	- OVERRIDE - \
+	NL_MCM's page based version of OnPageReset. \
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+}
 endevent
 
 ; OPTIONS
 
 event OnDefaultST(string state_id)
+{ 
+	- OVERRIDE - \
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+}
 endevent
 
 event OnHighlightST(string state_id)
+{ 
+	- OVERRIDE - \
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+}
 endevent
 
 event OnSelectST(string state_id)
+{ 
+	- OVERRIDE - \
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+}
 endevent
 
 event OnSliderOpenST(string state_id)
+{ 
+	- OVERRIDE - \
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+}
 endevent
 
 event OnMenuOpenST(string state_id)
+{ 
+	- OVERRIDE - \
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+}
 endevent
 
 event OnColorOpenST(string state_id)
+{ 
+	- OVERRIDE - \
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+}
 endevent
 
 event OnSliderAcceptST(string state_id, float f)
+{ 
+	- OVERRIDE - \
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+	@param f - Refer to the SkyUI API
+}
 endevent
 
 event OnMenuAcceptST(string state_id, int i)
+{ 
+	- OVERRIDE - \
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+	@param i - Refer to the SkyUI API
+}
 endevent
 
 event OnColorAcceptST(string state_id, int col)
+{ 
+	- OVERRIDE - \
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+	@param col - Refer to the SkyUI API
+}
 endevent
 
 event OnInputOpenST(string state_id)
+{ 
+	- OVERRIDE - \
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+}
 endevent
 
 event OnInputAcceptST(string state_id, string str)
+{ 
+	- OVERRIDE - \
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+	@param str - Refer to the SkyUI API
+}
 endevent
 
-event OnKeyMapChangeST(string state_id, int keycode)
+event OnKeyMapChangeST(string state_id, int keyCode)
+{ 
+	- OVERRIDE - \
+	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+	@param keycode - Refer to the SkyUI API
+}
 endevent

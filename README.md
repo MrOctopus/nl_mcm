@@ -26,8 +26,10 @@ An object-oriented module based extension of SkyUI MCM scripts.
 	- Set landing pages 
 	- Set splash screens
 	- Force page switches
+	- Rename them at any time
 * Built-in preset saving functionality
 	- Requires JContainers
+	- Support for persistent MCM settings that carry over between save games
 
 ## Releases
 

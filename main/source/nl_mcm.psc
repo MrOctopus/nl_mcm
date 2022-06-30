@@ -2,7 +2,7 @@ Scriptname nl_mcm extends SKI_ConfigBase
 {
 	This documents the important functions in the backbone nl_mcm script.
 	@author NeverLost
-	@version 1.1.0
+	@version 1.1.1
 }
 
 int function GetVersion()
@@ -260,6 +260,11 @@ event OnUpdate()
 	if _initialized
 		return
 	endif
+
+	if ModName == ""
+		DEBUG_MSG("The MCM ModName has not been set. Failed to initialize the MCM.", DEBUG_FLAG_N + DEBUG_FLAG_T)
+		return
+	endif
 	
 	_mutex_modules = True
 
@@ -444,10 +449,26 @@ int function _RenameModule(string old_page_name, string page_name)
 	
 	_mutex_modules = false
 
+	; If we are inside the MCM we need to update and redraw elements
+	if Ui.GetString(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.decorTitle.textHolder.textField.text") == ModName
+		; Reset page list
+		Ui.InvokeStringA(JOURNAL_MENU, MENU_ROOT + ".setPageNames", Pages)
+		; Select the page again if old page matches currently shown
+		if CurrentPage == old_page_name
+			int[] select_type = new int[2]
+			select_type[0] = i
+			select_type[1] = 1
+		
+			Ui.InvokeBool(JOURNAL_MENU, MENU_ROOT + ".unlock", true)
+			Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.subListFader.list.doSetSelectedIndex", select_type)
+			Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.subListFader.list.onItemPress", select_type)
+		endif
+	endif
+
 	return OK
 endfunction
 
-nl_mcm_module function _GetModule(string page_name)
+nl_mcm_module function _GetOtherModule(string page_name)
 	while _mutex_modules
 		Utility.WaitMenuMode(SPINLOCK_TIMER)
 	endwhile
