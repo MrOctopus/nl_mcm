@@ -67,7 +67,7 @@ event OnPageDraw()
 	; Right side
 	SetCursorPosition(1)
 	AddHeaderOption(FONT_PRIMARY("Misc"))
-	AddToggleOptionST("misc_toggle_font", "Toggle font color", GetCurrentFont())
+	AddToggleOptionST("misc_toggle_font", "Toggle font color", CurrentFont)
 	AddKeyMapOptionST("misc_key_mcm", "Set MCM hotkey", QuickHotkey)
 	
 	AddEmptyOption()
@@ -102,7 +102,7 @@ state misc_toggle_font
 	endevent
 
 	event OnSelectST(string state_id)
-		if GetCurrentFont() == FONT_TYPE_DEFAULT
+		if CurrentFont == FONT_TYPE_DEFAULT
 			SetFont(FONT_TYPE_PAPER)
 		else
 			SetFont(FONT_TYPE_DEFAULT)

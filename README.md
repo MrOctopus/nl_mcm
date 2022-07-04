@@ -50,6 +50,7 @@ An object-oriented module based extension of SkyUI MCM scripts.
 
 | Examples | Description | Link |
 |-------------------------|--------------------------------------------------------|------------------------------------------------------------------------------|
+| *Simple Template*       | nl_mcm mcm menu, basic template                        | [CLICK](https://github.com/MrOctopus/nl_mcm/tree/main/examples/nl_mcm_simple_template)    |
 | *NeverLost's Curios*    | nl_mcm being used to build a standalone mcm menu       | [CLICK](https://github.com/MrOctopus/nl_mcm/tree/main/examples/nl_curios)    |
 | *NeverLost's Utilities* | nl_mcm being used to attach a page to another mcm menu | [CLICK](https://github.com/MrOctopus/nl_mcm/tree/main/examples/nl_utilities) |
 

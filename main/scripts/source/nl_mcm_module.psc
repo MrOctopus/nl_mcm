@@ -374,10 +374,6 @@ string function FONT_CUSTOM(string text = "", string color)
 	Guard()
 endfunction
 
-int function GetCurrentFont()
-	Guard()
-endfunction
-
 ; PROPERTIES
 nl_mcm property UNSAFE_RAW_MCM hidden
     nl_mcm function Get()
@@ -407,7 +403,7 @@ int property QuickHotkey hidden
 	endfunction
 endproperty
 
-string property PageName 
+string property CurrentPageName 
 	string function Get()
 		Guard()
 	endfunction
@@ -417,7 +413,7 @@ string property PageName
 	endfunction
 endproperty
 
-int property PageOrder 
+int property CurrentPageOrder 
 	int function Get()
 		Guard()
 	endfunction
@@ -426,6 +422,12 @@ int property PageOrder
 		Guard()
 	endfunction
 endproperty
+
+int property CurrentFont hidden
+	int function Get()
+		Guard()
+	endfunction
+endproperty	
 
 int function GetMCMID()
 	Guard()

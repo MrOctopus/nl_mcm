@@ -637,17 +637,6 @@ string function FONT_CUSTOM(string text = "", string color)
 	return "<font color='" + color + "'>" + text + "</font>"
 endfunction
 
-int function GetCurrentFont()
-{
-	Getter for the current font.
-	@return Current font
-}
-	if _font > FONT_TYPE_PAPER
-		return FONT_TYPE_DEFAULT
-	endif
-	return _font
-endfunction
-
 ; PROPERTIES
 nl_mcm property UNSAFE_RAW_MCM hidden
 {
@@ -696,7 +685,7 @@ int property QuickHotkey hidden
 	endfunction
 endproperty
 
-string property PageName 
+string property CurrentPageName 
 {
 	Get the current page name assigned to the module.
 	@get Get the current page name assigned to the module
@@ -711,7 +700,7 @@ string property PageName
 	endfunction
 endproperty
 
-int property PageOrder
+int property CurrentPageOrder
 {
 	Get the current display order of the module's page name.
 	@get Get the current display order of the module's page name
@@ -725,6 +714,19 @@ int property PageOrder
 		_z = z
 	endfunction
 endproperty
+
+int property CurrentFont hidden
+{
+	Useful to check for the current font.
+	@get Get the current font
+}
+	int function Get()
+		if _font > FONT_TYPE_PAPER
+			return FONT_TYPE_DEFAULT
+		endif
+		return _font
+	endfunction
+endproperty	
 
 int function GetMCMID()
 {
