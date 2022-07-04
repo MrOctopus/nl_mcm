@@ -403,7 +403,7 @@ int property QuickHotkey hidden
 	endfunction
 endproperty
 
-string property CurrentPageName 
+string property PageName 
 	string function Get()
 		Guard()
 	endfunction
@@ -413,7 +413,7 @@ string property CurrentPageName
 	endfunction
 endproperty
 
-int property CurrentPageOrder 
+int property PageOrder 
 	int function Get()
 		Guard()
 	endfunction

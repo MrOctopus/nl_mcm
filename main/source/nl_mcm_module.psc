@@ -685,7 +685,7 @@ int property QuickHotkey hidden
 	endfunction
 endproperty
 
-string property CurrentPageName 
+string property PageName 
 {
 	Get the current page name assigned to the module.
 	@get Get the current page name assigned to the module
@@ -700,7 +700,7 @@ string property CurrentPageName
 	endfunction
 endproperty
 
-int property CurrentPageOrder
+int property PageOrder
 {
 	Get the current display order of the module's page name.
 	@get Get the current display order of the module's page name
