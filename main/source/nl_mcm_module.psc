@@ -152,11 +152,6 @@ auto state _inactive
 	event _OnPageEvent(string state_name, int event_id, float f, string str)
 		DEBUG_MSG("_OnPageEvent has been called in an invalid state.")
 	endevent
-
-	int function GetMCMID()
-		DEBUG_MSG("GetMCMID has been called in an invalid state.")
-		return ERROR
-	endfunction
 		
 	string function GetCommonStore(bool lock)
 		DEBUG_MSG("GetCommonStore has been called in an invalid state.")

@@ -3,8 +3,11 @@ Scriptname nl_mcm_template_page2 extends nl_mcm_module
 ; just remember to update the .esp quest script too
 
 ; The mod name is set in the Creation Kit on nl_mcm
-; The page name is set in the Creation kit
-; PageName <- The name of the page
+; The landing page is set in the Creation Kit on nl_mcm
+; The persistent mcm preset path is set in the Creation Kit on nl_mcm
+; The splash screen is set in the Creation Kit on nl_mcm
+; The page name is set in the Creation kit on this script
+; PageName  <- The name of the page
 ; PageOrder <- The order in which the page will be displayed
 ;              a lower number means it will display higher in the list
 

@@ -52,10 +52,6 @@ auto state _inactive
 	event _OnPageEvent(string state_name, int event_id, float f, string str)
 		Guard()
 	endevent
-
-	int function GetMCMID()
-		Guard()
-	endfunction
 	
 	string function GetCommonStore(bool lock)
 		Guard()
