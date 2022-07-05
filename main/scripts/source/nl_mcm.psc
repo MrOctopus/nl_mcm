@@ -63,6 +63,16 @@ string property LandingPageName
 	endfunction
 endproperty
 
+string property PersistentMCMPresetPath
+	string function Get()
+		Guard()
+	endfunction
+	
+	function Set(string path)
+		Guard()
+	endfunction
+endproperty
+
 string property SplashScreenPath
 	string function Get()
 		Guard()

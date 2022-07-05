@@ -93,6 +93,16 @@ string property LandingPageName
 	endfunction
 endproperty
 
+string property PersistentMCMPresetPath
+	string function Get()
+		return _persistent_preset
+	endfunction
+	
+	function Set(string path)
+		_persistent_preset = path
+	endfunction
+endproperty
+
 string property SplashScreenPath
 	string function Get()
 		return _splash_path
