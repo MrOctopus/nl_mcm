@@ -19,12 +19,6 @@ event OnPageInit()
     food_types[1] = "Fruit"
     food_types[2] = "Vegetables"
     food_types[3] = "Meat"
-
-    ; Set a peristent mcm preset path
-    ; (This will require the user to have JContainers installed)
-    ; To work. Don't worry, if they don't have it installed,
-    ; Your mod will still work
-    SetPersistentMCMPreset("persistence/settings")
 endevent
 
 event OnPageDraw()
