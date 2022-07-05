@@ -2,7 +2,7 @@ Scriptname nl_mcm extends SKI_ConfigBase
 {
 	This documents the important functions in the backbone nl_mcm script.
 	@author NeverLost
-	@version 1.1.1
+	@version 1.1.2
 }
 
 int function GetVersion()
@@ -78,6 +78,48 @@ string property MCM_PATH_SETTINGS hidden
 }
 	string function Get()
 		return "Data/NL_MCM/" + ModName + "/"
+	endfunction
+endproperty
+
+int property CurrentMCMID hidden
+	int function Get()
+		return _id
+	endfunction
+endproperty
+
+string property LandingPageName
+	function Set(string page_name)
+		_landing_page = page_name
+	endfunction
+endproperty
+
+string property SplashScreenPath
+	string function Get()
+		return _splash_path
+	endfunction
+	
+	function Set(string path)
+		_splash_path = path
+	endfunction
+endproperty
+
+float property SplashScreenX
+	float function Get()
+		return _splash_x
+	endfunction
+
+	function Set(float x)
+		_splash_x = x
+	endfunction
+endproperty
+
+float property SplashScreenY
+	float function Get()
+		return _splash_y
+	endfunction
+
+	function Set(float y)
+		_splash_y = y
 	endfunction
 endproperty
 
@@ -1219,10 +1261,6 @@ function AddParagraph(string text, string format = "", int flags = 0x01)
 		
 		AddTextOption(begin_format + line + end_format, "", flags)
 	endwhile
-endfunction
-
-int function GetMCMID()
-	return _id
 endfunction
 
 function SetModName(string name)

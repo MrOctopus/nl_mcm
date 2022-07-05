@@ -4,7 +4,7 @@ Scriptname nl_mcm_module extends Quest
 	For the original mcm Api, see [link](https://github.com/schlangster/skyui/wiki/MCM-API-Reference). \
 	Only STATE api functions are supported as part of the new api.
 	@author NeverLost
-	@version 1.1.1
+	@version 1.1.2
 }
 
 ; ------\-------\
@@ -715,6 +715,17 @@ int property PageOrder
 	endfunction
 endproperty
 
+int property CurrentMCMID hidden
+{
+	Useful to get the mcm's currently assigned mod id. \
+	Note: Don't cache this, as it might change on gamereloads.
+	@get Mcm id
+}
+	int function Get()
+		_MCM.CurrentMCMID
+	endfunction
+endproperty	
+
 int property CurrentFont hidden
 {
 	Useful to check for the current font.
@@ -726,16 +737,7 @@ int property CurrentFont hidden
 		endif
 		return _font
 	endfunction
-endproperty	
-
-int function GetMCMID()
-{
-	Getter for the mcm's mod id. \
-	Note: Don't cache this, as it might change on gamereloads.
-	@return Mcm id
-}
-	return _MCM.GetMCMID()
-endfunction
+endproperty
 
 string function GetCommonStore(bool lock)
 {
@@ -757,10 +759,10 @@ function SetCommonStore(string new_value)
 endfunction
 
 function SetModName(string name)
-	{
-		Set the mod page name. Can only be used before the mcm has been initialized.
-		@param name - The mod's name
-	}
+{
+	Set the mod page name. Can only be used before the mcm has been initialized.
+	@param name - The mod's name
+}
 		_MCM.SetModName(name)
 endfunction
 

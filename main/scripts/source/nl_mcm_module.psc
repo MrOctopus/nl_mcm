@@ -1,7 +1,7 @@
 Scriptname nl_mcm_module extends Quest
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.1.1
+	@version 1.1.2
 }
 
 ; ------\-------\
@@ -423,15 +423,17 @@ int property PageOrder
 	endfunction
 endproperty
 
-int property CurrentFont hidden
+int property CurrentMCMID hidden
 	int function Get()
 		Guard()
 	endfunction
 endproperty	
 
-int function GetMCMID()
-	Guard()
-endfunction
+int property CurrentFont hidden
+	int function Get()
+		Guard()
+	endfunction
+endproperty	
 
 string function GetCommonStore(bool lock)
 	Guard()

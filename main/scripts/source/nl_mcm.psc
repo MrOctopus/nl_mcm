@@ -1,7 +1,7 @@
 Scriptname nl_mcm extends SKI_ConfigBase
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.1.1
+	@version 1.1.2
 }
 
 int function GetVersion()
@@ -47,6 +47,48 @@ int property FONT_TYPE_PAPER = 0x01 autoreadonly
 ; ADVANCED
 string property MCM_PATH_SETTINGS hidden
 	string function Get()
+		Guard()
+	endfunction
+endproperty
+
+int property CurrentMCMID hidden
+	int function Get()
+		Guard()
+	endfunction
+endproperty
+
+string property LandingPageName
+	function Set(string page_name)
+		Guard()
+	endfunction
+endproperty
+
+string property SplashScreenPath
+	string function Get()
+		Guard()
+	endfunction
+	
+	function Set(string path)
+		Guard()
+	endfunction
+endproperty
+
+float property SplashScreenX
+	float function Get()
+		Guard()
+	endfunction
+
+	function Set(float x)
+		Guard()
+	endfunction
+endproperty
+
+float property SplashScreenY
+	float function Get()
+		Guard()
+	endfunction
+
+	function Set(float y)
 		Guard()
 	endfunction
 endproperty
@@ -232,10 +274,6 @@ function DeleteMCMSavedPreset(string preset_path)
 endfunction
 
 function AddParagraph(string text, string format = "", int flags = 0x01)
-	Guard()
-endfunction
-
-int function GetMCMID()
 	Guard()
 endfunction
 
