@@ -12,6 +12,7 @@
     <Variable Name="MCM" Value="..\main"/>
 	  <Variable Name="Dist" Value="..\dist"/>
     <Variable Name="MergedExample" Value="."/>
+    <Variable Name="TemplateExample" Value="@MergedExample\nl_mcm_simple_template"/>
     <Variable Name="CuriosExample" Value="@MergedExample\nl_curios"/>
     <Variable Name="UtilitiesExample" Value="@MergedExample\nl_utilities"/>
   </Variables>
@@ -30,11 +31,13 @@
   </Scripts>
   <Folders>
     <Folder NoRecurse="true">@MCM\source</Folder>
+    <Folder NoRecurse="true">@TemplateExample\scripts\source</Folder>
     <Folder NoRecurse="true">@CuriosExample\scripts\source</Folder>
 	  <Folder NoRecurse="true">@UtilitiesExample\scripts\source</Folder>
   </Folders>
   <ZipFiles Output="@Dist">
     <ZipFile Name="@ModName" RootDir="@MergedExample" Compression="deflate">
+      <Include Path="scripts\source">@TemplateExample\scripts\source</Include>
       <Include Path="scripts\source">@CuriosExample\scripts\source</Include>
       <Include Path="scripts\source">@UtilitiesExample\scripts\source</Include>
       <Include>scripts</Include>

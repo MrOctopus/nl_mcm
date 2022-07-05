@@ -1,0 +1,34 @@
+<PapyrusProject
+  xmlns="PapyrusProject.xsd"
+  Game="SSE"
+  Flags="TESV_Papyrus_Flags.flg"
+  Output="@Example\scripts"
+  Optimize="true" 
+  Anonymize="true"
+  Zip="true">
+  <Variables>
+    <Variable Name="Namespace" Value="Simple nl_mcm template"/>
+    <Variable Name="ModName" Value="@Namespace - SSE"/>
+    <Variable Name="MCM" Value="..\..\main"/>
+    <Variable Name="Example" Value="."/>
+    <Variable Name="Dist" Value="..\..\dist"/>
+  </Variables>
+  <Imports>
+    <Import>@Example\scripts\source</Import>
+    <Import>@MCM\scripts\source</Import>
+    <Import>https://github.com/MrOctopus/nl_online/tree/main/jcontainersse/source</Import>
+    <Import>https://github.com/MrOctopus/nl_online/tree/main/skyui/source</Import>
+    <Import>https://github.com/MrOctopus/nl_online/tree/main/skse64/source</Import>
+    <Import>https://github.com/MrOctopus/nl_online/tree/main/sse/source</Import>
+  </Imports>
+  <Folders>
+    <Folder NoRecurse="true">@Example\scripts\source</Folder>
+  </Folders>
+  <ZipFiles Output="@Dist">
+    <ZipFile Name="@ModName" RootDir="@Example" Compression="deflate">
+      <Include Path="scripts\source">@Example\scripts\source</Include>
+      <Include>scripts</Include>
+      <Match Path=".">*.esp|*.esl</Match>
+    </ZipFile>
+  </ZipFiles>
+</PapyrusProject>
