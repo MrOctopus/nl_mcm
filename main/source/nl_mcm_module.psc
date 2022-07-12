@@ -1285,20 +1285,20 @@ endfunction
 
 int function GetVersion()
 { 
-	| OVERRIDE | \
 	NL_MCM's page based version of GetVersion(). \
 	See the original [SkyUI Advanced Features](https://github.com/schlangster/skyui/wiki/MCM-Advanced-Features).
 	@return Refer to the SkyUI API
+	@override
 }
 	return 1
 endfunction
 
 event OnVersionUpdate(int new_version)
 { 
-	| OVERRIDE | \
 	NL_MCM's page based version of OnVersionUpdate(). \
 	See the original [SkyUI Advanced Features](https://github.com/schlangster/skyui/wiki/MCM-Advanced-Features).
 	@param new_version - Refer to the SkyUI API
+	@override
 }
 endevent
 
@@ -1306,20 +1306,20 @@ endevent
 
 int function SaveData()
 {
-	| OVERRIDE | \
 	Requires JContainers to function. \
 	Function to save the page's/module's data to a MCM preset. Use jContainers to create a object type of your choice and store the data in it.
 	@return Your jContainer object id
+	@override
 }
 	return 0
 endfunction
 
 function LoadData(int jObj)
 {
-	| OVERRIDE | \
 	Requires JContainers to function. \
 	Function to load the page's/module's data from a MCM preset. Use jContainers to load the object data you previously stored in SaveData().
 	@param jObj - The jContainer object id returned from loading the preset data
+	@override
 }
 endfunction
 
@@ -1327,33 +1327,33 @@ endfunction
 
 event OnGameReload()
 { 
-	| OVERRIDE | \
 	NL_MCM's page based version of OnGameReload. \
 	Does not require you to call parent.OnGameReload() as with SkyUI. \
 	See the original [SkyUI Advanced Features](https://github.com/schlangster/skyui/wiki/MCM-Advanced-Features).
+	@override
 }
 endevent
 
 event OnConfigClose()
 { 
-	| OVERRIDE | \
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@override
 }
 endevent
 
 event OnPageInit()
 { 
-	| OVERRIDE | \
 	NL_MCM's page based version of OnConfigInit. \
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@override
 }
 endevent
 
 event OnPageDraw()
 { 
-	| OVERRIDE | \
 	NL_MCM's page based version of OnPageReset. \
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
+	@override
 }
 endevent
 
@@ -1361,101 +1361,101 @@ endevent
 
 event OnDefaultST(string state_id)
 { 
-	| OVERRIDE | \
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
 	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+	@override
 }
 endevent
 
 event OnHighlightST(string state_id)
 { 
-	| OVERRIDE | \
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
 	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+	@override
 }
 endevent
 
 event OnSelectST(string state_id)
 { 
-	| OVERRIDE | \
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
 	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+	@override
 }
 endevent
 
 event OnSliderOpenST(string state_id)
 { 
-	| OVERRIDE | \
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
 	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+	@override
 }
 endevent
 
 event OnMenuOpenST(string state_id)
 { 
-	| OVERRIDE | \
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
 	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+	@override
 }
 endevent
 
 event OnColorOpenST(string state_id)
 { 
-	| OVERRIDE | \
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
 	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+	@override
 }
 endevent
 
 event OnSliderAcceptST(string state_id, float f)
 { 
-	| OVERRIDE | \
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
 	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
 	@param f - Refer to the SkyUI API
+	@override
 }
 endevent
 
 event OnMenuAcceptST(string state_id, int i)
 { 
-	| OVERRIDE | \
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
 	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
 	@param i - Refer to the SkyUI API
+	@override
 }
 endevent
 
 event OnColorAcceptST(string state_id, int col)
 { 
-	| OVERRIDE | \
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
 	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
 	@param col - Refer to the SkyUI API
+	@override
 }
 endevent
 
 event OnInputOpenST(string state_id)
 { 
-	| OVERRIDE | \
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
 	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
+	@override
 }
 endevent
 
 event OnInputAcceptST(string state_id, string str)
 { 
-	| OVERRIDE | \
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
 	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
 	@param str - Refer to the SkyUI API
+	@override
 }
 endevent
 
 event OnKeyMapChangeST(string state_id, int keyCode)
 { 
-	| OVERRIDE | \
 	See the original [SkyUI API](https://github.com/schlangster/skyui/wiki/MCM-API-Reference).
 	@param state_id - The nl_mcm advanced state id. Ignore this variable if you are not using advanced states
 	@param keycode - Refer to the SkyUI API
+	@override
 }
 endevent
