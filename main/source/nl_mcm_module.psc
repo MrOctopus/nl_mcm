@@ -4,7 +4,7 @@ Scriptname nl_mcm_module extends Quest
 	For the original mcm Api, see [link](https://github.com/schlangster/skyui/wiki/MCM-API-Reference). \
 	Only STATE api functions are supported as part of the new api.
 	@author NeverLost
-	@version 1.1.2
+	@version 1.1.3
 }
 
 ; ------\-------\
@@ -641,6 +641,16 @@ nl_mcm property UNSAFE_RAW_MCM hidden
 }
     nl_mcm function Get()
         return _MCM
+	endfunction
+endproperty
+
+bool property IsMCMInitialized hidden
+{
+	Check if the mcm has actually finished initializing.
+	@get Get the initialized status of the mcm
+}
+	bool function Get()
+		return _MCM.IsMCMInitialized
 	endfunction
 endproperty
 

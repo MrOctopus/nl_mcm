@@ -1,7 +1,7 @@
 Scriptname nl_mcm extends SKI_ConfigBase
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.1.2
+	@version 1.1.3
 }
 
 int function GetVersion()
@@ -100,6 +100,12 @@ float property SplashScreenY
 
 	function Set(float y)
 		Guard()
+	endfunction
+endproperty
+
+bool property IsMCMInitialized hidden
+	bool function Get()
+		return Guard()
 	endfunction
 endproperty
 

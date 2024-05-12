@@ -2,7 +2,7 @@ Scriptname nl_mcm extends SKI_ConfigBase
 {
 	This documents the important functions in the backbone nl_mcm script.
 	@author NeverLost
-	@version 1.1.2
+	@version 1.1.3
 }
 
 int function GetVersion()
@@ -133,6 +133,12 @@ float property SplashScreenY
 	endfunction
 endproperty
 
+bool property IsMCMInitialized hidden
+	bool function Get()
+		return _initialized
+	endfunction
+endproperty
+
 bool property PlayerUpdatedOptions auto hidden
 
 int property QuickHotkey hidden
@@ -144,17 +150,12 @@ int property QuickHotkey hidden
 		; Unregister
 		if keycode == -1
 			UnregisterForKey(_mcm_hotkey)
-			UnregisterForMenu(JOURNAL_MENU)
 		else
 			; Reregister
 			if _mcm_hotkey != -1
 				UnregisterForKey(_mcm_hotkey)
-			; Register
-			else
-				RegisterForMenu(JOURNAL_MENU)
 			endif
 
-			_journal_open = Ui.IsMenuOpen("Journal Menu")
 			RegisterForKey(keycode)
 		endif
 
@@ -182,6 +183,7 @@ string _key_store
 string _common_store
 string _common_store_owner
 string _landing_page
+string _landing_page_tmp
 string _splash_path
 string _persistent_preset
 
@@ -217,7 +219,13 @@ event OnGameReload()
 	; compacting it in the process. After the array has been compacted
 	; the array will be resized to equal the remaining active_modules
 	
-	if !_initialized || _advanced_modules == 0
+	if !_initialized
+		return
+	endif
+
+	RegisterForMenu(JOURNAL_MENU)
+
+	if _advanced_modules == 0
 		return
 	endif
 	
@@ -324,6 +332,7 @@ event OnUpdate()
 	_pages_z = Utility.ResizeIntArray(_pages_z, _buffered)
 
 	parent.OnGameReload()
+	RegisterForMenu(JOURNAL_MENU)
 	
 	_buffered = 0
 	_initialized = True
@@ -963,15 +972,20 @@ event OnPageReset(string page)
 			endif
 		endif
 
-		if _landing_page != ""
-			; MIGHT return -1 because of a in-progress OpenMCM call
-			int i = Pages.Find(_landing_page)
+		string landing_page = _landing_page
+		if _landing_page_tmp != ""
+			landing_page = _landing_page_tmp
+			_landing_page_tmp = ""
+		endif
 
+		if landing_page != ""
+			; MIGHT return -1 because of a in-progress OpenMCM call
+			int i = Pages.Find(landing_page)
 			if i == -1
-				_landing_page = ""
+				landing_page = ""
 			endif
 
-			parent.SetPage(_landing_page, i)
+			parent.SetPage(landing_page, i)
 		elseif _splash_path != ""
 			LoadCustomContent(_splash_path, _splash_x, _splash_y)
 		endif
@@ -1349,28 +1363,9 @@ function OpenMCM(string landing_page_name = "")
 		return
 	endif
 
-	RegisterForMenu(JOURNAL_MENU)
-
-	string old_landing_page = _landing_page
-	_landing_page = landing_page_name
-
 	_quick_open = true
+	_landing_page_tmp = landing_page_name
 	Input.TapKey(Input.GetMappedKey("Journal"))
-
-	string flash_path = MENU_ROOT + ".contentHolder.modListPanel.decorTitle.textHolder.textField.text"
-	int i = 0
-
-	; Not a true spinlock because users might muck this up
-	while i < 5 || Ui.GetString(JOURNAL_MENU, flash_path) != ModName
-		Utility.WaitMenuMode(SPINLOCK_TIMER)
-		i += 1
-	endwhile
-
-	_landing_page = old_landing_page
-
-	if _mcm_hotkey == -1
-		UnregisterForMenu(JOURNAL_MENU)
-	endif
 endfunction
 
 function CloseMCM(bool close_journal = false)
@@ -1381,6 +1376,7 @@ function CloseMCM(bool close_journal = false)
 	; Lock
 	_ctd_lock = true
 
+	; This also checks if the menu is open
 	if Ui.GetString(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.decorTitle.textHolder.textField.text") != ModName
 		_ctd_lock = false
 		return
