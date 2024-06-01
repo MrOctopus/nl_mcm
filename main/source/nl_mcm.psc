@@ -953,7 +953,7 @@ endEvent
 event OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
 	_manager = a_sender as SKI_ConfigManager
 
-	if _id >= 0
+	if _manager == none
 		return
 	endif
 
@@ -1230,8 +1230,8 @@ function LoadMCMFromPreset(string preset_path)
 	
 	; NOTE:
 	; This is a bit of a complicated function, and the reason for this being the case
-	; is that LoadData functions can cause new module registrations if we are unlucky.
-	; Therefore, we reattempt failed module loads every time a succesful one has occured.
+	; is that LoadData functions can cause new module registrations and unregistrations if we are unlucky.
+	; Therefore, we reattempt failed module loads every time a data load occurrs.
 	bool data_was_loaded = True
 	while failsafe_count > 0 && data_was_loaded
 		data_was_loaded = False
