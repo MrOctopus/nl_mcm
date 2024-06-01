@@ -2,7 +2,7 @@ Scriptname nl_mcm extends SKI_ConfigBase
 {
 	This documents the important functions in the backbone nl_mcm script.
 	@author NeverLost
-	@version 1.1.3
+	@version 1.1.4
 }
 
 int function GetVersion()
@@ -54,7 +54,7 @@ string property MCM_EXT = ".nlset" autoreadonly
 
 ; MISC CONSTANTS
 float property SPINLOCK_TIMER = 0.3 autoreadonly
-float property BUFFER_TIMER = 2.0 autoreadonly
+float property BUFFER_TIMER = 3.0 autoreadonly
 int property LINE_LENGTH = 47 autoreadonly
 
 ; ERROR CODES
@@ -139,6 +139,15 @@ bool property IsMCMInitialized hidden
 	endfunction
 endproperty
 
+bool property IsMCMOpen hidden
+	bool function Get()
+		if !Ui.IsMenuOpen(JOURNAL_MENU)
+			return false
+		endif
+		return Ui.GetString(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.decorTitle.textHolder.textField.text") == ModName
+	endfunction
+endproperty
+
 bool property PlayerUpdatedOptions auto hidden
 
 int property QuickHotkey hidden
@@ -185,7 +194,7 @@ string _common_store_owner
 string _landing_page
 string _landing_page_tmp
 string _splash_path
-string _persistent_preset
+string _persistent_preset = "persistence/settings"
 
 float _splash_x
 float _splash_y
@@ -195,6 +204,7 @@ int _advanced_modules ; External module
 int _id = -1
 int _font = -1
 int _mcm_hotkey = -1
+int _mod_name_index = -1
 
 bool _journal_open
 bool _quick_open
@@ -222,6 +232,10 @@ event OnGameReload()
 	if !_initialized
 		return
 	endif
+    
+    if _mod_name_index == -1
+        _mod_name_index = _id
+    endif
 
 	RegisterForMenu(JOURNAL_MENU)
 
@@ -300,7 +314,7 @@ event OnGameReload()
 			endwhile
 
 			_initialized = False
-			_id = 0
+			_id = -1
 
 			Pages = new string[128]
 			_pages_z = new int[128]
@@ -338,10 +352,7 @@ event OnUpdate()
 	_initialized = True
 	
 	_mutex_modules = False
-
-	if _persistent_preset != ""
-		LoadMCMFromPreset(_persistent_preset)
-	endif
+	LoadMCMFromPreset(_persistent_preset)
 endevent
 
 event OnConfigClose()
@@ -942,11 +953,12 @@ endEvent
 event OnConfigManagerReady(string a_eventName, string a_strArg, float a_numArg, Form a_sender)
 	_manager = a_sender as SKI_ConfigManager
 
-	if _manager == none || _id >= 0
+	if _id >= 0
 		return
 	endif
 
 	_id = _manager.RegisterMod(self, ModName)
+    _mod_name_index = _id
 
 	if _id >= 0
 		; Unregister to avoid polling events
@@ -1076,10 +1088,9 @@ event OnMenuOpen(string menu_name)
 	; Lock
 	_ctd_lock = true
 
-	int[] select_type = new int[2]
-	select_type[0] = _id
-	select_type[1] = 1
 
+	int[] select_type = new int[2]
+    select_type[1] = 1
 	string sort_event = MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.entryList.sortOn"
 
 	; Numeric sortOn
@@ -1106,11 +1117,30 @@ event OnMenuOpen(string menu_name)
 
 	; Wait 0.3 seconds for the ConfigManager to setNames
 	Utility.WaitMenuMode(SPINLOCK_TIMER)
-
-	UiCallback.Send(handle)
-	Ui.Invoke(JOURNAL_MENU, "_root.QuestJournalFader.Menu_mc.ConfigPanelOpen")
-	Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.doSetSelectedIndex", select_type)
-	Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.onItemPress", select_type)
+    
+    int mod_name_count = Ui.GetInt(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.itemCount")
+    if _mod_name_index > (mod_name_count - 1) || _mod_name_index < 0
+        _mod_name_index = mod_name_count
+    else
+        _mod_name_index += 1
+    endif
+    
+    ; Sort and open
+    UiCallback.Send(handle)
+    Ui.Invoke(JOURNAL_MENU, "_root.QuestJournalFader.Menu_mc.ConfigPanelOpen")
+    
+    ; Find correct menu  
+    int _tmp_id = -1
+    while _tmp_id != _id && _mod_name_index > 0
+        _mod_name_index -= 1
+        select_type[0] = _mod_name_index
+        
+        Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.doSetSelectedIndex", select_type)
+        _tmp_id = Ui.GetInt(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.selectedEntry.modIndex")
+    endwhile
+    
+    ; Select it
+    Ui.InvokeIntA(JOURNAL_MENU, MENU_ROOT + ".contentHolder.modListPanel.modListFader.list.onItemPress", select_type)
 	UiCallback.Send(handle2)
 	
 	; Cooldown
@@ -1177,7 +1207,7 @@ string[] function GetMCMSavedPresets(string default, string dir_path = "")
 endfunction
 
 function LoadMCMFromPreset(string preset_path)
-	if !JContainers.isInstalled() || preset_path == ""
+	if preset_path == "" || !JContainers.isInstalled()
 		return
 	endif
 
@@ -1195,28 +1225,35 @@ function LoadMCMFromPreset(string preset_path)
 	endif
 
 	string[] page_names = JMap.allKeysPArray(jPreset)
-	int prev_page_length = Pages.length
-	int remaining = page_names.length
-	int failed = 0
+	int start_lookup = 0
+	int failsafe_count = 20
+	
+	; NOTE:
+	; This is a bit of a complicated function, and the reason for this being the case
+	; is that LoadData functions can cause new module registrations if we are unlucky.
+	; Therefore, we reattempt failed module loads every time a succesful one has occured.
+	bool data_was_loaded = True
+	while failsafe_count > 0 && data_was_loaded
+		data_was_loaded = False
 
-	while failed < remaining
-		while failed < remaining && 0 < remaining
-			int jData = JMap.getObj(jPreset, page_names[failed])
-			int i = Pages.Find(page_names[failed])
+		int i = start_lookup
+		while i < page_names.length
+			int j = Pages.Find(page_names[i])
 
-			if i != -1
-				remaining -= 1
-				page_names[failed] = page_names[remaining]
-				_modules[i].LoadData(jData)
-			else
-				failed += 1
+			if j != - 1
+				int jData = JMap.getObj(jPreset, page_names[i])
+				_modules[j].LoadData(jData)
+
+				page_names[i] = page_names[start_lookup]
+				start_lookup += 1
+
+				data_was_loaded = True
 			endif
+
+			i += 1
 		endwhile
 
-		if Pages.length != prev_page_length
-			prev_page_length = Pages.length
-			failed = 0
-		endif
+		failsafe_count -= 1
 	endwhile
 	
 	_busy_jcontainer = false

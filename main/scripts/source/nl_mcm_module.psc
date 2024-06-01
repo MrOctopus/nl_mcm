@@ -1,7 +1,7 @@
 Scriptname nl_mcm_module extends Quest
 {!!!!!!DO NOT RECOMPILE!!!!!!
 	@author NeverLost
-	@version 1.1.3
+	@version 1.1.4
 }
 
 ; ------\-------\
@@ -378,6 +378,12 @@ nl_mcm property UNSAFE_RAW_MCM hidden
 endproperty
 
 bool property IsMCMInitialized hidden
+	bool function Get()
+		return Guard()
+	endfunction
+endproperty
+
+bool property IsMCMOpen hidden
 	bool function Get()
 		return Guard()
 	endfunction

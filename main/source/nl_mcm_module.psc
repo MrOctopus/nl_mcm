@@ -4,7 +4,7 @@ Scriptname nl_mcm_module extends Quest
 	For the original mcm Api, see [link](https://github.com/schlangster/skyui/wiki/MCM-API-Reference). \
 	Only STATE api functions are supported as part of the new api.
 	@author NeverLost
-	@version 1.1.3
+	@version 1.1.4
 }
 
 ; ------\-------\
@@ -651,6 +651,16 @@ bool property IsMCMInitialized hidden
 }
 	bool function Get()
 		return _MCM.IsMCMInitialized
+	endfunction
+endproperty
+
+bool property IsMCMOpen hidden
+{
+	Check if the mcm is open and in-focus by the user.
+	@get Get the mcm open state
+}
+	bool function Get()
+		return _MCM.IsMCMOpen
 	endfunction
 endproperty
 
